@@ -7,11 +7,13 @@ import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -24,49 +26,47 @@ import javax.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a Sage Intacct account.",
-    description = "Full documentation can be found [here](https://github.com/hotgluexyz/tap-intacct)"
+    title = "A Singer tap to fetch data from a Marketo account.",
+    description = "Full documentation can be found [here](https://gitlab.com/meltano/tap-marketo.git)"
 )
-public class SageIntacct extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
+public class Marketo extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Company Id."
+        title = "Endpoint url.",
+        description = "The base URL contains the account id (a.k.a. Munchkin id) and is therefore unique for each " +
+            "Marketo subscription. Your base URL is found by logging into Marketo and navigating to the " +
+            "Admin > Integration > Web Services menu. " +
+            "It is labled as “Endpoint:” underneath the “REST API” section as shown in the following screenshots."
     )
     @PluginProperty(dynamic = true)
-    private String companyId;
+    private String endpoint;
 
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Intacct Sender Id."
+        title = "Identity.",
+        description = "Identity is found directly below the endpoint entry." +
+            "https://developers.marketo.com/rest-api/base-url/"
     )
     @PluginProperty(dynamic = true)
-    private String senderId;
+    private String identity;
 
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Intacct Sender Password."
+        title = "Marketo client id."
     )
     @PluginProperty(dynamic = true)
-    private String senderPassword;
+    private String clientId;
 
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Intacct User Id."
+        title = "Marketo client secret."
     )
     @PluginProperty(dynamic = true)
-    private String userId;
-
-    @NotNull
-    @NotEmpty
-    @Schema(
-        title = "Intacct User Password."
-    )
-    @PluginProperty(dynamic = true)
-    private String userPassword;
+    private String clientSecret;
 
     @NotNull
     @NotEmpty
@@ -78,21 +78,16 @@ public class SageIntacct extends AbstractPythonTap implements RunnableTask<Abstr
     private LocalDate startDate;
 
     public List<Feature> features() {
-        return Arrays.asList(
-            Feature.PROPERTIES,
-            Feature.DISCOVER,
-            Feature.STATE
-        );
+        return Collections.emptyList();
     }
 
     @Override
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
-            .put("company_id", runContext.render(this.companyId))
-            .put("sender_id", runContext.render(this.senderId))
-            .put("sender_password", runContext.render(this.senderPassword))
-            .put("user_id", runContext.render(this.userId))
-            .put("user_password", runContext.render(this.userPassword))
+            .put("endpoint", runContext.render(this.endpoint))
+            .put("identity", runContext.render(this.identity))
+            .put("client_id", runContext.render(this.clientId))
+            .put("client_secret", runContext.render(this.clientSecret))
             .put("start_date", runContext.render(this.startDate.toString()));
 
         return builder.build();
@@ -100,11 +95,11 @@ public class SageIntacct extends AbstractPythonTap implements RunnableTask<Abstr
 
     @Override
     public List<String> pipPackages() {
-        return Collections.singletonList("git+https://github.com/hotgluexyz/tap-intacct.git");
+        return Collections.singletonList("git+https://gitlab.com/meltano/tap-marketo.git");
     }
 
     @Override
     protected String command() {
-        return "tap-intacct";
+        return "tap-marketo";
     }
 }

@@ -7,7 +7,10 @@ import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
@@ -24,49 +27,25 @@ import javax.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a Sage Intacct account.",
-    description = "Full documentation can be found [here](https://github.com/hotgluexyz/tap-intacct)"
+    title = "A Singer tap to fetch data from a Recharge account.",
+    description = "Full documentation can be found [here](https://github.com/singer-io/tap-recharge)"
 )
-public class SageIntacct extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
+public class Recharge extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Company Id."
+        title = "Private API Token."
     )
     @PluginProperty(dynamic = true)
-    private String companyId;
+    private String accessToken;
 
-    @NotNull
-    @NotEmpty
     @Schema(
-        title = "Intacct Sender Id."
+        title = "User agent.",
+        description = "User agent to send to ReCharge along with API requests. " +
+            "Typically includes name of integration and an email address you can be reached at."
     )
     @PluginProperty(dynamic = true)
-    private String senderId;
-
-    @NotNull
-    @NotEmpty
-    @Schema(
-        title = "Intacct Sender Password."
-    )
-    @PluginProperty(dynamic = true)
-    private String senderPassword;
-
-    @NotNull
-    @NotEmpty
-    @Schema(
-        title = "Intacct User Id."
-    )
-    @PluginProperty(dynamic = true)
-    private String userId;
-
-    @NotNull
-    @NotEmpty
-    @Schema(
-        title = "Intacct User Password."
-    )
-    @PluginProperty(dynamic = true)
-    private String userPassword;
+    private String userAgent;
 
     @NotNull
     @NotEmpty
@@ -79,7 +58,7 @@ public class SageIntacct extends AbstractPythonTap implements RunnableTask<Abstr
 
     public List<Feature> features() {
         return Arrays.asList(
-            Feature.PROPERTIES,
+            Feature.CATALOG,
             Feature.DISCOVER,
             Feature.STATE
         );
@@ -88,11 +67,8 @@ public class SageIntacct extends AbstractPythonTap implements RunnableTask<Abstr
     @Override
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
-            .put("company_id", runContext.render(this.companyId))
-            .put("sender_id", runContext.render(this.senderId))
-            .put("sender_password", runContext.render(this.senderPassword))
-            .put("user_id", runContext.render(this.userId))
-            .put("user_password", runContext.render(this.userPassword))
+            .put("access_token", runContext.render(this.accessToken))
+            .put("user_agent", runContext.render(this.userAgent))
             .put("start_date", runContext.render(this.startDate.toString()));
 
         return builder.build();
@@ -100,11 +76,11 @@ public class SageIntacct extends AbstractPythonTap implements RunnableTask<Abstr
 
     @Override
     public List<String> pipPackages() {
-        return Collections.singletonList("git+https://github.com/hotgluexyz/tap-intacct.git");
+        return Collections.singletonList("tap-recharge");
     }
 
     @Override
     protected String command() {
-        return "tap-intacct";
+        return "tap-recharge";
     }
 }

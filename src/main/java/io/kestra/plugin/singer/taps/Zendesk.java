@@ -7,7 +7,10 @@ import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
@@ -24,49 +27,37 @@ import javax.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a Sage Intacct account.",
-    description = "Full documentation can be found [here](https://github.com/hotgluexyz/tap-intacct)"
+    title = "A Singer tap to fetch data from a Zendesk account.",
+    description = "Full documentation can be found [here](https://github.com/singer-io/tap-zendesk)"
 )
-public class SageIntacct extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
+public class Zendesk extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Company Id."
+        title = "Zendesk Subdomain.",
+        description = "See [doc](https://support.zendesk.com/hc/en-us/articles/221682747-Where-can-I-find-my-Zendesk-subdomain-)"
     )
     @PluginProperty(dynamic = true)
-    private String companyId;
+    private String subdomain;
 
-    @NotNull
-    @NotEmpty
     @Schema(
-        title = "Intacct Sender Id."
+        title = "Zendesk email."
     )
     @PluginProperty(dynamic = true)
-    private String senderId;
+    private String email;
 
-    @NotNull
-    @NotEmpty
     @Schema(
-        title = "Intacct Sender Password."
+        title = "Zendesk api token."
     )
     @PluginProperty(dynamic = true)
-    private String senderPassword;
+    private String apiToken;
 
-    @NotNull
-    @NotEmpty
     @Schema(
-        title = "Intacct User Id."
+        title = "Zendesk access token.",
+        description = "See [doc](https://support.zendesk.com/hc/en-us/articles/203663836)"
     )
     @PluginProperty(dynamic = true)
-    private String userId;
-
-    @NotNull
-    @NotEmpty
-    @Schema(
-        title = "Intacct User Password."
-    )
-    @PluginProperty(dynamic = true)
-    private String userPassword;
+    private String accessToken;
 
     @NotNull
     @NotEmpty
@@ -79,7 +70,7 @@ public class SageIntacct extends AbstractPythonTap implements RunnableTask<Abstr
 
     public List<Feature> features() {
         return Arrays.asList(
-            Feature.PROPERTIES,
+            Feature.CATALOG,
             Feature.DISCOVER,
             Feature.STATE
         );
@@ -88,23 +79,31 @@ public class SageIntacct extends AbstractPythonTap implements RunnableTask<Abstr
     @Override
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
-            .put("company_id", runContext.render(this.companyId))
-            .put("sender_id", runContext.render(this.senderId))
-            .put("sender_password", runContext.render(this.senderPassword))
-            .put("user_id", runContext.render(this.userId))
-            .put("user_password", runContext.render(this.userPassword))
+            .put("subdomain", runContext.render(this.subdomain))
             .put("start_date", runContext.render(this.startDate.toString()));
+
+        if (this.email != null) {
+            builder.put("email", runContext.render(this.email));
+        }
+
+        if (this.apiToken != null) {
+            builder.put("api_token", runContext.render(this.apiToken));
+        }
+
+        if (this.accessToken != null) {
+            builder.put("access_token", runContext.render(this.accessToken));
+        }
 
         return builder.build();
     }
 
     @Override
     public List<String> pipPackages() {
-        return Collections.singletonList("git+https://github.com/hotgluexyz/tap-intacct.git");
+        return Collections.singletonList("tap-zendesk");
     }
 
     @Override
     protected String command() {
-        return "tap-intacct";
+        return "tap-zendesk";
     }
 }
