@@ -20,8 +20,8 @@ repositories {
 }
 
 sourceCompatibility = 11
-group "io.kestra.plugins"
-description 'Plugin template for Kestra'
+group "io.kestra.plugin"
+description 'Singer plugin for Kestra'
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
@@ -101,7 +101,7 @@ jar {
     manifest {
         attributes(
                 "X-Kestra-Title": project.name,
-                "X-Kestra-Group": project.group + ".templates",
+                "X-Kestra-Group": project.group + ".singer",
                 "X-Kestra-Description": project.description,
                 "X-Kestra-Version": project.version
         )
