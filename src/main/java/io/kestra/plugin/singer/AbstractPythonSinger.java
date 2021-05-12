@@ -169,7 +169,6 @@ public abstract class AbstractPythonSinger extends AbstractPython {
         };
     }
 
-
     public static class SingerLogSync extends AbstractLogThread {
         private final Consumer<String> consumer;
 

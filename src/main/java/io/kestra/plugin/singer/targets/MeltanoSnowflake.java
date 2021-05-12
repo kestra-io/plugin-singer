@@ -108,4 +108,9 @@ public class MeltanoSnowflake extends AbstractPythonTarget implements RunnableTa
     protected String command() {
         return "target-snowflake";
     }
+
+    @Override
+    public Output run(RunContext runContext) throws Exception {
+        return super.runTarget(runContext);
+    }
 }

@@ -148,6 +148,11 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
         return "target-bigquery";
     }
 
+    @Override
+    public Output run(RunContext runContext) throws Exception {
+        return super.runTarget(runContext);
+    }
+
     public enum ReplicationMethod {
         append,
         truncate

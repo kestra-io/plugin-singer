@@ -135,7 +135,6 @@ public class DatamillCoPostgres extends AbstractPythonTarget implements Runnable
     @Builder.Default
     private final Boolean addUpsertIndexes = true;
 
-
     @Schema(
         title = "Raw SQL statement(s) to execute as soon as the connection to Postgres is opened by the target.",
         description = "Useful for setup like SET ROLE or other connection state that is important."
@@ -192,5 +191,10 @@ public class DatamillCoPostgres extends AbstractPythonTarget implements Runnable
     @Override
     protected String command() {
         return "target-postgres";
+    }
+
+    @Override
+    public Output run(RunContext runContext) throws Exception {
+        return super.runTarget(runContext);
     }
 }

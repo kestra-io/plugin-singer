@@ -39,7 +39,7 @@ public abstract class AbstractPythonTarget extends AbstractPythonSinger {
     @Valid
     private AbstractPythonTap tap;
 
-    public AbstractPythonTarget.Output run(RunContext runContext) throws Exception {
+    protected AbstractPythonTarget.Output runTarget(RunContext runContext) throws Exception {
         Logger logger = runContext.logger();
         Path workingDirectory = this.tmpWorkingDirectory();
 

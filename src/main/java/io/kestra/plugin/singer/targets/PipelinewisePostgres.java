@@ -192,4 +192,9 @@ public class PipelinewisePostgres extends AbstractPythonTarget implements Runnab
     protected String command() {
         return "target-postgres";
     }
+
+    @Override
+    public Output run(RunContext runContext) throws Exception {
+        return super.runTarget(runContext);
+    }
 }

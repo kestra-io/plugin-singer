@@ -337,6 +337,11 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
         return "target-redshift";
     }
 
+    @Override
+    public Output run(RunContext runContext) throws Exception {
+        return super.runTarget(runContext);
+    }
+
     public enum Compression {
         gzip,
         bzip2
