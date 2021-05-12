@@ -21,13 +21,13 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.IsNot.not;
 
 @MicronautTest
-class CsvTest {
+class JsonTest {
     @Inject
     private RunContextFactory runContextFactory;
 
     @Test
     void run() throws Exception {
-        Csv.CsvBuilder<?, ?> builder = Csv
+        Json.JsonBuilder<?, ?> builder = Json
             .builder()
             .id(IdUtils.create())
             .type(DatamillCoPostgres.class.getName())
@@ -54,13 +54,12 @@ class CsvTest {
                         .build()
                 ))
                 .build()
-            )
-            .delimiter(";");
+            );
 
-        Csv task = builder.build();
+        Json task = builder.build();
 
         RunContext runContext = TestsUtils.mockRunContext(runContextFactory, task, ImmutableMap.of());
-        Csv.Output output = task.run(runContext);
+        Json.Output output = task.run(runContext);
 
         assertThat(output.getUris().size(), is(2));
         assertThat(output.getUris().keySet(), containsInAnyOrder("Northwind-Region", "Northwind-Category"));
