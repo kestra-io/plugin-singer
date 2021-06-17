@@ -9,8 +9,8 @@ import io.kestra.core.utils.TestsUtils;
 import io.kestra.plugin.singer.models.DiscoverMetadata;
 import io.kestra.plugin.singer.models.StreamsConfiguration;
 import io.kestra.plugin.singer.models.streams.AbstractStream;
-import io.micronaut.context.annotation.Value;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;
@@ -27,6 +27,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 @MicronautTest
+@Disabled("https://github.com/anelendata/getschema/pull/15")
 class BigQueryTest {
     @Inject
     private RunContextFactory runContextFactory;
