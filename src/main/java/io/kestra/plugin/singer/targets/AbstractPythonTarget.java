@@ -1,12 +1,9 @@
 package io.kestra.plugin.singer.targets;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.common.collect.ImmutableMap;
-import io.kestra.core.models.executions.metrics.Counter;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.AbstractPythonSinger;
 import io.kestra.plugin.singer.models.Feature;
-import io.kestra.plugin.singer.models.streams.AbstractStream;
 import io.kestra.plugin.singer.taps.AbstractPythonTap;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -14,10 +11,8 @@ import io.reactivex.FlowableEmitter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 
-import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.*;
@@ -41,9 +36,8 @@ public abstract class AbstractPythonTarget extends AbstractPythonSinger {
 
     protected AbstractPythonTarget.Output runTarget(RunContext runContext) throws Exception {
         Logger logger = runContext.logger();
-        Path workingDirectory = this.tmpWorkingDirectory();
+        this.init(runContext, logger);
 
-        // init working dir
         this.initVirtualEnv(runContext, logger);
         this.tap.init(runContext, logger);
 

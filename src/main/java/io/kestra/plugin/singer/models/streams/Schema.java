@@ -1,6 +1,7 @@
 package io.kestra.plugin.singer.models.streams;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.taps.AbstractPythonTap;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,7 @@ public class Schema extends AbstractStream {
     private List<String> bookmarkProperties;
 
     @Override
-    public void onNext(AbstractPythonTap abstractPythonSinger) {
+    public void onNext(RunContext runContext, AbstractPythonTap abstractPythonSinger) {
         abstractPythonSinger.schemaMessage(this.stream, this.schema);
     }
 }

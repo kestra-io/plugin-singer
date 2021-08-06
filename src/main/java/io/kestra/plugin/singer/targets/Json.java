@@ -10,11 +10,10 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import static io.kestra.core.utils.Rethrow.throwFunction;
 
@@ -28,13 +27,13 @@ import static io.kestra.core.utils.Rethrow.throwFunction;
     description = "Full documentation can be found [here](https://github.com/andyh1203/target-jsonl)"
 )
 public class Json extends AbstractPythonTarget implements RunnableTask<Json.Output> {
-    private File destinationDirectory() {
+    private File destinationDirectory() throws IOException {
         return new File(workingDirectory.toFile(), "destination");
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
-    public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
+    public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException, IOException {
         File destination = destinationDirectory();
         destination.mkdir();
 

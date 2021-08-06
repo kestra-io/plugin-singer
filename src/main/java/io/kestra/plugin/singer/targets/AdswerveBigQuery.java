@@ -131,7 +131,7 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
         HashMap<String, String> env = new HashMap<>(super.environnementVariable(runContext));
 
         if (this.serviceAccount != null) {
-            this.writeSingerFiles(workingDirectory, "google-credentials.json", runContext.render(this.serviceAccount));
+            this.writeSingerFiles("google-credentials.json", runContext.render(this.serviceAccount));
             env.put("GOOGLE_APPLICATION_CREDENTIALS", workingDirectory.toAbsolutePath() + "/google-credentials.json");
         }
 

@@ -3,6 +3,7 @@ package io.kestra.plugin.singer.models.streams;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.taps.AbstractPythonTap;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,7 +41,7 @@ public class Record extends AbstractStream {
     }
 
     @Override
-    public void onNext(AbstractPythonTap abstractPythonSinger) throws Exception {
-        abstractPythonSinger.recordMessage(stream, record);
+    public void onNext(RunContext runContext, AbstractPythonTap abstractPythonSinger) throws Exception {
+        abstractPythonSinger.recordMessage(runContext, stream, record);
     }
 }

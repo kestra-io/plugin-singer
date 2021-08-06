@@ -10,7 +10,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
@@ -48,14 +47,14 @@ public class Csv extends AbstractPythonTarget implements RunnableTask<Csv.Output
     @Builder.Default
     private final String quoteCharacters = "\"";
 
-    private File destinationDirectory() {
+    private File destinationDirectory(RunContext runContext) throws IOException {
         return new File(workingDirectory.toFile(), "destination");
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
-    public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
-        File destination = destinationDirectory();
+    public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException, IOException {
+        File destination = destinationDirectory(runContext);
         destination.mkdir();
 
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
@@ -82,7 +81,7 @@ public class Csv extends AbstractPythonTarget implements RunnableTask<Csv.Output
 
         return Output.builder()
             .state(output.getState())
-            .uris(Arrays.stream(Objects.requireNonNull(destinationDirectory().listFiles()))
+            .uris(Arrays.stream(Objects.requireNonNull(destinationDirectory(runContext).listFiles()))
                 .map(throwFunction(o -> {
                     List<String> name = new ArrayList<>(Arrays.asList(o.getName().split("-")));
                     name.remove(name.size() - 1);

@@ -12,6 +12,7 @@ import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.JacksonMapper;
 import io.kestra.core.tasks.scripts.AbstractLogThread;
 import io.kestra.core.tasks.scripts.AbstractPython;
+import io.kestra.core.utils.IdUtils;
 import io.kestra.plugin.singer.models.Metric;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -54,13 +55,19 @@ public abstract class AbstractPythonSinger extends AbstractPython {
 
     abstract protected String command();
 
-    protected void initVirtualEnv(RunContext runContext, Logger logger) throws Exception {
-        this.setupVirtualEnv(logger, runContext, this.pipPackages());
-        this.writeLoggingConf(workingDirectory, logger, runContext);
-        this.writeSingerFiles(workingDirectory, "config.json", this.configuration(runContext));
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    protected void init(RunContext runContext, Logger logger) throws Exception {
+        this.workingDirectory = runContext.tempDir().resolve(IdUtils.create());
+        this.workingDirectory.toFile().mkdir();
     }
 
-    protected void writeSingerFiles(Path workingDirectory, String filename, String content) throws IOException {
+    protected void initVirtualEnv(RunContext runContext, Logger logger) throws Exception {
+        this.setupVirtualEnv(logger, runContext, this.pipPackages());
+        this.writeLoggingConf(logger, runContext);
+        this.writeSingerFiles("config.json", this.configuration(runContext));
+    }
+
+    protected void writeSingerFiles(String filename, String content) throws IOException {
         FileUtils.writeStringToFile(
             new File(workingDirectory.toFile(), filename),
             content,
@@ -68,24 +75,25 @@ public abstract class AbstractPythonSinger extends AbstractPython {
         );
     }
 
-    protected void writeSingerFiles(Path workingDirectory, String filename, Object map) throws IOException {
-        this.writeSingerFiles(workingDirectory, filename, MAPPER.writeValueAsString(map));
+    protected void writeSingerFiles(String filename, Object map) throws IOException {
+        this.writeSingerFiles(filename, MAPPER.writeValueAsString(map));
     }
 
-    protected void writeLoggingConf(Path workingDirectory, Logger logger, RunContext runContext) throws Exception {
+    protected void writeLoggingConf(Logger logger, RunContext runContext) throws Exception {
         String template = IOUtils.toString(
             Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream("singer/logging.conf")),
             StandardCharsets.UTF_8
         );
 
-        this.writeSingerFiles(workingDirectory, "logging.conf", template);
+        this.writeSingerFiles("logging.conf", template);
 
         this.run(
             runContext,
             logger,
             workingDirectory,
             this.finalCommandsWithInterpreter(
-                "find lib/  -type f -name logging.conf | grep \"/singer/\" | xargs cp logging.conf"),
+                "find lib/  -type f -name logging.conf | grep \"/singer/\" | xargs cp logging.conf"
+            ),
             ImmutableMap.of(),
             this.logThreadSupplier(logger, null)
         );
@@ -106,10 +114,7 @@ public abstract class AbstractPythonSinger extends AbstractPython {
     }
 
     protected File writeJsonTempFile(Object value) throws IOException {
-        File tempFile = File.createTempFile(
-            this.getClass().getSimpleName().toLowerCase() + "_",
-            ".json"
-        );
+        File tempFile = workingDirectory.resolve(IdUtils.create() + ".json").toFile();
 
         try (FileWriter fileWriter = new FileWriter(tempFile)) {
             fileWriter.write(MAPPER.writeValueAsString(value));

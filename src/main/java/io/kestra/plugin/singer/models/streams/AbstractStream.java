@@ -2,6 +2,7 @@ package io.kestra.plugin.singer.models.streams;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.taps.AbstractPythonTap;
 import io.micronaut.core.annotation.Introspected;
 import lombok.Getter;
@@ -35,5 +36,5 @@ public abstract class AbstractStream {
         RECORD,
     }
 
-    abstract public void onNext(AbstractPythonTap abstractPythonSinger) throws Exception;
+    abstract public void onNext(RunContext runContext, AbstractPythonTap abstractPythonSinger) throws Exception;
 }

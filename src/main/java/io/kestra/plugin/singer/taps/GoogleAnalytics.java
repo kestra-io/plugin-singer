@@ -102,8 +102,8 @@ public class GoogleAnalytics extends AbstractPythonTap implements RunnableTask<A
             .put("start_date", runContext.render(this.startDate.toString()));
 
         if (this.serviceAccount != null) {
-            this.writeSingerFiles(workingDirectory, "google-credentials.json", runContext.render(this.serviceAccount));
-            builder.put("key_file_location", workingDirectory + "/google-credentials.json");
+            this.writeSingerFiles("google-credentials.json", runContext.render(this.serviceAccount));
+            builder.put("key_file_location", workingDirectory.toAbsolutePath() + "/google-credentials.json");
         }
 
         if (this.oauthClientId != null) {
@@ -127,8 +127,8 @@ public class GoogleAnalytics extends AbstractPythonTap implements RunnableTask<A
         }
 
         if (this.reports != null) {
-            this.writeSingerFiles(workingDirectory, "reports.json", this.reports);
-            builder.put("reports", workingDirectory + "/reports.json");
+            this.writeSingerFiles("reports.json", this.reports);
+            builder.put("reports", workingDirectory.toAbsolutePath() + "/reports.json");
         }
 
         if (this.endDate != null) {
