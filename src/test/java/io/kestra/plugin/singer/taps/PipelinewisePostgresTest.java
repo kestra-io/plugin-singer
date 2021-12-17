@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.*;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
