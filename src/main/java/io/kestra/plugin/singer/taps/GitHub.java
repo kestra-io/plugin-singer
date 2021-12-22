@@ -7,12 +7,10 @@ import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +49,24 @@ public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPy
     @PluginProperty(dynamic = true)
     private List<String> repositories;
 
+    @NotNull
+    @NotEmpty
+    @Schema(
+        title = "Determines how much historical data will be extracted.",
+        description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
+    )
+    @PluginProperty(dynamic = true)
+    private LocalDate startDate;
+
+    @NotNull
+    @NotEmpty
+    @Schema(
+        title = "Timeout for each request on github api."
+    )
+    @PluginProperty(dynamic = false)
+    @Builder.Default
+    private Integer requestTimeout = 300;
+
     public List<Feature> features() {
         return Arrays.asList(
             Feature.PROPERTIES,
@@ -63,7 +79,9 @@ public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPy
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
             .put("access_token", runContext.render(this.accessToken))
-            .put("repository", String.join(" ", runContext.render(this.repositories)));
+            .put("repository", String.join(" ", runContext.render(this.repositories)))
+            .put("start_date", runContext.render(this.startDate.toString()))
+            .put("request_timeout", this.requestTimeout);
 
         return builder.build();
     }
