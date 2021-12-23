@@ -201,16 +201,27 @@ public abstract class AbstractPythonSinger extends AbstractPython {
         @Override
         protected void call(String line) {
             try {
-                Map<String, String> jsonLog = MAPPER.readValue(line, TYPE_REFERENCE);
+                @SuppressWarnings("unchecked")
+                Map<String, String> jsonLog = (Map<String, String>) MAPPER.readValue(line, Object.class);
 
-                if (jsonLog.get("message").startsWith("METRIC: {")) {
+                if (jsonLog.containsKey("message") && jsonLog.get("message") != null && jsonLog.get("message").startsWith("METRIC: {")) {
                     metrics.add(MAPPER.readValue(jsonLog.get("message").substring(8), Metric.class));
-
                     return;
                 }
 
-                String format = "[Date: {}] [Name: {}] {}";
-                String[] args = new String[]{jsonLog.get("asctime"), jsonLog.get("name"), jsonLog.get("message")};
+                HashMap<String, String> additional = new HashMap<>(jsonLog);
+                additional.remove("asctime");
+                additional.remove("name");
+                additional.remove("message");
+                additional.remove("levelname");
+
+                String format = "[Date: {}] [Name: {}] {}{}";
+                String[] args = new String[]{
+                    jsonLog.get("asctime"),
+                    jsonLog.get("name"),
+                    jsonLog.get("message") != null ? jsonLog.get("message") + " " : "",
+                    additional.size() > 0 ? additional.toString() : ""
+                };
 
                 switch (jsonLog.get("levelname")) {
                     case "DEBUG":
@@ -226,7 +237,7 @@ public abstract class AbstractPythonSinger extends AbstractPython {
                         logger.error(format, (Object[]) args);
                 }
             } catch (JsonProcessingException e) {
-                logger.warn(line);
+                logger.info(line.trim());
             }
         }
     }
