@@ -5,11 +5,9 @@ import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
-import io.reactivex.FlowableEmitter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -100,6 +98,21 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
     @PluginProperty(dynamic = true)
     protected String serviceAccount;
 
+    @Schema(
+        title = "Enable control state flush",
+        description = "default: merges multiple state messages from the tap into the state file, if true : uses the last state message as the state file."
+    )
+    @PluginProperty(dynamic = false)
+    @Builder.Default
+    protected Boolean mergeStateMessages = false;
+
+    @Schema(
+        title = "The json service account key as string "
+    )
+    @PluginProperty(dynamic = false)
+    protected Map<String, Object> tableConfigs;
+
+    @SneakyThrows
     @Override
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
@@ -122,6 +135,15 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
             builder.put("table_suffix", runContext.render(this.tableSuffix));
         }
 
+        if (this.mergeStateMessages) {
+            builder.put("merge_state_messages", "0");
+        }
+
+        if (this.tableConfigs != null) {
+            this.writeSingerFiles("table-config.json", runContext.render(this.tableConfigs));
+            builder.put("table_config", workingDirectory.toAbsolutePath() + "/table-config.json");
+        }
+
         return builder.build();
     }
 
@@ -140,7 +162,7 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
 
     @Override
     public List<String> pipPackages() {
-        return Collections.singletonList("git+https://github.com/adswerve/target-bigquery.git@v0.10.2");
+        return Collections.singletonList("git+https://github.com/adswerve/target-bigquery.git@0.11.3");
     }
 
     @Override
