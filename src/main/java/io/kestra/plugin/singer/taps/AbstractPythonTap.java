@@ -25,6 +25,8 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
@@ -54,6 +56,10 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger {
     @NotEmpty
     @Valid
     protected List<StreamsConfiguration> streamsConfigurations;
+
+    @Getter(value = AccessLevel.NONE)
+    @Builder.Default
+    private transient Map<String, AtomicInteger> recordsCount =  new ConcurrentHashMap<>();
 
     abstract public List<Feature> features();
 
@@ -93,6 +99,7 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger {
         });
 
         this.saveSingerMetrics(runContext);
+        runContext.logger().info("Ended singer with {}", syncResult);
 
         // outputs
         Output.OutputBuilder builder = Output.builder()
@@ -183,6 +190,14 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger {
         if (!this.records.containsKey(stream)) {
             File tempFile = File.createTempFile("message", ".ion", workingDirectory.toFile());
             this.records.put(stream, Pair.of(tempFile, new FileOutputStream(tempFile)));
+        }
+
+        this.recordsCount.computeIfAbsent(stream, k -> new AtomicInteger()).incrementAndGet();
+
+        long count = this.recordsCount.values().stream().mapToLong(AtomicInteger::get).sum();
+
+        if (count > 0 && count % 5000 == 0) {
+            runContext.logger().debug("Received {} records: {}", count, this.recordsCount);
         }
 
         FileSerde.write(this.records.get(stream).getRight(), record);
