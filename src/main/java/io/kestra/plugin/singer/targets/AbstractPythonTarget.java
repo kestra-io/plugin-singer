@@ -13,6 +13,8 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.slf4j.Logger;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.*;
@@ -49,7 +51,7 @@ public abstract class AbstractPythonTarget extends AbstractPythonSinger {
         AbstractPythonTarget.Output.OutputBuilder builder = AbstractPythonTarget.Output.builder();
 
         if (this.tap.features().contains(Feature.STATE) && this.state.size() > 0) {
-            builder.state(this.tap.saveState(runContext));
+            builder.state(this.tap.saveState(runContext, this.tap, this.state));
         }
 
         return builder.build();

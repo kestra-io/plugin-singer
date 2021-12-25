@@ -144,8 +144,12 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger {
     }
 
     public URI saveState(RunContext runContext) throws IOException {
-        File tempFile = this.writeJsonTempFile(this.state);
-        return runContext.putTaskStateFile(tempFile, this, "state.json");
+        return this.saveState(runContext, this, this.state);
+    }
+
+    public URI saveState(RunContext runContext, AbstractPythonTap tap, Map<String, Object> state) throws IOException {
+        File tempFile = this.writeJsonTempFile(state);
+        return runContext.putTaskStateFile(tempFile, tap, "state.json");
     }
 
     protected void runSingerCommand(List<String> commands, RunContext runContext, Logger logger, FlowableEmitter<String> emitter) throws Exception {

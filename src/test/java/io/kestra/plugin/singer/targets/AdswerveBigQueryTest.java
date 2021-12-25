@@ -45,10 +45,10 @@ class AdswerveBigQueryTest {
 
         AdswerveBigQuery.AdswerveBigQueryBuilder<?, ?> builder = AdswerveBigQuery
             .builder()
-            .id(IdUtils.create())
+            .id(IdUtils.create() + "_bq")
             .type(io.kestra.plugin.singer.targets.AdswerveBigQuery.class.getName())
             .tap(PipelinewiseMysql.builder()
-                .id(IdUtils.create())
+                .id(IdUtils.create() + "_mysql")
                 .type(PipelinewiseMysql.class.getName())
                 .host("127.0.0.1")
                 .username("root")
@@ -78,6 +78,12 @@ class AdswerveBigQueryTest {
         AbstractPythonTarget.Output output = task.run(runContext);
 
         assertThat(runContext.metrics().stream().filter(r -> r.getName().equals("singer.record.count")).findFirst().get().getValue(), is(8D));
+        assertThat(output.getState(), not((nullValue())));
+
+        output = task.run(runContext);
+
+        // 8D + 8D + 1D (8D is duplicate as we use same run context, 1D is a bug because mysql query >= 8 (last state with = and not only >)
+        assertThat(runContext.metrics().stream().filter(r -> r.getName().equals("singer.record.count")).findFirst().get().getValue(), is(17D));
         assertThat(output.getState(), not((nullValue())));
     }
 }
