@@ -67,7 +67,7 @@ public class Csv extends AbstractPythonTarget implements RunnableTask<Csv.Output
 
     @Override
     public List<String> pipPackages() {
-        return Collections.singletonList("target-csv");
+        return Collections.singletonList("git+https://github.com/hotgluexyz/target-csv.git@0.3.6");
     }
 
     @Override

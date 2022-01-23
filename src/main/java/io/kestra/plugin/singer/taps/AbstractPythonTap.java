@@ -1,5 +1,6 @@
 package io.kestra.plugin.singer.taps;
 
+import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.executions.metrics.Counter;
 import io.kestra.core.runners.RunContext;
@@ -48,6 +49,9 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger {
     @Getter(AccessLevel.NONE)
     protected transient Map<String, Pair<File, OutputStream>> records = new HashMap<>();
 
+    @Getter(AccessLevel.NONE)
+    protected transient Pair<File, OutputStream> rawSingerStream;
+
     @Schema(
         title = "The list of stream configurations"
     )
@@ -57,6 +61,15 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger {
     @Valid
     protected List<StreamsConfiguration> streamsConfigurations;
 
+    @Schema(
+        title = "Send singer as raw data",
+        description = "Using raw data can be used with any singer target, otherwise, schemas and records will be output in kestra storage format."
+    )
+    @PluginProperty(dynamic = false)
+    @NotNull
+    @Builder.Default
+    protected Boolean raw = true;
+
     @Getter(value = AccessLevel.NONE)
     @Builder.Default
     private transient Map<String, AtomicInteger> recordsCount =  new ConcurrentHashMap<>();
@@ -64,19 +77,22 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger {
     abstract public List<Feature> features();
 
     public void init(RunContext runContext, Logger logger) throws Exception {
-        super.init(runContext, logger);
+        if (this.workingDirectory == null) {
+            this.workingDirectory = runContext.tempDir();
+        }
+
         this.initVirtualEnv(runContext, logger);
 
         // catalog or properties
         if (this.features().contains(Feature.PROPERTIES) || this.features().contains(Feature.CATALOG)) {
-            DiscoverStreams discoverProperties = this.discover(workingDirectory, runContext, logger, this.command());
+            DiscoverStreams discoverProperties = this.discover(workingDirectory, runContext, logger, this.finalCommand(runContext));
             this.writeSingerFiles(this.catalogName() + ".json", discoverProperties);
         }
 
         // state
         if (this.features().contains(Feature.STATE)) {
             try {
-                InputStream taskStateFile = runContext.getTaskStateFile(this, "state.json");
+                InputStream taskStateFile = runContext.getTaskStateFile(this.stateName, "state.json");
                 this.writeSingerFiles("state.json", IOUtils.toString(taskStateFile, StandardCharsets.UTF_8));
             } catch (FileNotFoundException e) {
                 this.writeSingerFiles("state.json", "{}");
@@ -91,7 +107,7 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger {
         this.init(runContext, logger);
 
         // sync
-        Map<AbstractStream.Type, Long> syncResult = this.runSinger(this.tapCommand(), runContext, logger);
+        Map<AbstractStream.Type, Long> syncResult = this.runSinger(this.tapCommand(runContext), runContext, logger);
 
         // metrics
         syncResult.forEach((streamType, count) -> {
@@ -120,6 +136,7 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger {
                     }))
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
             )
+            .raw(this.raw ? runContext.putTempFile(this.rawSingerStream.getLeft()) : null)
             .schemas(
                 this.schemas
                     .entrySet()
@@ -136,20 +153,11 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger {
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
             );
 
-        if (this.features().contains(Feature.STATE) && this.state.size() > 0) {
+        if (!this.raw && this.features().contains(Feature.STATE) && this.stateRecords.size() > 0) {
             builder.state(this.saveState(runContext));
         }
 
         return builder.build();
-    }
-
-    public URI saveState(RunContext runContext) throws IOException {
-        return this.saveState(runContext, this, this.state);
-    }
-
-    public URI saveState(RunContext runContext, AbstractPythonTap tap, Map<String, Object> state) throws IOException {
-        File tempFile = this.writeJsonTempFile(state);
-        return runContext.putTaskStateFile(tempFile, tap, "state.json");
     }
 
     protected void runSingerCommand(List<String> commands, RunContext runContext, Logger logger, FlowableEmitter<String> emitter) throws Exception {
@@ -164,30 +172,54 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger {
     }
 
     protected Map<AbstractStream.Type, Long> runSinger(List<String> commands, RunContext runContext, Logger logger) {
-        return Flowable
-            .<String>create(
-                emitter -> {
-                    this.runSingerCommand(commands, runContext, logger, emitter);
+        Flowable<String> flowable = Flowable.create(
+            emitter -> {
+                this.runSingerCommand(commands, runContext, logger, emitter);
 
-                    emitter.onComplete();
-                },
-                BackpressureStrategy.BUFFER
-            )
-            .map(s -> MAPPER.readValue(s, AbstractStream.class))
-            .doOnNext(abstractStream -> {
-                abstractStream.onNext(runContext, this);
-            })
-            .groupBy(AbstractStream::getType)
-            .flatMapSingle(g -> g
-                .count()
-                .map(v -> Pair.of(g.getKey(), v))
-            )
+                emitter.onComplete();
+            },
+            BackpressureStrategy.BUFFER
+        );
+
+        Flowable<Pair<AbstractStream.Type, Long>> grouped;
+
+        if (this.raw) {
+            grouped = flowable
+                .doOnNext(this::rawData)
+                .groupBy(s -> AbstractStream.Type.RAW)
+                .flatMapSingle(g -> g
+                    .count()
+                    .map(v -> Pair.of(g.getKey(), v))
+                );
+        } else {
+            grouped = flowable
+                .map(s -> MAPPER.readValue(s, AbstractStream.class))
+                .doOnNext(abstractStream -> {
+                    abstractStream.onNext(runContext, this);
+                })
+                .groupBy(AbstractStream::getType)
+                .flatMapSingle(g -> g
+                    .count()
+                    .map(v -> Pair.of(g.getKey(), v))
+                );
+        }
+
+        return grouped
             .toMap(Pair::getLeft, Pair::getRight)
             .blockingGet();
     }
 
     public void schemaMessage(String stream, Map<String, Object> schema) {
         this.schemas.put(stream, schema);
+    }
+
+    public void rawData(String raw) throws IOException {
+        if (this.rawSingerStream == null) {
+            File tempFile = File.createTempFile("message", ".json", workingDirectory.toFile());
+            this.rawSingerStream =  Pair.of(tempFile, new FileOutputStream(tempFile));
+        }
+
+        this.rawSingerStream.getRight().write((raw + "\n").getBytes(StandardCharsets.UTF_8));
     }
 
     public void recordMessage(RunContext runContext, String stream, Map<String, Object> record) throws IOException {
@@ -232,14 +264,14 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger {
             (this.features().contains(Feature.PROPERTIES) ? "properties" : null);
     }
 
-    public List<String> tapCommand() {
+    private List<String> tapCommand(RunContext runContext) throws IllegalVariableEvaluationException {
         String catalogName = this.catalogName();
 
         return Collections.singletonList(
-            workingDirectory.toAbsolutePath() + "/bin/" + this.command() +
-                " --config " + workingDirectory.toAbsolutePath() + "/" + "config.json " +
-                (catalogName != null ? "--" + catalogName + " " + workingDirectory.toAbsolutePath() + "/" + catalogName + ".json " : "") +
-                (this.features().contains(Feature.STATE) ? "--state " + workingDirectory.toAbsolutePath() + "/" + "state.json" : "")
+             "./bin/" + this.finalCommand(runContext) +
+                " --config ./" + "config.json " +
+                (catalogName != null ? "--" + catalogName + " ./" + catalogName + ".json " : "") +
+                (this.features().contains(Feature.STATE) ? "--state ./" + "state.json" : "")
         );
     }
 
@@ -252,6 +284,13 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger {
         )
         @PluginProperty(additionalProperties = URI.class)
         private final Map<String, URI> streams;
+
+        @Schema(
+            title = "Raw singer streams",
+            description = "Json multiline file with raw singer format that can be passed to a target"
+        )
+        @PluginProperty(additionalProperties = URI.class)
+        private final URI raw;
 
         @Schema(
             title = "Map of schemas captured",

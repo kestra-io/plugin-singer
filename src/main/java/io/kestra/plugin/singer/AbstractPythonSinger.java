@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
+import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.executions.metrics.Counter;
 import io.kestra.core.models.executions.metrics.Timer;
 import io.kestra.core.runners.RunContext;
@@ -14,6 +15,7 @@ import io.kestra.core.tasks.scripts.AbstractLogThread;
 import io.kestra.core.tasks.scripts.AbstractPython;
 import io.kestra.core.utils.IdUtils;
 import io.kestra.plugin.singer.models.Metric;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.io.FileUtils;
@@ -24,12 +26,15 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @SuperBuilder
 @ToString
@@ -47,7 +52,27 @@ public abstract class AbstractPythonSinger extends AbstractPython {
 
     @Builder.Default
     @Getter(AccessLevel.NONE)
-    protected transient Map<String, Object> state = new HashMap<>();
+    protected transient Map<String, Object> stateRecords = new HashMap<>();
+
+    @Schema(
+        title = "The name of singer state file"
+    )
+    @PluginProperty(dynamic = false)
+    @NotNull
+    @Builder.Default
+    protected String stateName = "singer-state";
+
+    @Schema(
+        title = "Override default pip packages to use a specific version"
+    )
+    @PluginProperty(dynamic = true)
+    protected List<String> pipPackages;
+
+    @Schema(
+        title = "Override default singer command"
+    )
+    @PluginProperty(dynamic = true)
+    protected String command;
 
     abstract public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException, IOException;
 
@@ -55,14 +80,12 @@ public abstract class AbstractPythonSinger extends AbstractPython {
 
     abstract protected String command();
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    protected void init(RunContext runContext, Logger logger) throws Exception {
-        this.workingDirectory = runContext.tempDir().resolve(IdUtils.create());
-        this.workingDirectory.toFile().mkdir();
+    protected String finalCommand(RunContext runContext) throws IllegalVariableEvaluationException {
+        return this.command != null ? runContext.render(this.command) : this.command();
     }
 
     protected void initVirtualEnv(RunContext runContext, Logger logger) throws Exception {
-        this.setupVirtualEnv(logger, runContext, this.pipPackages());
+        this.setupVirtualEnv(logger, runContext, this.pipPackages != null ? runContext.render(this.pipPackages) : this.pipPackages());
         this.writeLoggingConf(logger, runContext);
         this.writeSingerFiles("config.json", this.configuration(runContext));
     }
@@ -124,6 +147,15 @@ public abstract class AbstractPythonSinger extends AbstractPython {
         return tempFile;
     }
 
+    public URI saveState(RunContext runContext) throws IOException {
+        return this.saveState(runContext, this.stateName, this.stateRecords);
+    }
+
+    public URI saveState(RunContext runContext, String state, Map<String, Object> stateRecords) throws IOException {
+        File tempFile = this.writeJsonTempFile(stateRecords);
+        return runContext.putTaskStateFile(tempFile, state, "state.json");
+    }
+
     protected Map<String, String> environnementVariable(RunContext runContext) throws IllegalVariableEvaluationException, IOException {
         return ImmutableMap.of("LOGGING_CONF_FILE", "logging.conf");
     }
@@ -154,7 +186,7 @@ public abstract class AbstractPythonSinger extends AbstractPython {
     }
 
     public void stateMessage(Map<String, Object> stateValue) {
-        this.state.putAll(stateValue);
+        this.stateRecords.putAll(stateValue);
     }
 
     protected LogSupplier logThreadSupplier(Logger logger, Consumer<String> consumer) {

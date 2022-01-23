@@ -134,7 +134,7 @@ public class PipelinewisePostgres extends AbstractPythonTap implements RunnableT
 
     @Override
     public List<String> pipPackages() {
-        return Collections.singletonList("pipelinewise-tap-postgres");
+        return Collections.singletonList("pipelinewise-tap-postgres==1.8.1");
     }
 
     @Override
