@@ -35,6 +35,7 @@ class ExchangeRateHostTest {
         ExchangeRateHost.ExchangeRateHostBuilder<?, ?> builder = ExchangeRateHost.builder()
             .id(IdUtils.create())
             .type(ExchangeRateHost.class.getName())
+            .raw(false)
             .startDate(LocalDate.now().minusDays(2))
             .type(ExchangeRateHost.class.getName());
 

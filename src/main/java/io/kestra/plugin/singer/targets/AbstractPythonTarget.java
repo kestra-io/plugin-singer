@@ -1,10 +1,9 @@
 package io.kestra.plugin.singer.targets;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.AbstractPythonSinger;
-import io.kestra.plugin.singer.models.Feature;
-import io.kestra.plugin.singer.taps.AbstractPythonTap;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
@@ -13,13 +12,16 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.slf4j.Logger;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
 
 @SuperBuilder
 @ToString
@@ -30,38 +32,45 @@ public abstract class AbstractPythonTarget extends AbstractPythonSinger {
     private static final TypeReference<Map<String, Object>> TYPE_REFERENCE = new TypeReference<>() {};
 
     @Schema(
-        title = "The source tap"
+        title = "The raw data from a tap"
     )
     @NotNull
     @Valid
-    private AbstractPythonTap tap;
+    private String from;
 
     protected AbstractPythonTarget.Output runTarget(RunContext runContext) throws Exception {
         Logger logger = runContext.logger();
-        this.init(runContext, logger);
+
+        if (this.workingDirectory == null) {
+            this.workingDirectory = runContext.tempDir();
+        }
 
         this.initVirtualEnv(runContext, logger);
-        this.tap.init(runContext, logger);
+
+        // from
+        URI from = new URI(runContext.render(this.from));
+        Path tempFile = runContext.tempFile();
+        Files.copy(runContext.uriToInputStream(from), tempFile, StandardCopyOption.REPLACE_EXISTING);
 
         // sync
-        Long syncResult = this.tapsSync(workingDirectory, runContext, logger);
+        this.tapsSync(workingDirectory, tempFile, runContext, logger);
         this.saveSingerMetrics(runContext);
 
         // outputs
         AbstractPythonTarget.Output.OutputBuilder builder = AbstractPythonTarget.Output.builder();
 
-        if (this.tap.features().contains(Feature.STATE) && this.state.size() > 0) {
-            builder.state(this.tap.saveState(runContext, this.tap, this.state));
+        if (this.stateRecords.size() > 0) {
+            builder.state(this.saveState(runContext, this.stateName, this.stateRecords));
         }
 
         return builder.build();
     }
 
-    protected Long tapsSync(Path workingDirectory, RunContext runContext, Logger logger) throws Exception {
-        List<String> commands = new ArrayList<>(this.tap.tapCommand());
+    protected Long tapsSync(Path workingDirectory, Path tempFile, RunContext runContext, Logger logger) throws IllegalVariableEvaluationException {
+        List<String> commands = new ArrayList<>(List.of("cat " + tempFile.toAbsolutePath()));
 
         commands.add("|");
-        commands.add(workingDirectory + "/bin/" + this.command() + " --config " + workingDirectory + "/config.json ");
+        commands.add(workingDirectory + "/bin/" + this.finalCommand(runContext) + " --config " + workingDirectory + "/config.json ");
 
         return this.runSinger(commands, runContext, logger);
     }

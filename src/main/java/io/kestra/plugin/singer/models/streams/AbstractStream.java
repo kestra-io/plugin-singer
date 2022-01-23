@@ -30,6 +30,7 @@ public abstract class AbstractStream {
     protected String stream;
 
     public enum Type {
+        RAW,
         SCHEMA,
         STATE,
         ACTIVATE_VERSION,

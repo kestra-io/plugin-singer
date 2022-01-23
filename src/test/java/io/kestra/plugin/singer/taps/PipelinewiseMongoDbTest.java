@@ -36,6 +36,7 @@ class PipelinewiseMongoDbTest {
         PipelinewiseMongoDb.PipelinewiseMongoDbBuilder<?, ?> builder = PipelinewiseMongoDb.builder()
             .id(IdUtils.create())
             .type(PipelinewiseMongoDb.class.getName())
+            .raw(false)
             .host("127.0.0.1")
             .username("root")
             .password("example")

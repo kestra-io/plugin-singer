@@ -37,6 +37,7 @@ class PipelinewiseMysqlTest {
         PipelinewiseMysql.PipelinewiseMysqlBuilder<?, ?> builder = PipelinewiseMysql.builder()
             .id(IdUtils.create())
             .type(PipelinewiseMysql.class.getName())
+            .raw(false)
             .host("127.0.0.1")
             .username("root")
             .password("mysql_passwd")

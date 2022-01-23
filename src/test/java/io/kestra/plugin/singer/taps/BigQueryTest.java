@@ -40,6 +40,7 @@ class BigQueryTest {
         BigQuery.BigQueryBuilder<?, ?> builder = BigQuery.builder()
             .id(IdUtils.create())
             .type(ExchangeRateHost.class.getName())
+            .raw(false)
             .serviceAccount(serviceAccount)
             .startDateTime(Instant.parse("2013-09-08T16:19:12Z"))
             .streams(Collections.singletonList(

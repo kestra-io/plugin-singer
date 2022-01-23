@@ -36,6 +36,7 @@ class PipelinewisePostgresTest {
         PipelinewisePostgres.PipelinewisePostgresBuilder<?, ?> builder = PipelinewisePostgres.builder()
             .id(IdUtils.create())
             .type(PipelinewisePostgres.class.getName())
+            .raw(false)
             .host("127.0.0.1")
             .username("postgres")
             .password("pg_passwd")
