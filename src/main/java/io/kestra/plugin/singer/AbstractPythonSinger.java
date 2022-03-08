@@ -42,9 +42,9 @@ import javax.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 public abstract class AbstractPythonSinger extends AbstractPython {
-    transient static final protected ObjectMapper MAPPER = JacksonMapper.ofJson()
+    protected static final ObjectMapper MAPPER = JacksonMapper.ofJson()
         .setSerializationInclusion(JsonInclude.Include.NON_NULL);
-    transient static final TypeReference<Map<String, String>> TYPE_REFERENCE = new TypeReference<>() {};
+    protected static final TypeReference<Map<String, String>> TYPE_REFERENCE = new TypeReference<>() {};
 
     @Builder.Default
     @Getter(AccessLevel.NONE)
@@ -117,7 +117,7 @@ public abstract class AbstractPythonSinger extends AbstractPython {
             this.finalCommandsWithInterpreter(
                 "find lib/  -type f -name logging.conf | grep \"/singer/\" | xargs cp logging.conf"
             ),
-            ImmutableMap.of(),
+            this.environnementVariable(runContext),
             this.logThreadSupplier(logger, null)
         );
     }
@@ -131,7 +131,7 @@ public abstract class AbstractPythonSinger extends AbstractPython {
             logger,
             workingDirectory,
             this.finalCommandsWithInterpreter(this.virtualEnvCommand(runContext, finalRequirements)),
-            ImmutableMap.of(),
+            this.environnementVariable(runContext),
             this.logThreadSupplier(logger, null)
         );
     }
@@ -157,7 +157,10 @@ public abstract class AbstractPythonSinger extends AbstractPython {
     }
 
     protected Map<String, String> environnementVariable(RunContext runContext) throws IllegalVariableEvaluationException, IOException {
-        return ImmutableMap.of("LOGGING_CONF_FILE", "logging.conf");
+        HashMap<String, String> env = new HashMap<>(this.finalEnv());
+        env.put("LOGGING_CONF_FILE", "logging.conf");
+
+        return env;
     }
 
     protected void saveSingerMetrics(RunContext runContext) {
