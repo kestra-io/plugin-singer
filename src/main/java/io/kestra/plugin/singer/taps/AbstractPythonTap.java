@@ -5,6 +5,7 @@ import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.executions.metrics.Counter;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.FileSerde;
+import io.kestra.core.tasks.scripts.AbstractLogThread;
 import io.kestra.plugin.singer.AbstractPythonSinger;
 import io.kestra.plugin.singer.models.DiscoverStreams;
 import io.kestra.plugin.singer.models.Feature;
@@ -160,7 +161,7 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger {
         return builder.build();
     }
 
-    protected void runSingerCommand(List<String> commands, RunContext runContext, Logger logger, FlowableEmitter<String> emitter) throws Exception {
+    protected void runSingerStreamCommand(List<String> commands, RunContext runContext, Logger logger, FlowableEmitter<String> emitter) throws Exception {
         this.run(
             runContext,
             logger,
@@ -171,10 +172,29 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger {
         );
     }
 
+    protected void runSingerFile(List<String> commands, RunContext runContext, Logger logger, FlowableEmitter<String> emitter) throws Exception {
+        this.run(
+            runContext,
+            logger,
+            workingDirectory,
+            this.finalCommandsWithInterpreter(String.join(" ", commands)),
+            this.environnementVariable(runContext),
+            this.logThreadSupplier(logger, emitter::onNext)
+        );
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(this.workingDirectory.resolve("raw.jsonl").toFile()))) {
+            reader.lines().forEach(emitter::onNext);
+        }
+    }
+
     protected Map<AbstractStream.Type, Long> runSinger(List<String> commands, RunContext runContext, Logger logger) {
         Flowable<String> flowable = Flowable.create(
             emitter -> {
-                this.runSingerCommand(commands, runContext, logger, emitter);
+                if (this.raw) {
+                    this.runSingerFile(commands, runContext, logger, emitter);
+                } else {
+                    this.runSingerStreamCommand(commands, runContext, logger, emitter);
+                }
 
                 emitter.onComplete();
             },
@@ -240,21 +260,28 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger {
     }
 
     protected DiscoverStreams discover(Path workingDirectory, RunContext runContext, Logger logger, String command) throws Exception {
+        Path discoverPath = this.workingDirectory.resolve("discover.json");
+
         List<String> commands = Collections.singletonList(
-            "./bin/" + command + " --config config.json --discover"
+            "./bin/" + command + " --config config.json --discover > " + discoverPath
         );
 
-        StringBuilder sb = new StringBuilder();
         this.run(
             runContext,
             logger,
             workingDirectory,
             this.finalCommandsWithInterpreter(String.join(" ", commands)),
             this.environnementVariable(runContext),
-            this.logThreadSupplier(logger, sb::append)
+            (inputStream, isStdErr) -> {
+                AbstractLogThread thread = new LogThread(logger, inputStream, isStdErr, runContext);
+                thread.setName("bash-log-" + (isStdErr ? "-err" : "-out"));
+                thread.start();
+
+                return thread;
+            }
         );
 
-        DiscoverStreams discoverStreams = MAPPER.readValue(sb.toString(), DiscoverStreams.class);
+        DiscoverStreams discoverStreams = MAPPER.readValue(discoverPath.toFile(), DiscoverStreams.class);
 
         return SelectedService.fill(discoverStreams, this.streamsConfigurations);
     }
@@ -268,10 +295,11 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger {
         String catalogName = this.catalogName();
 
         return Collections.singletonList(
-             "./bin/" + this.finalCommand(runContext) +
+            "./bin/" + this.finalCommand(runContext) +
                 " --config ./" + "config.json " +
                 (catalogName != null ? "--" + catalogName + " ./" + catalogName + ".json " : "") +
-                (this.features().contains(Feature.STATE) ? "--state ./" + "state.json" : "")
+                (this.features().contains(Feature.STATE) ? "--state ./" + "state.json" : "") +
+                (this.raw ? " > " + this.workingDirectory.resolve("raw.jsonl") : "")
         );
     }
 
