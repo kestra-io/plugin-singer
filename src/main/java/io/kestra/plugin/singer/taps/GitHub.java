@@ -1,10 +1,13 @@
 package io.kestra.plugin.singer.taps;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
+import io.kestra.core.serializers.JacksonMapper;
 import io.kestra.plugin.singer.models.Feature;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -47,7 +50,7 @@ public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPy
             "For example the path for [this repository](https://github.com/kestra-io/kestra) is `kestra-io/kestra`."
     )
     @PluginProperty(dynamic = true)
-    private List<String> repositories;
+    private Object repositories;
 
     @NotNull
     @NotEmpty
@@ -77,9 +80,29 @@ public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPy
 
     @Override
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
+        List<String> repositories;
+        if (this.repositories instanceof List) {
+            //noinspection unchecked
+            repositories = (List<String>) this.repositories;
+        } else if (this.repositories instanceof String) {
+            final TypeReference<List<String>> reference = new TypeReference<>() {};
+
+            try {
+                repositories = JacksonMapper.ofJson(false).readValue(
+                    runContext.render((String) this.repositories),
+                    reference
+                );
+            } catch (JsonProcessingException e) {
+                throw new IllegalVariableEvaluationException(e);
+            }
+        } else {
+            throw new IllegalVariableEvaluationException("Invalid `files` properties with type '" + this.repositories.getClass() + "'");
+        }
+
+
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
             .put("access_token", runContext.render(this.accessToken))
-            .put("repository", String.join(" ", runContext.render(this.repositories)))
+            .put("repository", String.join(" ", repositories))
             .put("start_date", runContext.render(this.startDate.toString()))
             .put("request_timeout", this.requestTimeout);
 
