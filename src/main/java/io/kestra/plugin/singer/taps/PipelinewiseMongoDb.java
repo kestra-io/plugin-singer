@@ -75,14 +75,14 @@ public class PipelinewiseMongoDb extends AbstractPythonTap implements RunnableTa
     )
     @PluginProperty(dynamic = false)
     @Builder.Default
-    private final Boolean ssl = false;
+    private final String ssl = "false";
 
     @Schema(
         title = "Default SSL verify mode."
     )
     @PluginProperty(dynamic = false)
     @Builder.Default
-    private final Boolean sslVerify = true;
+    private final String sslVerify = "true";
 
     @Schema(
         title = "The name of replica set."
