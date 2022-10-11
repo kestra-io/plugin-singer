@@ -138,8 +138,8 @@ public class PipelinewiseMongoDb extends AbstractPythonTap implements RunnableTa
             .put("password", runContext.render(this.password))
             .put("host", runContext.render(this.host))
             .put("port", this.port)
-            .put("ssl", this.ssl)
-            .put("verify_mode", this.sslVerify)
+            .put("ssl", this.ssl.toString())
+            .put("verify_mode", this.sslVerify.toString())
             .put("database", runContext.render(this.database))
             .put("auth_database", runContext.render(this.authDatabase))
 
