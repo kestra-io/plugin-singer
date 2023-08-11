@@ -4,16 +4,20 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.executions.metrics.Counter;
 import io.kestra.core.models.executions.metrics.Timer;
+import io.kestra.core.models.tasks.Task;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.JacksonMapper;
-import io.kestra.core.tasks.scripts.AbstractLogThread;
-import io.kestra.core.tasks.scripts.AbstractPython;
 import io.kestra.core.utils.IdUtils;
+import io.kestra.plugin.scripts.exec.scripts.models.DockerOptions;
+import io.kestra.plugin.scripts.exec.scripts.models.RunnerType;
+import io.kestra.plugin.scripts.exec.scripts.runners.AbstractLogConsumer;
+import io.kestra.plugin.scripts.exec.scripts.runners.CommandsWrapper;
+import io.kestra.plugin.scripts.exec.scripts.services.LogService;
+import io.kestra.plugin.scripts.exec.scripts.services.ScriptService;
 import io.kestra.plugin.singer.models.Metric;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -22,29 +26,29 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @SuperBuilder
 @ToString
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-public abstract class AbstractPythonSinger extends AbstractPython {
+public abstract class AbstractPythonSinger extends Task {
     protected static final ObjectMapper MAPPER = JacksonMapper.ofJson()
         .setSerializationInclusion(JsonInclude.Include.NON_NULL);
-    protected static final TypeReference<Map<String, String>> TYPE_REFERENCE = new TypeReference<>() {};
+    protected static final TypeReference<Map<String, Object>> TYPE_REFERENCE = new TypeReference<>() {
+    };
 
     @Builder.Default
     @Getter(AccessLevel.NONE)
@@ -54,10 +58,13 @@ public abstract class AbstractPythonSinger extends AbstractPython {
     @Getter(AccessLevel.NONE)
     protected transient Map<String, Object> stateRecords = new HashMap<>();
 
+    @Getter(AccessLevel.NONE)
+    protected transient Path workingDirectory;
+
     @Schema(
         title = "The name of singer state file"
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @NotNull
     @Builder.Default
     protected String stateName = "singer-state";
@@ -74,6 +81,15 @@ public abstract class AbstractPythonSinger extends AbstractPython {
     @PluginProperty(dynamic = true)
     protected String command;
 
+    @Schema(
+        title = "Docker options when for the `DOCKER` runner"
+    )
+    @PluginProperty
+    @Builder.Default
+    protected DockerOptions docker = DockerOptions.builder()
+        .image("python:3.10.12")
+        .build();
+
     abstract public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException, IOException;
 
     abstract public List<String> pipPackages();
@@ -84,15 +100,82 @@ public abstract class AbstractPythonSinger extends AbstractPython {
         return this.command != null ? runContext.render(this.command) : this.command();
     }
 
-    protected void initVirtualEnv(RunContext runContext, Logger logger) throws Exception {
-        this.setupVirtualEnv(logger, runContext, this.pipPackages != null ? runContext.render(this.pipPackages) : this.pipPackages());
-        this.writeLoggingConf(logger, runContext);
-        this.writeSingerFiles("config.json", this.configuration(runContext));
+    protected void setup(RunContext runContext) throws Exception {
+        CommandsWrapper commandsWrapper = new CommandsWrapper(runContext);
+        workingDirectory = commandsWrapper.getWorkingDirectory();
+
+        commandsWrapper.withWarningOnStdErr(true)
+            .withRunnerType(RunnerType.DOCKER)
+            .withDockerOptions(this.docker)
+            .withLogConsumer(LogService.defaultLogSupplier(runContext))
+            .withCommands(ScriptService.scriptCommands(
+                List.of("/bin/sh", "-c"),
+                Stream.of(
+                    pipInstallCommands(runContext),
+                    logSetupCommands(),
+                    configSetupCommands(runContext)
+                ).flatMap(Function.identity()).toList(),
+                Collections.emptyList()
+            )).run();
+    }
+
+    protected void run(RunContext runContext, String command, AbstractLogConsumer logConsumer) throws Exception {
+        new CommandsWrapper(runContext)
+            .withWarningOnStdErr(true)
+            .withRunnerType(RunnerType.DOCKER)
+            .withDockerOptions(this.docker)
+            .withLogConsumer(logConsumer)
+            .withCommands(ScriptService.scriptCommands(
+                List.of("/bin/sh", "-c"),
+                Collections.emptyList(),
+                List.of(command)
+            ))
+            .withEnv(this.environmentVariables(runContext))
+            .run();
+    }
+
+    protected Stream<String> pipInstallCommands(RunContext runContext) throws Exception {
+        ArrayList<String> finalRequirements = new ArrayList<>(this.pipPackages != null ? runContext.render(this.pipPackages) : this.pipPackages());
+        finalRequirements.add("python-json-logger");
+
+        return Stream.concat(
+            Stream.of(
+                "set -o errexit",
+                "pip install pip --upgrade > /dev/null"
+            ),
+            finalRequirements.stream().map("pip install --target . %s > /dev/null"::formatted)
+        );
+    }
+
+    protected Stream<String> logSetupCommands() throws Exception {
+        String template = IOUtils.toString(
+            Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream("singer/logging.conf")),
+            StandardCharsets.UTF_8
+        );
+
+        return Stream.of(
+            "cat > logging.conf << EOT\n%s\nEOT".formatted(template),
+            "find .  -type f -name logging.conf | grep \"/singer/\" | xargs cp logging.conf"
+        );
+    }
+
+    protected Stream<String> configSetupCommands(RunContext runContext) throws IllegalVariableEvaluationException, IOException {
+        return Stream.of(
+            "cat > config.json << EOT\n%s\nEOT".formatted(MAPPER.writeValueAsString(this.configuration(runContext)))
+        );
+    }
+
+    protected Map<String, String> environmentVariables(RunContext runContext) throws IllegalVariableEvaluationException, IOException {
+        return new HashMap<>(Map.of(
+            "PYTHONUNBUFFERED", "true",
+            "LOGGING_CONF_FILE", "logging.conf",
+            "PYTHONPATH", "."
+        ));
     }
 
     protected void writeSingerFiles(String filename, String content) throws IOException {
         FileUtils.writeStringToFile(
-            new File(workingDirectory.toFile(), filename),
+            new File(this.workingDirectory.toFile(), filename),
             content,
             StandardCharsets.UTF_8
         );
@@ -102,38 +185,25 @@ public abstract class AbstractPythonSinger extends AbstractPython {
         this.writeSingerFiles(filename, MAPPER.writeValueAsString(map));
     }
 
-    protected void writeLoggingConf(Logger logger, RunContext runContext) throws Exception {
-        String template = IOUtils.toString(
-            Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream("singer/logging.conf")),
-            StandardCharsets.UTF_8
-        );
+    protected void saveSingerMetrics(RunContext runContext) {
+        this.metrics
+            .forEach(metric -> {
+                synchronized (this) {
+                    String name = "singer." + metric.getMetric().replaceAll("[_-]", ".");
+                    String[] tags = metric
+                        .getTags()
+                        .entrySet()
+                        .stream()
+                        .filter(e -> e.getValue() instanceof String)
+                        .flatMap(e -> Stream.of(e.getKey().toLowerCase(Locale.ROOT), ((String) e.getValue()).toLowerCase(Locale.ROOT)))
+                        .toArray(String[]::new);
 
-        this.writeSingerFiles("logging.conf", template);
-
-        this.run(
-            runContext,
-            logger,
-            workingDirectory,
-            this.finalCommandsWithInterpreter(
-                "find lib/  -type f -name logging.conf | grep \"/singer/\" | xargs cp logging.conf"
-            ),
-            this.environnementVariable(runContext),
-            this.logThreadSupplier(logger, null)
-        );
-    }
-
-    protected void setupVirtualEnv(Logger logger, RunContext runContext, List<String> requirements) throws Exception {
-        ArrayList<String> finalRequirements = new ArrayList<>(requirements);
-        finalRequirements.add("python-json-logger");
-
-        this.run(
-            runContext,
-            logger,
-            workingDirectory,
-            this.finalCommandsWithInterpreter(this.virtualEnvCommand(runContext, finalRequirements)),
-            this.environnementVariable(runContext),
-            this.logThreadSupplier(logger, null)
-        );
+                    switch (metric.getType()) {
+                        case counter -> runContext.metric(Counter.of(name, metric.getValue(), tags));
+                        case timer -> runContext.metric(Timer.of(name, Duration.ofNanos(Double.valueOf(metric.getValue() * 1e+9).longValue()), tags));
+                    }
+                }
+            });
     }
 
     protected File writeJsonTempFile(Object value) throws IOException {
@@ -156,85 +226,58 @@ public abstract class AbstractPythonSinger extends AbstractPython {
         return runContext.putTaskStateFile(tempFile, state, "state.json");
     }
 
-    protected Map<String, String> environnementVariable(RunContext runContext) throws IllegalVariableEvaluationException, IOException {
-        HashMap<String, String> env = new HashMap<>(this.finalEnv());
-        env.put("LOGGING_CONF_FILE", "logging.conf");
-
-        return env;
-    }
-
-    protected void saveSingerMetrics(RunContext runContext) {
-        this.metrics
-            .forEach(metric -> {
-                synchronized (this) {
-                    String name = "singer." + metric.getMetric().replaceAll("[_-]", ".");
-                    String[] tags = metric
-                        .getTags()
-                        .entrySet()
-                        .stream()
-                        .filter(e -> e.getValue() instanceof String)
-                        .flatMap(e -> Stream.of(e.getKey().toLowerCase(Locale.ROOT), ((String) e.getValue()).toLowerCase(Locale.ROOT)))
-                        .toArray(String[]::new);
-
-                    switch (metric.getType()) {
-                        case counter:
-                            runContext.metric(Counter.of(name, metric.getValue(), tags));
-                            break;
-                        case timer:
-                            runContext.metric(Timer.of(name, Duration.ofNanos(Double.valueOf(metric.getValue() * 1e+9).longValue()), tags));
-                            break;
-                    }
-                }
-            });
-    }
-
     public void stateMessage(Map<String, Object> stateValue) {
         this.stateRecords.putAll(stateValue);
     }
 
-    protected LogSupplier logThreadSupplier(Logger logger, Consumer<String> consumer) {
-        return (inputStream, isStdErr) -> {
-            AbstractLogThread thread;
-            if (isStdErr || consumer == null) {
-                thread = new singerLogParser(inputStream, logger, this.metrics);
-                thread.setName("singer-log-err");
-            } else {
-                thread = new SingerLogSync(inputStream, consumer);
-                thread.setName("singer-log-out");
+    public static class SingerLogDispatcher extends AbstractLogConsumer {
+        private final SingerLogParser singerLogParser;
+        private SingerLogSync singerLogSync;
+
+        public SingerLogDispatcher(RunContext runContext, List<Metric> metrics, Consumer<String> consumer) {
+            singerLogParser = new SingerLogParser(runContext.logger(), metrics);
+            if(consumer != null) {
+                singerLogSync = new SingerLogSync(consumer);
+            }
+        }
+
+        @Override
+        public void accept(String line, Boolean isStdErr) throws Exception {
+            if(isStdErr) {
+                singerLogParser.accept(line, isStdErr);
+                return;
             }
 
-            thread.start();
-
-            return thread;
-        };
+            if(singerLogSync != null) {
+                singerLogSync.accept(line, isStdErr);
+            }
+        }
     }
 
-    public static class SingerLogSync extends AbstractLogThread {
+    private static class SingerLogSync extends AbstractLogConsumer {
         private final Consumer<String> consumer;
 
-        public SingerLogSync(InputStream inputStream, Consumer<String> consumer) {
-            super(inputStream);
+        public SingerLogSync(Consumer<String> consumer) {
             this.consumer = consumer;
         }
 
         @Override
-        protected void call(String line) {
-            this.consumer.accept(line);
+        public void accept(String log, Boolean isStdErr) {
+            this.consumer.accept(log);
         }
     }
 
-    protected static class singerLogParser extends AbstractLogThread {
+    private static class SingerLogParser extends AbstractLogConsumer {
         private final Logger logger;
         private final List<Metric> metrics;
 
-        public singerLogParser(InputStream inputStream, Logger logger, List<Metric> metrics) {
-            super(inputStream);
+        public SingerLogParser(Logger logger, List<Metric> metrics) {
             this.logger = logger;
             this.metrics = metrics;
         }
 
         @Override
-        protected void call(String line) {
+        public void accept(String line, Boolean isStdErr) {
             try {
                 @SuppressWarnings("unchecked")
                 Map<String, String> jsonLog = (Map<String, String>) MAPPER.readValue(line, Object.class);
@@ -255,21 +298,14 @@ public abstract class AbstractPythonSinger extends AbstractPython {
                     jsonLog.get("asctime"),
                     jsonLog.get("name"),
                     jsonLog.get("message") != null ? jsonLog.get("message") + " " : "",
-                    additional.size() > 0 ? additional.toString() : ""
+                    !additional.isEmpty() ? additional.toString() : ""
                 };
 
                 switch (jsonLog.get("levelname")) {
-                    case "DEBUG":
-                        logger.debug(format, (Object[]) args);
-                        break;
-                    case "INFO":
-                        logger.info(format, (Object[]) args);
-                        break;
-                    case "WARNING":
-                        logger.warn(format, (Object[]) args);
-                        break;
-                    default:
-                        logger.error(format, (Object[]) args);
+                    case "DEBUG" -> logger.debug(format, (Object[]) args);
+                    case "INFO" -> logger.info(format, (Object[]) args);
+                    case "WARNING" -> logger.warn(format, (Object[]) args);
+                    default -> logger.error(format, (Object[]) args);
                 }
             } catch (JsonProcessingException e) {
                 logger.info(line.trim());

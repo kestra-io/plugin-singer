@@ -8,27 +8,19 @@ import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
 import io.kestra.plugin.singer.models.DiscoverMetadata;
 import io.kestra.plugin.singer.models.StreamsConfiguration;
-import io.kestra.plugin.singer.models.streams.AbstractStream;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import org.junit.jupiter.api.Disabled;
+import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
-import jakarta.inject.Inject;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 
-@MicronautTest
-@Disabled("https://github.com/anelendata/getschema/pull/15")
-class BigQueryTest {
+class BigQueryTest extends TapsTest {
     @Inject
     private RunContextFactory runContextFactory;
 
@@ -40,8 +32,8 @@ class BigQueryTest {
         BigQuery.BigQueryBuilder<?, ?> builder = BigQuery.builder()
             .id(IdUtils.create())
             .type(ExchangeRateHost.class.getName())
-            .raw(false)
             .serviceAccount(serviceAccount)
+            .startAlwaysInclusive(false)
             .startDateTime(Instant.parse("2013-09-08T16:19:12Z"))
             .streams(Collections.singletonList(
                 BigQuery.Stream.builder()
@@ -67,11 +59,14 @@ class BigQueryTest {
         RunContext runContext = TestsUtils.mockRunContext(runContextFactory, task, ImmutableMap.of());
         PipelinewiseMongoDb.Output output = task.run(runContext);
 
-        assertThat(output.getSchemas().size(), is(1));
-        assertThat(output.getSchemas().get("covid19_nyt_us_states"), is(notNullValue()));
-        assertThat(output.getStreams().size(), is(1));
-        assertThat(output.getStreams().get("covid19_nyt_us_states"), is(notNullValue()));
-        assertThat(output.getCount().get(AbstractStream.Type.RECORD), is(17L));
-        assertThat(output.getState(), is(notNullValue()));
+        Map<StreamType, List<Map<String, Object>>> groupedByType = groupedByType(runContext, output.getRaw());
+
+        assertThat(groupedByType.get(StreamType.SCHEMA).size(), is(1));
+        assertThat(groupedByType.get(StreamType.SCHEMA).get(0).get("stream"), is("covid19_nyt_us_states"));
+        assertThat(groupedByType.get(StreamType.RECORD).size(), is(17));
+        assertThat(groupedByType.get(StreamType.STATE).size(), is(2));
+
+        // rerun, since we have startAlwaysInclusive false, we won't retrieve any record
+        assertThat(groupedByType(runContext, builder.build().run(runContext).getRaw()).containsKey(StreamType.RECORD), is(false));
     }
 }

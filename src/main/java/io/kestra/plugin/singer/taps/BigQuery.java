@@ -7,15 +7,12 @@ import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
-import io.reactivex.FlowableEmitter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -41,7 +38,7 @@ public class BigQuery extends AbstractPythonTap implements RunnableTask<Abstract
     @Schema(
         title = "Array holding objects describing streams (tables) to extract, with `name`, `table`, `columns`, `datetime_key`, and `filters` keys."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     protected List<Stream> streams;
 
     @NotNull
@@ -49,7 +46,7 @@ public class BigQuery extends AbstractPythonTap implements RunnableTask<Abstract
     @Schema(
         title = "Limits the number of records returned in each stream, applied as a limit in the query."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     private Integer limit;
 
     @NotNull
@@ -58,8 +55,8 @@ public class BigQuery extends AbstractPythonTap implements RunnableTask<Abstract
         title = "When replicating incrementally, disable to only select records whose `datetime_key` is greater than the maximum value replicated in the last run, by excluding records whose timestamps match exactly.",
         description = "This could cause records to be missed that were created after the last run finished, but during the same second and with the same timestamp."
     )
-    @PluginProperty(dynamic = false)
-    private final Boolean startAlwaysInclusive = true;
+    @PluginProperty
+    private Boolean startAlwaysInclusive = true;
 
     @NotNull
     @NotEmpty
@@ -103,7 +100,7 @@ public class BigQuery extends AbstractPythonTap implements RunnableTask<Abstract
 
     @Override
     public List<String> pipPackages() {
-        return Collections.singletonList("tap-bigquery");
+        return List.of("tap-bigquery");
     }
 
     @Override
@@ -113,13 +110,15 @@ public class BigQuery extends AbstractPythonTap implements RunnableTask<Abstract
 
     @SuppressWarnings("DuplicatedCode")
     @Override
-    protected Map<String, String> environnementVariable(RunContext runContext) throws IllegalVariableEvaluationException, IOException {
-        HashMap<String, String> env = new HashMap<>(super.environnementVariable(runContext));
+    protected Map<String, String> environmentVariables(RunContext runContext) throws IllegalVariableEvaluationException, IOException {
+        HashMap<String, String> env = new HashMap<>(super.environmentVariables(runContext));
 
         if (this.serviceAccount != null) {
             this.writeSingerFiles("google-credentials.json", runContext.render(this.serviceAccount));
             env.put("GOOGLE_APPLICATION_CREDENTIALS", workingDirectory.toAbsolutePath() + "/google-credentials.json");
         }
+
+        env.put("PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION", "python");
 
         return env;
     }

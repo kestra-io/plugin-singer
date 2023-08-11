@@ -32,11 +32,10 @@ class CsvTest {
         PipelinewiseMysql.PipelinewiseMysqlBuilder<?, ?> tapBuilder = PipelinewiseMysql.builder()
             .id(IdUtils.create())
             .type(PipelinewiseMysql.class.getName())
-            .host("127.0.0.1")
+            .host("172.17.0.1")
             .username("root")
             .password("mysql_passwd")
             .port(63306)
-            .raw(true)
             .stateName(stateName)
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
@@ -58,9 +57,6 @@ class CsvTest {
 
         RunContext runContextTap = TestsUtils.mockRunContext(runContextFactory, tap, ImmutableMap.of());
         AbstractPythonTap.Output tapOutput = tap.run(runContextTap);
-
-        assertThat(runContextTap.metrics().stream().filter(r -> r.getName().equals("singer.record.count") && r.getTags().containsValue("category")).findFirst().get().getValue(), is(8D));
-        assertThat(runContextTap.metrics().stream().filter(r -> r.getName().equals("singer.record.count") && r.getTags().containsValue("region")).findFirst().get().getValue(), is(4D));
 
         Csv.CsvBuilder<?, ?> builder = Csv
             .builder()

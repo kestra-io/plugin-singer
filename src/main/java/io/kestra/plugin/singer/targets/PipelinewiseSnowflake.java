@@ -3,19 +3,18 @@ package io.kestra.plugin.singer.targets;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
-import io.kestra.core.models.executions.statistics.DailyExecutionStatistics;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @SuperBuilder
 @ToString
@@ -141,16 +140,17 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
     @Schema(
         title = "Maximum number of rows in each batch. At the end of each batch, the rows in the batch are loaded into Snowflake. "
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private Integer batchSizeRows = 100000;
 
     @Schema(
         title = "Maximum time to wait for batch to reach `batch_size_rows`. "
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     private Duration batchWaitLimit;
 
+    @Builder.Default
     @Schema(
         title = "Flush and load every stream into Snowflake when one batch is full. Warning: This may trigger the COPY command to use files with low number of records, and may cause performance problems. "
     )
@@ -160,14 +160,14 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
     @Schema(
         title = "The number of threads used to flush tables. 0 will create a thread for each stream, up to parallelism_max. -1 will create a thread for each CPU core. Any other positive number will create that number of threads, up to parallelism_max. "
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private Integer parallelism = 0;
 
     @Schema(
         title = "Max number of parallel threads to use when flushing tables. "
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private Integer parallelismMax = 16;
 
@@ -207,27 +207,27 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
     )
 
     @Builder.Default
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     private Boolean addMetadataColumns = false;
 
     @Schema(
         title = "When `hardDelete` option is true then DELETE SQL commands will be performed in Snowflake to delete rows in tables. It's achieved by continuously checking the  `_SDC_DELETED_AT` metadata column sent by the singer tap. Due to deleting rows requires metadata columns, `hard_delete` option automatically enables the `add_metadata_columns` option as well. "
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private Boolean hardDelete = false;
 
     @Schema(
         title = "(Default: 0) Object type RECORD items from taps can be loaded into VARIANT columns as JSON (default) or we can flatten the schema by creating columns automatically.<br><br>When value is 0 (default) then flattening functionality is turned off. "
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private Integer dataFlatteningMaxLevel = 0;
 
     @Schema(
         title = "Log based and Incremental replications on tables with no Primary Key cause duplicates when merging UPDATE events. When set to true, stop loading data if no Primary Key is defined. "
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private Boolean primaryKeyRequired = true;
 
@@ -241,7 +241,7 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
     @Schema(
         title = "Generate uncompressed files when loading to Snowflake. Normally, by default GZIP compressed files are generated. "
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private Boolean noCompression = false;
 
@@ -254,7 +254,7 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
     @Schema(
         title = "When enabled, the files loaded to Snowflake will also be stored in `archive_load_files_s3_bucket` under the key `/{archive_load_files_s3_prefix}/{schema_name}/{table_name}/`. All archived files will have `tap`, `schema`, `table` and `archived-by` as S3 metadata keys. When incremental replication is used, the archived files will also have the following S3 metadata keys: `incremental-key`, `incremental-key-min` and `incremental-key-max`"
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private Boolean archiveLoadFiles = false;
 

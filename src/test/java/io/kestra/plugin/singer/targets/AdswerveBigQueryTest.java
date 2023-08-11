@@ -48,7 +48,7 @@ class AdswerveBigQueryTest {
         PipelinewiseMysql tap = PipelinewiseMysql.builder()
             .id(IdUtils.create())
             .type(PipelinewiseMysql.class.getName())
-            .host("127.0.0.1")
+            .host("172.17.0.1")
             .username("root")
             .password("mysql_passwd")
             .port(63306)

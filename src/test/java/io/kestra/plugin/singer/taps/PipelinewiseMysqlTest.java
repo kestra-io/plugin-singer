@@ -3,28 +3,28 @@ package io.kestra.plugin.singer.taps;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
-import io.kestra.core.serializers.FileSerde;
 import io.kestra.core.storages.StorageInterface;
 import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
-import io.kestra.plugin.singer.models.streams.AbstractStream;
 import io.kestra.plugin.singer.models.DiscoverMetadata;
 import io.kestra.plugin.singer.models.StreamsConfiguration;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import jakarta.inject.Inject;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.nio.file.Path;
-import java.util.*;
-import jakarta.inject.Inject;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
-@MicronautTest
-class PipelinewiseMysqlTest {
+class PipelinewiseMysqlTest extends TapsTest {
     @Inject
     private RunContextFactory runContextFactory;
 
@@ -37,8 +37,7 @@ class PipelinewiseMysqlTest {
         PipelinewiseMysql.PipelinewiseMysqlBuilder<?, ?> builder = PipelinewiseMysql.builder()
             .id(IdUtils.create())
             .type(PipelinewiseMysql.class.getName())
-            .raw(false)
-            .host("127.0.0.1")
+            .host("172.17.0.1")
             .username("root")
             .password("mysql_passwd")
             .port(63306)
@@ -59,24 +58,19 @@ class PipelinewiseMysqlTest {
         RunContext runContext = TestsUtils.mockRunContext(runContextFactory, task, ImmutableMap.of());
         PipelinewiseMysql.Output output = task.run(runContext);
 
-        assertThat(output.getSchemas().size(), is(1));
-        assertThat(output.getSchemas().get("Northwind-Category"), is(notNullValue()));
-        assertThat(output.getStreams().size(), is(1));
-        assertThat(output.getStreams().get("Northwind-Category"), is(notNullValue()));
-        assertThat(output.getState(), is(notNullValue()));
+        Map<StreamType, List<Map<String, Object>>> groupedByType = groupedByType(runContext, output.getRaw());
 
-        BufferedReader inputStream = new BufferedReader(new InputStreamReader(storageInterface.get(output.getStreams().get("Northwind-Category"))));
-        List<Object> result = new ArrayList<>();
-        FileSerde.reader(inputStream, result::add);
+        assertThat(groupedByType.get(StreamType.SCHEMA).size(), is(1));
+        assertThat(groupedByType.get(StreamType.SCHEMA).get(0).get("stream"), is("Northwind-Category"));
+        assertThat(groupedByType.get(StreamType.STATE).size(), is(4));
 
-        assertThat(output.getCount().get(AbstractStream.Type.RECORD), is(8L));
-        assertThat(result.size(), is(8));
-        assertThat(((Map<String, Object>) result.get(0)).size(), is(2));
-        assertThat(((Map<String, Object>) result.get(0)).containsKey("description"), is(false));
+        assertThat(groupedByType.get(StreamType.RECORD).size(), is(8));
+        assertThat(((Map<String, Object>) groupedByType.get(StreamType.RECORD).get(0).get("record")).get("categoryName"), is("Beverages"));
 
         // second sync, no result, except tag is bug and will return the last one
         task = builder.build();
         output = task.run(runContext);
-        assertThat(output.getCount().get(AbstractStream.Type.RECORD), is(1L));
+        groupedByType = groupedByType(runContext, output.getRaw());
+        assertThat(groupedByType.get(StreamType.RECORD).size(), is(1));
     }
 }

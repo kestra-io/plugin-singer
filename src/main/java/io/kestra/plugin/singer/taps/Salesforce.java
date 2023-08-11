@@ -33,7 +33,7 @@ public class Salesforce extends AbstractPythonTap implements RunnableTask<Abstra
     @Schema(
         title = "This is used to switch the behavior of the tap between using Salesforce's `REST` and `BULK` APIs."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final ApiType apiType = ApiType.BULK;
 
@@ -41,7 +41,7 @@ public class Salesforce extends AbstractPythonTap implements RunnableTask<Abstra
     @Schema(
         title = "Select by default any new fields discovered in Salesforce objects."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean selectFieldsByDefault = true;
 
@@ -49,7 +49,7 @@ public class Salesforce extends AbstractPythonTap implements RunnableTask<Abstra
     @Schema(
         title = "Select by default any new fields discovered in Salesforce objects."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean isSandbox = false;
 
@@ -57,7 +57,7 @@ public class Salesforce extends AbstractPythonTap implements RunnableTask<Abstra
     @Schema(
         title = "Generate a STATE message every N records."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer stateMessageThreshold = 1000;
 
@@ -65,7 +65,7 @@ public class Salesforce extends AbstractPythonTap implements RunnableTask<Abstra
     @Schema(
         title = "Maximum number of threads to use."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer maxWorkers = 8;
 

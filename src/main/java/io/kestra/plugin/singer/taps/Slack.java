@@ -52,7 +52,7 @@ public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPyt
         title = "Join Private Channels.",
         description = "Specifies whether to sync private channels or not."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean privateChannels = true;
 
@@ -60,7 +60,7 @@ public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPyt
         title = "Join Public Channels.",
         description = "Specifies whether to have the tap auto-join all public channels in your ogranziation."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean publicChannels = false;
 
@@ -70,7 +70,7 @@ public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPyt
             "an archived channel, so unless the bot was added to the channel prior to it being archived it will not " +
             "be able to sync the data from that channel."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean archivedChannels = false;
 
@@ -89,7 +89,7 @@ public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPyt
             "(messages, files, threads) this tap implements date windowing based on a configuration parameter." +
             "5 means the tap to sync 5 days of data per request, for applicable streams."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer dateWindowSize = 7;
 

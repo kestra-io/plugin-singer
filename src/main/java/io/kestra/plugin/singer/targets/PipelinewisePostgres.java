@@ -57,14 +57,14 @@ public class PipelinewisePostgres extends AbstractPythonTarget implements Runnab
     @Schema(
         title = "The database port"
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     private Integer port;
 
     @Schema(
         title = "Maximum number of rows in each batch.",
         description = "At the end of each batch, the rows in the batch are loaded into Postgres."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer batchSizeRows = 100000;
 
@@ -72,7 +72,7 @@ public class PipelinewisePostgres extends AbstractPythonTarget implements Runnab
         title = "Flush and load every stream into Postgres when one batch is full.",
         description = "Warning: This may trigger the COPY command to use files with low number of records.."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean flushAllStreams = false;
 
@@ -81,14 +81,14 @@ public class PipelinewisePostgres extends AbstractPythonTarget implements Runnab
         description = "0 will create a thread for each stream, up to parallelism_max. -1 will create a thread for " +
             "each CPU core. Any other positive number will create that number of threads, up to parallelism_max."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer parallelism = 0;
 
     @Schema(
         title = "Max number of parallel threads to use when flushing tables."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer maxParallelism = 16;
 
@@ -101,7 +101,7 @@ public class PipelinewisePostgres extends AbstractPythonTarget implements Runnab
             "Enabling metadata columns will flag the deleted rows by setting the `_SDC_DELETED_AT` metadata column. " +
             "Without the `add_metadata_columns` option the deleted rows from singer taps will not be recognisable in Postgres."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean addMetadataColumns = false;
 
@@ -112,7 +112,7 @@ public class PipelinewisePostgres extends AbstractPythonTarget implements Runnab
             "by the singer tap. Due to deleting rows requires metadata columns, hard_delete option automatically " +
             "enables the add_metadata_columns option as well."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean hardDelete = false;
 
@@ -120,7 +120,7 @@ public class PipelinewisePostgres extends AbstractPythonTarget implements Runnab
         title = "Object type RECORD items from taps can be transformed to flattened columns by creating columns automatically.",
         description = "When value is 0 (default) then flattening functionality is turned off."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer dataFlatteningMaxLevel = 0;
 
@@ -128,7 +128,7 @@ public class PipelinewisePostgres extends AbstractPythonTarget implements Runnab
         title = "Log based and Incremental replications on tables with no Primary Key cause duplicates when merging UPDATE events.",
         description = "When set to true, stop loading data if no Primary Key is defined."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean primaryKeyRequired = true;
 
@@ -137,7 +137,7 @@ public class PipelinewisePostgres extends AbstractPythonTarget implements Runnab
         description = "This option is disabled by default and invalid RECORD messages will fail only at load time by " +
             "Postgres. Enabling this option will detect invalid records earlier but could cause performance degradation.."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean validateRecords = false;
 

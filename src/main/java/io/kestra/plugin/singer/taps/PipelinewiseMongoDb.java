@@ -53,7 +53,7 @@ public class PipelinewiseMongoDb extends AbstractPythonTap implements RunnableTa
     @Schema(
         title = "The database port"
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     private Integer port;
 
     @NotNull
@@ -73,14 +73,14 @@ public class PipelinewiseMongoDb extends AbstractPythonTap implements RunnableTa
     @Schema(
         title = "If ssl is enabled."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean ssl = false;
 
     @Schema(
         title = "Default SSL verify mode."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean sslVerify = true;
 
@@ -93,7 +93,7 @@ public class PipelinewiseMongoDb extends AbstractPythonTap implements RunnableTa
     @Schema(
         title = "Forces the stream names to take the form `<database_name>_<collection_name>` instead of `<collection_name>`."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean includeSchemaInStream = false;
 
@@ -101,7 +101,7 @@ public class PipelinewiseMongoDb extends AbstractPythonTap implements RunnableTa
         title = "The size of the buffer that holds detected update operations in memory.",
         description = "For LOG_BASED only, the buffer is flushed once the size is reached"
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer updateBufferSize = 1;
 
@@ -109,7 +109,7 @@ public class PipelinewiseMongoDb extends AbstractPythonTap implements RunnableTa
         title = "The maximum amount of time in milliseconds waits for new data changes before exiting..",
         description = "For LOG_BASED only."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer awaitTimeMs = 1000;
 

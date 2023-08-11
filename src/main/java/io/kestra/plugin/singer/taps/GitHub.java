@@ -66,7 +66,7 @@ public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPy
     @Schema(
         title = "Timeout for each request on github api."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private Integer requestTimeout = 300;
 
