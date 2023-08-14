@@ -10,12 +10,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @SuperBuilder
 @ToString
@@ -59,41 +58,41 @@ public class PipelinewisePostgres extends AbstractPythonTap implements RunnableT
     @Schema(
         title = "The database port"
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     private Integer port;
 
     @Schema(
         title = "If ssl is enabled"
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean ssl = false;
 
     @Schema(
         title = "Stop running the tap when no data received from wal after certain number of seconds."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer logicalPollSeconds = 10800;
 
     @Schema(
         title = "Stop running the tap if the newly received lsn is after the max lsn that was detected when the tap started."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean breakAtEndLsn = true;
 
     @Schema(
         title = "Stop running the tap after certain number of seconds."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer maxRunSeconds = 43200;
 
     @Schema(
         title = "If set to \"true\" then add _sdc_lsn property to the singer messages to debug postgres LSN position in the WAL stream."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean debugLsn = false;
 
@@ -134,7 +133,7 @@ public class PipelinewisePostgres extends AbstractPythonTap implements RunnableT
 
     @Override
     public List<String> pipPackages() {
-        return Collections.singletonList("pipelinewise-tap-postgres==1.8.1");
+        return List.of("pipelinewise-tap-postgres");
     }
 
     @Override

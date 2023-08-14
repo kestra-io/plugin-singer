@@ -57,7 +57,7 @@ public class DatamillCoPostgres extends AbstractPythonTarget implements Runnable
     @Schema(
         title = "The database port"
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     private Integer port;
 
     @Schema(
@@ -77,14 +77,14 @@ public class DatamillCoPostgres extends AbstractPythonTarget implements Runnable
     @Schema(
         title = "Crash on invalid records."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean invalidRecordsDetect = true;
 
     @Schema(
         title = "Include a positive value n in your config to allow to encounter at most n invalid records per stream before giving up."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer invalidRecordsThreshold = 0;
 
@@ -99,21 +99,21 @@ public class DatamillCoPostgres extends AbstractPythonTarget implements Runnable
     @Schema(
         title = "Whether the Target should create tables which have no records present in Remote."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean persistEmptyTables = false;
 
     @Schema(
         title = "The maximum number of rows to buffer in memory before writing to the destination table in Postgres."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer maxBatchRows = 200000;
 
     @Schema(
         title = "The maximum number of bytes to buffer in memory before writing to the destination table in Postgres."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer maxBufferSize = 104857600;
 
@@ -124,14 +124,14 @@ public class DatamillCoPostgres extends AbstractPythonTarget implements Runnable
             " to set as the default is dynamically adjusted to check reasonably often. \n\n" +
             "Default is 5000, or 1/40th `maxBatchRows`"
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     private Integer batchDetectionThreshold;
 
     @Schema(
         title = "Whether the Target should create column indexes on the important columns used during data loading.",
         description = "These indexes will make data loading slightly slower but the deduplication phase much faster. Defaults to on for better baseline performance."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean addUpsertIndexes = true;
 
@@ -139,13 +139,13 @@ public class DatamillCoPostgres extends AbstractPythonTarget implements Runnable
         title = "Raw SQL statement(s) to execute as soon as the connection to Postgres is opened by the target.",
         description = "Useful for setup like SET ROLE or other connection state that is important."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     private String beforeRunSql;
 
     @Schema(
         title = "Raw SQL statement(s) to before closing the connection to Postgres."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     private String afterRunSql;
 
     @Override

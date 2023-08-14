@@ -81,7 +81,7 @@ public class MeltanoSnowflake extends AbstractPythonTarget implements RunnableTa
     @Schema(
         title = "Whether to add metadata columns."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private Boolean addRecordMetadata = true;
 
@@ -94,13 +94,13 @@ public class MeltanoSnowflake extends AbstractPythonTarget implements RunnableTa
     @Schema(
         title = "'True' to enable schema flattening and automatically expand nested properties."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     private Boolean flatteningEnabled;
 
     @Schema(
         title = "The max depth to flatten schemas."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     private Integer flatteningMaxDepth;
 
     @Override

@@ -76,7 +76,7 @@ public class PipelinewiseOracle extends AbstractPythonTap implements RunnableTas
     @Schema(
         title = "The database port"
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     private Integer port;
 
     @NotNull

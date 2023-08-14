@@ -86,14 +86,14 @@ public class GoogleAdwords extends AbstractPythonTap implements RunnableTask<Abs
     @Schema(
         title = "How many Days before the Start Date to fetch data for Performance Reports."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer conversionWindowDays = 0;
 
     @Schema(
         title = "Primary Keys for the selected Entities (Streams)."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     private Map<String, List<String>> primaryKeys;
 
     @Schema(

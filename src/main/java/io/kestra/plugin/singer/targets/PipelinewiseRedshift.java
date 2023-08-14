@@ -57,7 +57,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
     @Schema(
         title = "The database port"
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     private Integer port;
 
     @NotEmpty
@@ -135,7 +135,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
         title = "Maximum number of rows in each batch.",
         description = "At the end of each batch, the rows in the batch are loaded into Redshift."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer batchSizeRows = 100000;
 
@@ -143,7 +143,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
         title = "Flush and load every stream into Redshift when one batch is full.",
         description = "Warning: This may trigger the COPY command to use files with low number of records.."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean flushAllStreams = false;
 
@@ -152,14 +152,14 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
         description = "0 will create a thread for each stream, up to parallelism_max. -1 will create a thread for " +
             "each CPU core. Any other positive number will create that number of threads, up to parallelism_max."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer parallelism = 0;
 
     @Schema(
         title = "Max number of parallel threads to use when flushing tables."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer maxParallelism = 16;
 
@@ -178,7 +178,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
             "`default_target_schema_select_permissions` value to grant SELECT permissions to different groups per " +
             "schemas or optionally you can create indices automatically for the replicated tables."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     private String schema_mapping;
 
     @Schema(
@@ -188,7 +188,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
             "tables is required. With disable_table_cache option you can turn off this caching. You will always " +
             "see the most recent table structures but will cause an extra query runtime."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean disableTableCache = false;
 
@@ -201,7 +201,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
             "Enabling metadata columns will flag the deleted rows by setting the _SDC_DELETED_AT metadata column. " +
             "Without the `addMetadataColumns` option the deleted rows from singer taps will not be recongisable in Redshift."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean addMetadataColumns = false;
 
@@ -212,7 +212,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
             "singer tap. Due to deleting rows requires metadata columns, `hardDelete` option automatically enables " +
             "the `addMetadataColumns` option as well."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean hardDelete = false;
 
@@ -223,7 +223,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
             "singer tap. Due to deleting rows requires metadata columns, `hardDelete` option automatically " +
             "enables the `addMetadataColumns` option as well.."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer dataFlatteningMaxLevel = 0;
 
@@ -231,7 +231,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
         title = "Log based and Incremental replications on tables with no Primary Key cause duplicates when merging UPDATE events.",
         description = "When set to true, stop loading data if no Primary Key is defined.."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean primaryKeyRequired = true;
 
@@ -240,7 +240,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
         description = "This option is disabled by default and invalid RECORD messages will fail only at load time by " +
             "Redshift. Enabling this option will detect invalid records earlier but could cause performance degradation.."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean validateRecords = false;
 
@@ -248,14 +248,14 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
         title = "Do not update existing records when Primary Key is defined. ",
         description = "Useful to improve performance when records are immutable, e.g. events."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean skipUpdates = false;
 
     @Schema(
         title = "The compression method to use when writing files to S3 and running Redshift COPY."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Compression compression = Compression.bzip2;
 
@@ -264,7 +264,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
         description = "This should be set to the number of Redshift slices. The number of slices per node depends on " +
             "the node size of the cluster - run SELECT COUNT(DISTINCT slice) slices FROM stv_slices to calculate this."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer slices = 1;
 

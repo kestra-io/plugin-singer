@@ -55,21 +55,21 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
         description = "This option is disabled by default and invalid RECORD messages will fail only at load time by " +
             "Postgres. Enabling this option will detect invalid records earlier but could cause performance degradation.."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     private final Boolean validateRecords = false;
 
     @Schema(
         title = "Add singer Metadata columns.",
         description = "Add `_time_extracted` and `_time_loaded` metadata columns."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean addMetadataColumns = false;
 
     @Schema(
         title = "The replication method, `append` or `truncate`"
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final ReplicationMethod replicationMethod = ReplicationMethod.append;
 
@@ -88,7 +88,7 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
     @Schema(
         title = "Maximum cache size in MB"
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer maxCache = 50;
 
@@ -102,14 +102,14 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
         title = "Enable control state flush",
         description = "default: merges multiple state messages from the tap into the state file, if true : uses the last state message as the state file."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     protected Boolean mergeStateMessages = false;
 
     @Schema(
         title = "The json service account key as string "
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     protected Map<String, Object> tableConfigs;
 
     @SneakyThrows
@@ -149,8 +149,8 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
 
     @SuppressWarnings("DuplicatedCode")
     @Override
-    protected Map<String, String> environnementVariable(RunContext runContext) throws IllegalVariableEvaluationException, IOException {
-        HashMap<String, String> env = new HashMap<>(super.environnementVariable(runContext));
+    protected Map<String, String> environmentVariables(RunContext runContext) throws IllegalVariableEvaluationException, IOException {
+        HashMap<String, String> env = new HashMap<>(super.environmentVariables(runContext));
 
         if (this.serviceAccount != null) {
             this.writeSingerFiles("google-credentials.json", runContext.render(this.serviceAccount));

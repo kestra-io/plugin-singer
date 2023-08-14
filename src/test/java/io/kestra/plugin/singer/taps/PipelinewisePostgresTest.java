@@ -3,32 +3,24 @@ package io.kestra.plugin.singer.taps;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
-import io.kestra.core.serializers.FileSerde;
-import io.kestra.core.storages.StorageInterface;
 import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
-import io.kestra.plugin.singer.models.streams.AbstractStream;
 import io.kestra.plugin.singer.models.DiscoverMetadata;
 import io.kestra.plugin.singer.models.StreamsConfiguration;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.*;
-import jakarta.inject.Inject;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 
-@MicronautTest
-class PipelinewisePostgresTest {
+class PipelinewisePostgresTest extends TapsTest {
     @Inject
     private RunContextFactory runContextFactory;
-
-    @Inject
-    private StorageInterface storageInterface;
 
     @SuppressWarnings("unchecked")
     @Test
@@ -36,8 +28,7 @@ class PipelinewisePostgresTest {
         PipelinewisePostgres.PipelinewisePostgresBuilder<?, ?> builder = PipelinewisePostgres.builder()
             .id(IdUtils.create())
             .type(PipelinewisePostgres.class.getName())
-            .raw(false)
-            .host("127.0.0.1")
+            .host("172.17.0.1")
             .username("postgres")
             .password("pg_passwd")
             .port(65432)
@@ -59,27 +50,20 @@ class PipelinewisePostgresTest {
         RunContext runContext = TestsUtils.mockRunContext(runContextFactory, task, ImmutableMap.of());
         PipelinewisePostgres.Output output = task.run(runContext);
 
-        assertThat(output.getSchemas().size(), is(1));
-        assertThat(output.getSchemas().get("public-category"), is(notNullValue()));
-        assertThat(output.getStreams().size(), is(1));
-        assertThat(output.getStreams().get("public-category"), is(notNullValue()));
-        assertThat(output.getState(), is(notNullValue()));
+        Map<StreamType, List<Map<String, Object>>> groupedByType = groupedByType(runContext, output.getRaw());
 
+        assertThat(groupedByType.get(StreamType.SCHEMA).size(), is(1));
+        assertThat(groupedByType.get(StreamType.SCHEMA).get(0).get("stream"), is("public-category"));
 
-        BufferedReader inputStream = new BufferedReader(new InputStreamReader(storageInterface.get(output.getStreams().get("public-category"))));
-        List<Object> result = new ArrayList<>();
-        FileSerde.reader(inputStream, result::add);
+        assertThat(groupedByType.get(StreamType.RECORD).size(), is(8));
+        Map<String, Object> firstRecord = (Map<String, Object>) groupedByType.get(StreamType.RECORD).get(0).get("record");
+        assertThat(firstRecord.size(), is(3));
+        assertThat(firstRecord.containsKey("description"), is(true));
 
-        assertThat(output.getCount().get(AbstractStream.Type.RECORD), is(8L));
-        assertThat(result.size(), is(8));
+        assertThat(groupedByType.get(StreamType.STATE).size(), is(2));
 
-        // postgres bug: cols selection don't work
-        assertThat(((Map<String, Object>) result.get(0)).size(), is(3));
-        assertThat(((Map<String, Object>) result.get(0)).containsKey("description"), is(true));
-
-        // second sync, no result, except tag is bug and will return the last one
-        task = builder.build();
-        output = task.run(runContext);
-        assertThat(output.getCount().get(AbstractStream.Type.RECORD), is(1L));
+        // second sync, no result, except tap is bug and will return the last one
+        groupedByType = groupedByType(runContext, builder.build().run(runContext).getRaw());
+        assertThat(groupedByType.get(StreamType.RECORD).size(), is(1));
     }
 }

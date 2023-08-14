@@ -75,13 +75,13 @@ public class PipelinewiseMysql extends AbstractPythonTap implements RunnableTask
     @Schema(
         title = "The database port"
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     private Integer port;
 
     @Schema(
         title = "If ssl is enabled"
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean ssl = false;
 
@@ -94,7 +94,7 @@ public class PipelinewiseMysql extends AbstractPythonTap implements RunnableTask
     @Schema(
         title = "Number of rows to export from MySQL in one batch."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer exportBatchRows = 50000;
 

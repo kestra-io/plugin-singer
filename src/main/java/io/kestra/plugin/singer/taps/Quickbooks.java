@@ -32,7 +32,7 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
     @Schema(
         title = "Select by default any new fields discovered in Quickbooks objects."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean selectFieldsByDefault = true;
 
@@ -40,7 +40,7 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
     @Schema(
         title = "Select by default any new fields discovered in Quickbooks objects."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Boolean isSandbox = false;
 
@@ -48,7 +48,7 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
     @Schema(
         title = "Generate a STATE message every N records."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer stateMessageThreshold = 1000;
 
@@ -56,7 +56,7 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
     @Schema(
         title = "Maximum number of threads to use."
     )
-    @PluginProperty(dynamic = false)
+    @PluginProperty
     @Builder.Default
     private final Integer maxWorkers = 8;
 
