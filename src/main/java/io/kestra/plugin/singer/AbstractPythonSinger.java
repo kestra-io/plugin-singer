@@ -195,12 +195,18 @@ public abstract class AbstractPythonSinger extends Task {
                         .entrySet()
                         .stream()
                         .filter(e -> e.getValue() instanceof String)
-                        .flatMap(e -> Stream.of(e.getKey().toLowerCase(Locale.ROOT), ((String) e.getValue()).toLowerCase(Locale.ROOT)))
+                        .flatMap(e -> Stream.of(
+                            e.getKey().toLowerCase(Locale.ROOT),
+                            ((String) e.getValue()).toLowerCase(Locale.ROOT)
+                        ))
                         .toArray(String[]::new);
 
                     switch (metric.getType()) {
                         case counter -> runContext.metric(Counter.of(name, metric.getValue(), tags));
-                        case timer -> runContext.metric(Timer.of(name, Duration.ofNanos(Double.valueOf(metric.getValue() * 1e+9).longValue()), tags));
+                        case timer -> runContext.metric(Timer.of(name,
+                            Duration.ofNanos(Double.valueOf(metric.getValue() * 1e+9).longValue()),
+                            tags
+                        ));
                     }
                 }
             });
@@ -236,19 +242,19 @@ public abstract class AbstractPythonSinger extends Task {
 
         public SingerLogDispatcher(RunContext runContext, List<Metric> metrics, Consumer<String> consumer) {
             singerLogParser = new SingerLogParser(runContext.logger(), metrics);
-            if(consumer != null) {
+            if (consumer != null) {
                 singerLogSync = new SingerLogSync(consumer);
             }
         }
 
         @Override
         public void accept(String line, Boolean isStdErr) throws Exception {
-            if(isStdErr) {
+            if (isStdErr) {
                 singerLogParser.accept(line, isStdErr);
                 return;
             }
 
-            if(singerLogSync != null) {
+            if (singerLogSync != null) {
                 singerLogSync.accept(line, isStdErr);
             }
         }
@@ -282,7 +288,8 @@ public abstract class AbstractPythonSinger extends Task {
                 @SuppressWarnings("unchecked")
                 Map<String, String> jsonLog = (Map<String, String>) MAPPER.readValue(line, Object.class);
 
-                if (jsonLog.containsKey("message") && jsonLog.get("message") != null && jsonLog.get("message").startsWith("METRIC: {")) {
+                if (jsonLog.containsKey("message") && jsonLog.get("message") != null && jsonLog.get("message")
+                    .startsWith("METRIC: {")) {
                     metrics.add(MAPPER.readValue(jsonLog.get("message").substring(8), Metric.class));
                     return;
                 }

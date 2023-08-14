@@ -82,12 +82,12 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger implements 
         Long itemsCount = runSync(runContext);
 
         // metrics
-        runContext.metric(Counter.of("RAW", itemsCount));
+        runContext.metric(Counter.of("records", itemsCount));
 
         this.saveSingerMetrics(runContext);
         runContext.logger().info("Ended singer with {} raw items", itemsCount);
 
-        if(this.rawSingerStream == null) {
+        if (this.rawSingerStream == null) {
             this.rawData("");
         }
 
@@ -95,7 +95,7 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger implements 
             .count(itemsCount)
             .raw(runContext.putTempFile(this.rawSingerStream.getLeft()));
 
-        if(this.features().contains(Feature.STATE)) {
+        if (this.features().contains(Feature.STATE)) {
             this.saveState(runContext);
         }
 
@@ -123,7 +123,7 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger implements 
             .doOnNext(line -> {
                 Map<String, Object> parsed = MAPPER.readValue(line, TYPE_REFERENCE);
 
-                if(parsed.getOrDefault("type", "UNKNOWN").equals("STATE")){
+                if (parsed.getOrDefault("type", "UNKNOWN").equals("STATE")) {
                     this.stateMessage((Map<String, Object>) parsed.get("value"));
                 }
             })
@@ -148,7 +148,10 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger implements 
             LogService.defaultLogSupplier(runContext)
         );
 
-        DiscoverStreams discoverStreams = MAPPER.readValue(workingDirectory.resolve(discoverFileName).toFile(), DiscoverStreams.class);
+        DiscoverStreams discoverStreams = MAPPER.readValue(
+            workingDirectory.resolve(discoverFileName).toFile(),
+            DiscoverStreams.class
+        );
 
         return SelectedService.fill(discoverStreams, this.streamsConfigurations);
     }
