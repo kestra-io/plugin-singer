@@ -16,7 +16,7 @@ import io.kestra.plugin.scripts.exec.scripts.models.DockerOptions;
 import io.kestra.plugin.scripts.exec.scripts.models.RunnerType;
 import io.kestra.plugin.scripts.exec.scripts.runners.AbstractLogConsumer;
 import io.kestra.plugin.scripts.exec.scripts.runners.CommandsWrapper;
-import io.kestra.plugin.scripts.exec.scripts.services.LogService;
+import io.kestra.plugin.scripts.exec.scripts.runners.DefaultLogConsumer;
 import io.kestra.plugin.scripts.exec.scripts.services.ScriptService;
 import io.kestra.plugin.singer.models.Metric;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -107,7 +107,7 @@ public abstract class AbstractPythonSinger extends Task {
         commandsWrapper.withWarningOnStdErr(true)
             .withRunnerType(RunnerType.DOCKER)
             .withDockerOptions(this.docker)
-            .withLogConsumer(LogService.defaultLogSupplier(runContext))
+            .withLogConsumer(new DefaultLogConsumer(runContext))
             .withCommands(ScriptService.scriptCommands(
                 List.of("/bin/sh", "-c"),
                 Stream.of(
