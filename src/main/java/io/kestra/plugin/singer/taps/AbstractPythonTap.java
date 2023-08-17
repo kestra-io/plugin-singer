@@ -5,7 +5,7 @@ import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.executions.metrics.Counter;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
-import io.kestra.plugin.scripts.exec.scripts.services.LogService;
+import io.kestra.plugin.scripts.exec.scripts.runners.DefaultLogConsumer;
 import io.kestra.plugin.singer.AbstractPythonSinger;
 import io.kestra.plugin.singer.models.DiscoverStreams;
 import io.kestra.plugin.singer.models.Feature;
@@ -145,7 +145,7 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger implements 
         this.run(
             runContext,
             "./bin/" + command + " --config config.json --discover > " + discoverFileName,
-            LogService.defaultLogSupplier(runContext)
+            new DefaultLogConsumer(runContext)
         );
 
         DiscoverStreams discoverStreams = MAPPER.readValue(

@@ -34,7 +34,7 @@ public class DiscoverMetadata {
     boolean selectedByDefault;
 
     @JsonProperty("valid-replication-keys")
-    List<String> validReplicationKeys;
+    Object validReplicationKeys;
 
     @JsonProperty("forced-replication-method")
     ForceReplicationMethod forceReplicationMethod;

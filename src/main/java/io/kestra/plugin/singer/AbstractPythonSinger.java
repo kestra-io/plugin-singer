@@ -104,6 +104,8 @@ public abstract class AbstractPythonSinger extends Task {
         CommandsWrapper commandsWrapper = new CommandsWrapper(runContext);
         workingDirectory = commandsWrapper.getWorkingDirectory();
 
+        configSetupCommands(runContext);
+
         commandsWrapper.withWarningOnStdErr(true)
             .withRunnerType(RunnerType.DOCKER)
             .withDockerOptions(this.docker)
@@ -112,8 +114,7 @@ public abstract class AbstractPythonSinger extends Task {
                 List.of("/bin/sh", "-c"),
                 Stream.of(
                     pipInstallCommands(runContext),
-                    logSetupCommands(),
-                    configSetupCommands(runContext)
+                    logSetupCommands()
                 ).flatMap(Function.identity()).toList(),
                 Collections.emptyList()
             )).run();
@@ -147,22 +148,22 @@ public abstract class AbstractPythonSinger extends Task {
         );
     }
 
+
     protected Stream<String> logSetupCommands() throws Exception {
         String template = IOUtils.toString(
             Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream("singer/logging.conf")),
             StandardCharsets.UTF_8
         );
 
+        this.writeSingerFiles("logging.conf", template);
+
         return Stream.of(
-            "cat > logging.conf << EOT\n%s\nEOT".formatted(template),
             "find .  -type f -name logging.conf | grep \"/singer/\" | xargs cp logging.conf"
         );
     }
 
-    protected Stream<String> configSetupCommands(RunContext runContext) throws IllegalVariableEvaluationException, IOException {
-        return Stream.of(
-            "cat > config.json << EOT\n%s\nEOT".formatted(MAPPER.writeValueAsString(this.configuration(runContext)))
-        );
+    protected void configSetupCommands(RunContext runContext) throws IllegalVariableEvaluationException, IOException {
+        this.writeSingerFiles("config.json", MAPPER.writeValueAsString(this.configuration(runContext)));
     }
 
     protected Map<String, String> environmentVariables(RunContext runContext) throws IllegalVariableEvaluationException, IOException {
