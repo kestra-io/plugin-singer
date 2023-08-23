@@ -38,13 +38,13 @@ import javax.validation.constraints.NotNull;
                 "port: 63306",
                 "sid: ORCL",
                 "streamsConfigurations:",
-                " - stream: Category",
-                "   replicationMethod: INCREMENTAL",
-                "   replicationKeys: categoryId",
-                "   selected: true",
-                "- propertiesPattern:",
-                "   - description",
-                "  selected: false",
+                "  - stream: Category",
+                "    replicationMethod: INCREMENTAL",
+                "    replicationKeys: categoryId",
+                "    selected: true",
+                "  - propertiesPattern:",
+                "      - description",
+                "    selected: false",
             }
         )
     }
