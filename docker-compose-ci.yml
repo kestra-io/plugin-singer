@@ -41,3 +41,12 @@ services:
       - "57037:1433"
     volumes:
       - ${PWD}/data:/tmp/docker
+
+  oracle:
+    image: gvenzl/oracle-free
+    environment:
+      ORACLE_PASSWORD: oracle_passwd
+    ports:
+      - "57057:1521"
+    volumes:
+      - ${PWD}/data:/tmp/docker

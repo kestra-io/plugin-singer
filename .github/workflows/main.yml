@@ -28,6 +28,12 @@ jobs:
           curl -s -o data/postgres.sql https://raw.githubusercontent.com/harryho/db-samples/master/pgsql/northwind.sql
           curl -s -o data/mongo.jsonl https://raw.githubusercontent.com/ozlerhakan/mongodb-json-files/master/datasets/books.json
           curl -s -o data/sqlserver.sql https://raw.githubusercontent.com/microsoft/sql-server-samples/master/samples/databases/northwind-pubs/instnwnd.sql
+          
+          curl -s -o data/oracle.sql https://raw.githubusercontent.com/oracle-samples/db-sample-schemas/main/customer_orders/co_create.sql
+          curl -s -o data/oracle_pop.sql https://raw.githubusercontent.com/oracle-samples/db-sample-schemas/main/customer_orders/co_populate.sql
+          cat data/oracle_pop.sql >> data/oracle.sql
+          rm data/oracle_pop.sql
+          
           docker-compose -f docker-compose-ci.yml up -d
           sleep 10
           docker exec plugin-singer_postgres_1 sh -c "psql -d postgres -U postgres -f /tmp/docker/postgres.sql > /dev/null"
@@ -35,6 +41,7 @@ jobs:
           docker exec plugin-singer_mongo_1 sh -c "mongoimport --authenticationDatabase admin -c books  "mongodb://root:example@localhost/samples" /tmp/docker/mongo.jsonl > /dev/null"
           docker exec plugin-singer_mysql_1 sh -c "mysql -u root -pmysql_passwd < /tmp/docker/mysql.sql"
           docker exec plugin-singer_sqlserver_1 sh -c "/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P SQLServer_Passwd -d msdb -i /tmp/docker/sqlserver.sql > /dev/null"
+          docker exec plugin-singer_oracle_1 sh -c "sqlplus -s system/oracle_passwd@localhost @/tmp/docker/oracle.sql > /dev/null"
 
       # Caches
       - name: Gradle cache
