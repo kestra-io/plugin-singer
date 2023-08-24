@@ -50,7 +50,6 @@ import java.util.Map;
     }
 )
 public class PipelinewiseSqlServer extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
-    @NotNull
     @NotEmpty
     @Schema(
         title = "The database hostname"
@@ -58,7 +57,6 @@ public class PipelinewiseSqlServer extends AbstractPythonTap implements Runnable
     @PluginProperty(dynamic = true)
     private String host;
 
-    @NotNull
     @NotEmpty
     @Schema(
         title = "The database name"
@@ -67,14 +65,12 @@ public class PipelinewiseSqlServer extends AbstractPythonTap implements Runnable
     private String database;
 
     @NotNull
-    @NotEmpty
     @Schema(
         title = "The database port"
     )
     @PluginProperty
     private Integer port;
 
-    @NotNull
     @NotEmpty
     @Schema(
         title = "The database user"
@@ -82,7 +78,6 @@ public class PipelinewiseSqlServer extends AbstractPythonTap implements Runnable
     @PluginProperty(dynamic = true)
     private String username;
 
-    @NotNull
     @NotEmpty
     @Schema(
         title = "The database user's password"
@@ -91,13 +86,12 @@ public class PipelinewiseSqlServer extends AbstractPythonTap implements Runnable
     private String password;
 
     @Schema(
-        title = "Schema to extract tables only from particular schemas and to improve data extraction performance"
+        title = "The list of schemas to extract tables only from particular schemas and to improve data extraction performance"
     )
     @PluginProperty(dynamic = true)
-    private String filterDbs;
+    private List<String> filterDbs;
 
     @NotNull
-    @NotEmpty
     @Schema(
         title = "Emit Date datatypes as-is without converting them to datetime"
     )
@@ -106,7 +100,7 @@ public class PipelinewiseSqlServer extends AbstractPythonTap implements Runnable
     private Boolean useDateDatatype = true;
 
     @Schema(
-        title = "TDS verison to use when communicating with SQL Server (default is 7.3)"
+        title = "TDS version to use when communicating with SQL Server (default is 7.3)"
     )
     @PluginProperty(dynamic = true)
     private String tdsVersion;
@@ -151,7 +145,7 @@ public class PipelinewiseSqlServer extends AbstractPythonTap implements Runnable
             .put("use_date_datatype", this.useDateDatatype);
 
         if (this.filterDbs != null) {
-            builder.put("filter_dbs", this.filterDbs);
+            builder.put("filter_dbs", String.join(",", runContext.render(this.filterDbs)));
         }
 
         if (this.tdsVersion != null) {

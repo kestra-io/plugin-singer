@@ -5,9 +5,11 @@ import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
-import io.micronaut.validation.Validated;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,11 +25,10 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer target loads data into a Microsoft SQL Server database.",
+    title = "A Singer target that loads data into a Microsoft SQL Server database.",
     description = "Full documentation can be found [here](https://github.com/storebrand/target-mssql/blob/main/README.md)"
 )
 public class SqlServer extends AbstractPythonTarget implements RunnableTask<AbstractPythonTarget.Output> {
-    @NotNull
     @NotEmpty
     @Schema(
         title = "The database hostname"
@@ -35,7 +36,6 @@ public class SqlServer extends AbstractPythonTarget implements RunnableTask<Abst
     @PluginProperty(dynamic = true)
     private String host;
 
-    @NotNull
     @NotEmpty
     @Schema(
         title = "The database name"
@@ -44,14 +44,12 @@ public class SqlServer extends AbstractPythonTarget implements RunnableTask<Abst
     private String database;
 
     @NotNull
-    @NotEmpty
     @Schema(
         title = "The database port"
     )
     @PluginProperty
     private Integer port;
 
-    @NotNull
     @NotEmpty
     @Schema(
         title = "The database user"
@@ -59,7 +57,6 @@ public class SqlServer extends AbstractPythonTarget implements RunnableTask<Abst
     @PluginProperty(dynamic = true)
     private String username;
 
-    @NotNull
     @NotEmpty
     @Schema(
         title = "The database user's password"
@@ -118,31 +115,31 @@ public class SqlServer extends AbstractPythonTarget implements RunnableTask<Abst
             .put("port", String.valueOf(this.port))
             .put("database", runContext.render(this.database));
 
-        if(this.defaultTargetSchema != null) {
+        if (this.defaultTargetSchema != null) {
             builder.put("default_target_schema", runContext.render(this.defaultTargetSchema));
         }
 
-        if(this.tablePrefix != null) {
+        if (this.tablePrefix != null) {
             builder.put("table_prefix", runContext.render(this.tablePrefix));
         }
 
-        if(this.preferFloatOverNumeric != null) {
+        if (this.preferFloatOverNumeric != null) {
             builder.put("prefer_float_over_numeric", StringUtils.capitalize(this.preferFloatOverNumeric.toString()));
         }
 
-        if(this.streamMaps != null) {
+        if (this.streamMaps != null) {
             builder.put("stream_maps", runContext.render(this.streamMaps));
         }
 
-        if(this.streamMapConfig != null) {
+        if (this.streamMapConfig != null) {
             builder.put("stream_map_config", runContext.render(this.streamMapConfig));
         }
 
-        if(this.flatteningEnabled != null) {
+        if (this.flatteningEnabled != null) {
             builder.put("flattening_enabled", StringUtils.capitalize(this.flatteningEnabled.toString()));
         }
 
-        if(this.flatteningMaxDepth != null) {
+        if (this.flatteningMaxDepth != null) {
             builder.put("flattening_max_depth", this.flatteningMaxDepth);
         }
 

@@ -1,7 +1,6 @@
 package io.kestra.plugin.singer.targets;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.io.CharStreams;
 import io.kestra.core.models.executions.AbstractMetricEntry;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
@@ -10,20 +9,14 @@ import io.kestra.core.utils.TestsUtils;
 import io.kestra.plugin.singer.models.DiscoverMetadata;
 import io.kestra.plugin.singer.models.StreamsConfiguration;
 import io.kestra.plugin.singer.taps.AbstractPythonTap;
-import io.kestra.plugin.singer.taps.PipelinewiseMysql;
 import io.kestra.plugin.singer.taps.PipelinewiseSqlServer;
-import io.micronaut.context.annotation.Value;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -36,7 +29,7 @@ class SqlServerTest {
 
     @Test
     void run() throws Exception {
-        PipelinewiseSqlServer.PipelinewiseSqlServerBuilder<?, ? extends PipelinewiseSqlServer.PipelinewiseSqlServerBuilder<?, ?>> tapBuilder = PipelinewiseSqlServer.builder()
+        var tapBuilder = PipelinewiseSqlServer.builder()
             .id(IdUtils.create())
             .type(PipelinewiseSqlServer.class.getName())
             .host("172.17.0.1")
@@ -44,7 +37,7 @@ class SqlServerTest {
             .username("SA")
             .password("SQLServer_Passwd")
             .port(57037)
-            .filterDbs("dbo")
+            .filterDbs(Collections.singletonList("dbo"))
             .stateName("before-target-test")
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
@@ -90,7 +83,7 @@ class SqlServerTest {
         assertThat(output.getState(), not((nullValue())));
 
         tap = tapBuilder
-            .filterDbs("target")
+            .filterDbs(Collections.singletonList("target"))
             .stateName("after-target-test")
             .streamsConfigurations(Collections.singletonList(
                 StreamsConfiguration.builder()

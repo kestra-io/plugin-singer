@@ -25,7 +25,7 @@ class PipelinewiseSqlServerTest extends TapsTest {
     @SuppressWarnings("unchecked")
     @Test
     void run() throws Exception {
-        PipelinewiseSqlServer.PipelinewiseSqlServerBuilder<?, ? extends PipelinewiseSqlServer.PipelinewiseSqlServerBuilder<?, ?>> builder = PipelinewiseSqlServer.builder()
+        var builder = PipelinewiseSqlServer.builder()
             .id(IdUtils.create())
             .type(PipelinewiseSqlServer.class.getName())
             .host("172.17.0.1")
@@ -33,7 +33,7 @@ class PipelinewiseSqlServerTest extends TapsTest {
             .username("SA")
             .password("SQLServer_Passwd")
             .port(57037)
-            .filterDbs("dbo")
+            .filterDbs(Collections.singletonList("dbo"))
             .stateName("tap-test")
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
