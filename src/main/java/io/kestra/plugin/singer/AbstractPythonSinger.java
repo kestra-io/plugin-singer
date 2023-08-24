@@ -158,7 +158,7 @@ public abstract class AbstractPythonSinger extends Task {
         this.writeSingerFiles("logging.conf", template);
 
         return Stream.of(
-            "find .  -type f -name logging.conf | grep \"/singer/\" | xargs cp logging.conf"
+            "find .  -type f -name logging.conf | grep \"/singer/\" | xargs -r cp logging.conf"
         );
     }
 

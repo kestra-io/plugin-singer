@@ -31,3 +31,13 @@ services:
       - "57017:27017"
     volumes:
       - ${PWD}/data:/tmp/docker
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      MSSQL_SA_PASSWORD: SQLServer_Passwd
+      ACCEPT_EULA: Y
+    ports:
+      - "57037:1433"
+    volumes:
+      - ${PWD}/data:/tmp/docker

@@ -37,13 +37,13 @@ import javax.validation.constraints.NotNull;
                 "password: mysql_passwd",
                 "port: 63306",
                 "streamsConfigurations:",
-                " - stream: Category",
-                "   replicationMethod: INCREMENTAL",
-                "   replicationKeys: categoryId",
-                "   selected: true",
-                "- propertiesPattern:",
-                "   - description",
-                "  selected: false",
+                "  - stream: Category",
+                "    replicationMethod: INCREMENTAL",
+                "    replicationKeys: categoryId",
+                "    selected: true",
+                "  - propertiesPattern:",
+                "      - description",
+                "    selected: false",
             }
         )
     }
