@@ -24,11 +24,10 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer target loads data into an Oracle database.",
+    title = "A Singer target that loads data into an Oracle database.",
     description = "Full documentation can be found [here](https://hub.meltano.com/loaders/target-oracle/)"
 )
 public class Oracle extends AbstractPythonTarget implements RunnableTask<AbstractPythonTarget.Output> {
-    @NotNull
     @NotEmpty
     @Schema(
         title = "The database hostname"
@@ -43,14 +42,12 @@ public class Oracle extends AbstractPythonTarget implements RunnableTask<Abstrac
     private String database;
 
     @NotNull
-    @NotEmpty
     @Schema(
         title = "The database port"
     )
     @PluginProperty
     private Integer port;
 
-    @NotNull
     @NotEmpty
     @Schema(
         title = "The database user"
@@ -58,7 +55,6 @@ public class Oracle extends AbstractPythonTarget implements RunnableTask<Abstrac
     @PluginProperty(dynamic = true)
     private String username;
 
-    @NotNull
     @NotEmpty
     @Schema(
         title = "The database user's password"
