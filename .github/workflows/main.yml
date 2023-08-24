@@ -35,7 +35,7 @@ jobs:
           rm data/oracle_pop.sql
           
           docker-compose -f docker-compose-ci.yml up -d
-          sleep 30
+          sleep 10
           docker exec plugin-singer_postgres_1 sh -c "psql -d postgres -U postgres -f /tmp/docker/postgres.sql > /dev/null"
           docker exec plugin-singer_postgres_1 sh -c "psql -d postgres -U postgres -c 'CREATE DATABASE sync' > /dev/null"
           docker exec plugin-singer_mongo_1 sh -c "mongoimport --authenticationDatabase admin -c books  "mongodb://root:example@localhost/samples" /tmp/docker/mongo.jsonl > /dev/null"
