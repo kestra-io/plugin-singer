@@ -49,6 +49,7 @@ public abstract class AbstractPythonSinger extends Task {
         .setSerializationInclusion(JsonInclude.Include.NON_NULL);
     protected static final TypeReference<Map<String, Object>> TYPE_REFERENCE = new TypeReference<>() {
     };
+    private static final String DEFAULT_IMAGE = "python:3.10.12";
 
     @Builder.Default
     @Getter(AccessLevel.NONE)
@@ -82,13 +83,21 @@ public abstract class AbstractPythonSinger extends Task {
     protected String command;
 
     @Schema(
-        title = "Docker options when for the `DOCKER` runner"
+        title = "Docker options when for the `DOCKER` runner",
+        defaultValue = "{image=" + DEFAULT_IMAGE + ", pullPolicy=ALWAYS}"
     )
     @PluginProperty
     @Builder.Default
-    protected DockerOptions docker = DockerOptions.builder()
-        .image("python:3.10.12")
-        .build();
+    protected DockerOptions docker = DockerOptions.builder().build();
+
+    protected DockerOptions injectDefaults(DockerOptions original) {
+        var builder = original.toBuilder();
+        if (original.getImage() == null) {
+            builder.image(DEFAULT_IMAGE);
+        }
+
+        return builder.build();
+    }
 
     abstract public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException, IOException;
 
@@ -108,7 +117,7 @@ public abstract class AbstractPythonSinger extends Task {
 
         commandsWrapper.withWarningOnStdErr(true)
             .withRunnerType(RunnerType.DOCKER)
-            .withDockerOptions(this.docker)
+            .withDockerOptions(this.injectDefaults(getDocker()))
             .withLogConsumer(new DefaultLogConsumer(runContext))
             .withCommands(ScriptService.scriptCommands(
                 List.of("/bin/sh", "-c"),
@@ -124,7 +133,7 @@ public abstract class AbstractPythonSinger extends Task {
         new CommandsWrapper(runContext)
             .withWarningOnStdErr(true)
             .withRunnerType(RunnerType.DOCKER)
-            .withDockerOptions(this.docker)
+            .withDockerOptions(this.injectDefaults(getDocker()))
             .withLogConsumer(logConsumer)
             .withCommands(ScriptService.scriptCommands(
                 List.of("/bin/sh", "-c"),
