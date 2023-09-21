@@ -7,6 +7,7 @@ import io.kestra.core.storages.StorageInterface;
 import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
 import jakarta.inject.Inject;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -25,6 +26,7 @@ class ExchangeRateHostTest extends TapsTest {
     private RunContextFactory runContextFactory;
 
     @Test
+    @Disabled("site down")
     void run() throws Exception {
         ExchangeRateHost.ExchangeRateHostBuilder<?, ?> builder = ExchangeRateHost.builder()
             .id(IdUtils.create())
