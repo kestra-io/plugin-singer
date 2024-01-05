@@ -259,7 +259,7 @@ public abstract class AbstractPythonSinger extends Task {
         }
 
         @Override
-        public void accept(String line, Boolean isStdErr) throws Exception {
+        public void accept(String line, Boolean isStdErr) {
             if (isStdErr) {
                 singerLogParser.accept(line, isStdErr);
                 return;
