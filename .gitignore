@@ -22,3 +22,4 @@ src/test/java/io/kestra/plugin/singer/taps/GitHubTest.java
 src/test/java/io/kestra/plugin/singer/taps/GitlabTest.java
 src/test/java/io/kestra/plugin/singer/taps/SlackTest.java
 src/test/java/io/kestra/plugin/singer/taps/CrowDevTest.java
+src/test/java/io/kestra/plugin/singer/taps/HubSpotTest.java

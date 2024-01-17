@@ -1,7 +1,6 @@
 package io.kestra.plugin.singer.taps;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
@@ -27,25 +26,17 @@ import javax.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a crow.dev api.",
-    description = "Full documentation can be found [here](https://github.com/edgarrmondragon/tap-crowd-dev)"
+    title = "A Singer tap to fetch data from a HubSpot api.",
+    description = "Full documentation can be found [here](https://github.com/potloc/tap-hubspot)"
 )
-public class CrowdDev extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
+public class HubSpot extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Tenant ID for Crowd Dev"
+        title = "API Access Token"
     )
     @PluginProperty(dynamic = true)
-    private String tenantId;
-
-    @NotNull
-    @NotEmpty
-    @Schema(
-        title = "API Token for Crowd Dev"
-    )
-    @PluginProperty(dynamic = true)
-    private String token;
+    private String accessToken;
 
     @Schema(
         title = "List Config object for stream maps capability.",
@@ -93,8 +84,7 @@ public class CrowdDev extends AbstractPythonTap implements RunnableTask<Abstract
     @Override
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
-            .put("tenant_id", runContext.render(this.tenantId))
-            .put("token", runContext.render(this.token))
+            .put("access_token", runContext.render(this.accessToken))
             .put("start_date", runContext.render(this.startDate.toString()));
 
         try {
@@ -122,11 +112,11 @@ public class CrowdDev extends AbstractPythonTap implements RunnableTask<Abstract
 
     @Override
     public List<String> pipPackages() {
-        return Collections.singletonList("git+https://github.com/edgarrmondragon/tap-crowd-dev.git");
+        return Collections.singletonList("git+https://github.com/potloc/tap-hubspot.git");
     }
 
     @Override
     protected String command() {
-        return "tap-crowd-dev";
+        return "tap-hubspot";
     }
 }
