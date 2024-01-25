@@ -178,6 +178,7 @@ public abstract class AbstractPythonSinger extends Task {
     protected Map<String, String> environmentVariables(RunContext runContext) throws IllegalVariableEvaluationException, IOException {
         return new HashMap<>(Map.of(
             "PYTHONUNBUFFERED", "true",
+            "PIP_ROOT_USER_ACTION", "ignore",
             "LOGGING_CONF_FILE", "logging.conf",
             "PYTHONPATH", "."
         ));
