@@ -35,7 +35,7 @@ public class Zendesk extends AbstractPythonTap implements RunnableTask<AbstractP
     @NotEmpty
     @Schema(
         title = "Zendesk Subdomain.",
-        description = "See [doc](https://support.zendesk.com/hc/en-us/articles/221682747-Where-can-I-find-my-Zendesk-subdomain-)"
+        description = "See [Zendesk Documentation](https://support.zendesk.com/hc/en-us/articles/4409381383578-Where-can-I-find-my-Zendesk-subdomain)"
     )
     @PluginProperty(dynamic = true)
     private String subdomain;
@@ -47,14 +47,14 @@ public class Zendesk extends AbstractPythonTap implements RunnableTask<AbstractP
     private String email;
 
     @Schema(
-        title = "Zendesk api token."
+        title = "Zendesk API token."
     )
     @PluginProperty(dynamic = true)
     private String apiToken;
 
     @Schema(
         title = "Zendesk access token.",
-        description = "See [doc](https://support.zendesk.com/hc/en-us/articles/203663836)"
+        description = "See [Zendesk Documentation](https://support.zendesk.com/hc/en-us/articles/203663836)"
     )
     @PluginProperty(dynamic = true)
     private String accessToken;
