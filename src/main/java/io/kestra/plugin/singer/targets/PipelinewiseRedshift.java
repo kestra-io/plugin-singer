@@ -197,7 +197,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
         description = "Metadata columns add extra row level information about data ingestions, (i.e. when was the " +
             "row read in source, when was inserted or deleted in redshift etc.) Metadata columns are creating " +
             "automatically by adding extra columns to the tables with a column prefix _SDC_. The metadata columns " +
-            "are documented at [here](https://transferwise.github.io/pipelinewise/data_structure/sdc-columns.html). " +
+            "are documented at [here](https://transferwise.github.io/pipelinewise/index.html). " +
             "Enabling metadata columns will flag the deleted rows by setting the _SDC_DELETED_AT metadata column. " +
             "Without the `addMetadataColumns` option the deleted rows from singer taps will not be recongisable in Redshift."
     )
