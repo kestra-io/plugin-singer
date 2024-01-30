@@ -5,6 +5,7 @@ import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,6 @@ import lombok.experimental.SuperBuilder;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import javax.validation.constraints.NotNull;
 
 @SuperBuilder
 @ToString
