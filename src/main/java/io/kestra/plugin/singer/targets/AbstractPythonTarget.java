@@ -1,16 +1,13 @@
 package io.kestra.plugin.singer.targets;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.AbstractPythonSinger;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 
@@ -88,7 +85,7 @@ public abstract class AbstractPythonTarget extends AbstractPythonSinger {
                 FluxSink.OverflowStrategy.BUFFER
             )
             .map(throwFunction(s -> MAPPER.readValue(s, TYPE_REFERENCE)))
-            .doOnEach(throwConsumer(signal -> stateMessage(signal.get())))
+            .doOnNext(throwConsumer(this::stateMessage))
             .collectList()
             .block();
     }
