@@ -6,13 +6,13 @@ import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import javax.validation.constraints.NotNull;
 
 @SuperBuilder
 @ToString

@@ -26,7 +26,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -259,7 +259,7 @@ public abstract class AbstractPythonSinger extends Task {
         }
 
         @Override
-        public void accept(String line, Boolean isStdErr) throws Exception {
+        public void accept(String line, Boolean isStdErr) {
             if (isStdErr) {
                 singerLogParser.accept(line, isStdErr);
                 return;

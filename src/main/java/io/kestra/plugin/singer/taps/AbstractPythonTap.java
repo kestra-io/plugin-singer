@@ -11,17 +11,18 @@ import io.kestra.plugin.singer.models.DiscoverStreams;
 import io.kestra.plugin.singer.models.Feature;
 import io.kestra.plugin.singer.models.StreamsConfiguration;
 import io.kestra.plugin.singer.services.SelectedService;
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.FluxSink;
+
 import java.io.*;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -29,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static io.kestra.core.utils.Rethrow.throwConsumer;
 
 @SuperBuilder
 @ToString
@@ -104,31 +107,31 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger implements 
     }
 
     @SuppressWarnings("unchecked")
-    private Long runSync(RunContext runContext) {
-        Flowable<String> flowable = Flowable.create(
-            emitter -> {
+    private Long runSync(RunContext runContext) throws Exception {
+        Flux<String> flowable = Flux.create(
+            throwConsumer(emitter -> {
                 this.run(runContext, this.tapCommand(runContext), new SingerLogDispatcher(runContext, metrics, null));
 
                 try (BufferedReader reader = new BufferedReader(new FileReader(this.workingDirectory.resolve("raw.jsonl").toFile()))) {
-                    reader.lines().forEach(emitter::onNext);
+                    reader.lines().forEach(emitter::next);
                 }
 
-                emitter.onComplete();
-            },
-            BackpressureStrategy.BUFFER
+                emitter.complete();
+            }),
+            FluxSink.OverflowStrategy.BUFFER
         );
 
         return flowable
-            .doOnNext(this::rawData)
-            .doOnNext(line -> {
+            .doOnNext(throwConsumer(this::rawData))
+            .doOnNext(throwConsumer(line -> {
                 Map<String, Object> parsed = MAPPER.readValue(line, TYPE_REFERENCE);
 
                 if (parsed.getOrDefault("type", "UNKNOWN").equals("STATE")) {
                     this.stateMessage((Map<String, Object>) parsed.get("value"));
                 }
-            })
+            }))
             .count()
-            .blockingGet();
+            .block();
     }
 
     public void rawData(String raw) throws IOException {
