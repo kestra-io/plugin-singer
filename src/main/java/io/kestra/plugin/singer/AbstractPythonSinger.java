@@ -65,7 +65,7 @@ public abstract class AbstractPythonSinger extends Task {
     @Schema(
         title = "The name of singer state file"
     )
-    @PluginProperty
+    @PluginProperty(dynamic = true)
     @NotNull
     @Builder.Default
     protected String stateName = "singer-state";
@@ -234,8 +234,8 @@ public abstract class AbstractPythonSinger extends Task {
         return tempFile;
     }
 
-    public URI saveState(RunContext runContext) throws IOException {
-        return this.saveState(runContext, this.stateName, this.stateRecords);
+    public URI saveState(RunContext runContext) throws IOException, IllegalVariableEvaluationException {
+        return this.saveState(runContext, runContext.render(this.stateName), this.stateRecords);
     }
 
     public URI saveState(RunContext runContext, String state, Map<String, Object> stateRecords) throws IOException {
