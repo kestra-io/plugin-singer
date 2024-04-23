@@ -1,11 +1,11 @@
 package io.kestra.plugin.singer.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.annotation.Nullable;
 import lombok.Builder;
 import lombok.Value;
 
 import java.util.List;
-import io.micronaut.core.annotation.Nullable;
 import javax.annotation.RegEx;
 
 @Value
