@@ -45,7 +45,7 @@ dependencies {
     implementation group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: '3.0.0'
 
     // Kestra
-    annotationProcessor group: "io.kestra", name: "core", version: kestraVersion
+    annotationProcessor group: "io.kestra", name: "processor", version: kestraVersion
     compileOnly group: "io.kestra", name: "core", version: kestraVersion
     implementation group: "io.kestra.plugin", name: 'plugin-script', version: kestraVersion
 
@@ -85,7 +85,7 @@ dependencies {
     testImplementation "io.micronaut:micronaut-http-client"
 
     // test deps needed only for to have a runner
-    testAnnotationProcessor group: "io.kestra", name: "core", version: kestraVersion
+    testAnnotationProcessor group: "io.kestra", name: "processor", version: kestraVersion
     testImplementation group: "io.kestra", name: "core", version: kestraVersion
     testImplementation group: "io.kestra", name: "repository-memory", version: kestraVersion
     testImplementation group: "io.kestra", name: "runner-memory", version: kestraVersion
