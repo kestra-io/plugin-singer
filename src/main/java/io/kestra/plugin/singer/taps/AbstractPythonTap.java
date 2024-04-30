@@ -37,7 +37,6 @@ import static io.kestra.core.utils.Rethrow.throwConsumer;
 @ToString
 @EqualsAndHashCode
 @Getter
-@NoArgsConstructor
 public abstract class AbstractPythonTap extends AbstractPythonSinger implements RunnableTask<AbstractPythonTap.Output> {
     @Getter(AccessLevel.NONE)
     protected transient Pair<File, OutputStream> rawSingerStream;
@@ -54,7 +53,11 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger implements 
     @Getter(value = AccessLevel.NONE)
     @Builder.Default
     private transient Map<String, AtomicInteger> recordsCount = new ConcurrentHashMap<>();
-
+    
+    public AbstractPythonTap() {
+        super();
+    }
+    
     abstract public List<Feature> features();
 
     public void initEnvDiscoveryAndState(RunContext runContext) throws Exception {
@@ -124,7 +127,7 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger implements 
         return flowable
             .doOnNext(throwConsumer(this::rawData))
             .doOnNext(throwConsumer(line -> {
-                Map<String, Object> parsed = MAPPER.readValue(line, TYPE_REFERENCE);
+                Map<String, Object> parsed = objectMapper().readValue(line, TYPE_REFERENCE);
 
                 if (parsed.getOrDefault("type", "UNKNOWN").equals("STATE")) {
                     this.stateMessage((Map<String, Object>) parsed.get("value"));
@@ -151,7 +154,7 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger implements 
             new DefaultLogConsumer(runContext)
         );
 
-        DiscoverStreams discoverStreams = MAPPER.readValue(
+        DiscoverStreams discoverStreams = objectMapper().readValue(
             workingDirectory.resolve(discoverFileName).toFile(),
             DiscoverStreams.class
         );

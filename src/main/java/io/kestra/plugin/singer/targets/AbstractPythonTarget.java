@@ -84,7 +84,7 @@ public abstract class AbstractPythonTarget extends AbstractPythonSinger {
                 }),
                 FluxSink.OverflowStrategy.BUFFER
             )
-            .map(throwFunction(s -> MAPPER.readValue(s, TYPE_REFERENCE)))
+            .map(throwFunction(s -> objectMapper().readValue(s, TYPE_REFERENCE)))
             .doOnNext(throwConsumer(this::stateMessage))
             .collectList()
             .block();

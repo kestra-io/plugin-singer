@@ -45,8 +45,6 @@ import java.util.stream.Stream;
 @Getter
 @NoArgsConstructor
 public abstract class AbstractPythonSinger extends Task {
-    protected static final ObjectMapper MAPPER = JacksonMapper.ofJson()
-        .setSerializationInclusion(JsonInclude.Include.NON_NULL);
     protected static final TypeReference<Map<String, Object>> TYPE_REFERENCE = new TypeReference<>() {
     };
     private static final String DEFAULT_IMAGE = "python:3.10.12";
@@ -89,7 +87,7 @@ public abstract class AbstractPythonSinger extends Task {
     @PluginProperty
     @Builder.Default
     protected DockerOptions docker = DockerOptions.builder().build();
-
+    
     protected DockerOptions injectDefaults(DockerOptions original) {
         var builder = original.toBuilder();
         if (original.getImage() == null) {
@@ -172,7 +170,7 @@ public abstract class AbstractPythonSinger extends Task {
     }
 
     protected void configSetupCommands(RunContext runContext) throws IllegalVariableEvaluationException, IOException {
-        this.writeSingerFiles("config.json", MAPPER.writeValueAsString(this.configuration(runContext)));
+        this.writeSingerFiles("config.json", objectMapper().writeValueAsString(this.configuration(runContext)));
     }
 
     protected Map<String, String> environmentVariables(RunContext runContext) throws IllegalVariableEvaluationException, IOException {
@@ -193,7 +191,7 @@ public abstract class AbstractPythonSinger extends Task {
     }
 
     protected void writeSingerFiles(String filename, Object map) throws IOException {
-        this.writeSingerFiles(filename, MAPPER.writeValueAsString(map));
+        this.writeSingerFiles(filename, objectMapper().writeValueAsString(map));
     }
 
     protected void saveSingerMetrics(RunContext runContext) {
@@ -227,7 +225,7 @@ public abstract class AbstractPythonSinger extends Task {
         File tempFile = workingDirectory.resolve(IdUtils.create() + ".json").toFile();
 
         try (FileWriter fileWriter = new FileWriter(tempFile)) {
-            fileWriter.write(MAPPER.writeValueAsString(value));
+            fileWriter.write(objectMapper().writeValueAsString(value));
             fileWriter.flush();
         }
 
@@ -297,11 +295,11 @@ public abstract class AbstractPythonSinger extends Task {
         public void accept(String line, Boolean isStdErr) {
             try {
                 @SuppressWarnings("unchecked")
-                Map<String, String> jsonLog = (Map<String, String>) MAPPER.readValue(line, Object.class);
+                Map<String, String> jsonLog = (Map<String, String>) objectMapper().readValue(line, Object.class);
 
                 if (jsonLog.containsKey("message") && jsonLog.get("message") != null && jsonLog.get("message")
                     .startsWith("METRIC: {")) {
-                    metrics.add(MAPPER.readValue(jsonLog.get("message").substring(8), Metric.class));
+                    metrics.add(objectMapper().readValue(jsonLog.get("message").substring(8), Metric.class));
                     return;
                 }
 
@@ -330,5 +328,8 @@ public abstract class AbstractPythonSinger extends Task {
             }
         }
     }
-
+    
+    protected static ObjectMapper objectMapper() {
+        return JacksonMapper.ofJson().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    }
 }
