@@ -47,7 +47,7 @@ class ExchangeRateHostTest extends TapsTest {
         assertThat(groupedByType.get(StreamType.STATE).size(), is(1));
 
         // rerun, we won't retrieve any record due to state
-        String rawOutput = new BufferedReader(new InputStreamReader(runContext.uriToInputStream(builder.build().run(runContext).getRaw()))).lines().collect(Collectors.joining("\n"));
+        String rawOutput = new BufferedReader(new InputStreamReader(runContext.storage().getFile(builder.build().run(runContext).getRaw()))).lines().collect(Collectors.joining("\n"));
         assertThat(rawOutput, is(""));
     }
 }

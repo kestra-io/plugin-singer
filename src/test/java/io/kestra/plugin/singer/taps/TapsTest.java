@@ -19,7 +19,7 @@ import static io.kestra.core.utils.Rethrow.throwFunction;
 @MicronautTest
 public abstract class TapsTest {
     public Map<StreamType, List<Map<String, Object>>> groupedByType(RunContext runContext, URI internalStorageUri) throws IOException {
-        String rawOutput = new BufferedReader(new InputStreamReader(runContext.uriToInputStream(internalStorageUri))).lines().collect(Collectors.joining("\n"));
+        String rawOutput = new BufferedReader(new InputStreamReader(runContext.storage().getFile(internalStorageUri))).lines().collect(Collectors.joining("\n"));
         return Arrays.stream(rawOutput.split("\n"))
             .map(throwFunction(JacksonMapper::toMap))
             .collect(Collectors.groupingBy(object -> StreamType.value((String) object.getOrDefault("type", "UNKNOWN"))));

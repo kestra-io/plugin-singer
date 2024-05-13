@@ -45,7 +45,7 @@ public abstract class AbstractPythonTarget extends AbstractPythonSinger {
         // from
         URI from = new URI(runContext.render(this.from));
         Path tempFile = runContext.tempFile();
-        Files.copy(runContext.uriToInputStream(from), tempFile, StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(runContext.storage().getFile(from), tempFile, StandardCopyOption.REPLACE_EXISTING);
 
         // sync
         this.tapsSync(tempFile, runContext);
