@@ -67,7 +67,7 @@ public class Json extends AbstractPythonTarget implements RunnableTask<Json.Outp
 
                     return new AbstractMap.SimpleEntry<>(
                         String.join(".", name),
-                        runContext.putTempFile(o)
+                        runContext.storage().putFile(o)
                     );
                 }))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))

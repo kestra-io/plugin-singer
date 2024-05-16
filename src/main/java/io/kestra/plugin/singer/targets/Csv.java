@@ -88,7 +88,7 @@ public class Csv extends AbstractPythonTarget implements RunnableTask<Csv.Output
 
                     return new AbstractMap.SimpleEntry<>(
                         String.join("-", name),
-                        runContext.putTempFile(o)
+                        runContext.storage().putFile(o)
                     );
                 }))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))

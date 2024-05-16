@@ -96,7 +96,7 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger implements 
 
         Output.OutputBuilder outputBuilder = Output.builder()
             .count(itemsCount)
-            .raw(runContext.putTempFile(this.rawSingerStream.getLeft()));
+            .raw(runContext.storage().putFile(this.rawSingerStream.getLeft()));
 
         if (this.features().contains(Feature.STATE)) {
             this.saveState(runContext);
