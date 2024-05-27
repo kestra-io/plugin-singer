@@ -11,7 +11,13 @@ on:
     branches:
       - master
 
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      skip-test:
+        description: 'Skip test'
+        required: false
+        type: string
+        default: "false"
 
 jobs:
   check:
@@ -24,6 +30,7 @@ jobs:
 
       # Services
       - name: Build the docker-compose stack
+        if: ${{ github.event.inputs.skip-test == 'false' || github.event.inputs.skip-test == '' }}
         run: |
           mkdir data
           curl -s -o data/mysql.sql https://raw.githubusercontent.com/harryho/db-samples/master/mysql/northwind.sql
@@ -68,11 +75,13 @@ jobs:
 
       # Python
       - name: Set up Python
+        if: ${{ github.event.inputs.skip-test == 'false' || github.event.inputs.skip-test == '' }}
         run: |
           python3 -m pip install virtualenv
 
       # Gradle check
       - name: Build with Gradle
+        if: ${{ github.event.inputs.skip-test == 'false' || github.event.inputs.skip-test == '' }}
         env:
           GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
         run: |
