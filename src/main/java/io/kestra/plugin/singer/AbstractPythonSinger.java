@@ -240,7 +240,7 @@ public abstract class AbstractPythonSinger extends Task {
 
     public URI saveState(RunContext runContext, String state, Map<String, Object> stateRecords) throws IOException {
         File tempFile = this.writeJsonTempFile(stateRecords);
-        return runContext.putTaskStateFile(tempFile, state, "state.json");
+        return runContext.storage().putTaskStateFile(tempFile, state, "state.json");
     }
 
     public void stateMessage(Map<String, Object> stateValue) {

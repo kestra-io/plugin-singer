@@ -69,7 +69,7 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger implements 
         // state
         if (this.features().contains(Feature.STATE)) {
             try {
-                InputStream taskStateFile = runContext.getTaskStateFile(runContext.render(this.stateName), "state.json");
+                InputStream taskStateFile = runContext.storage().getTaskStateFile(runContext.render(this.stateName), "state.json");
                 this.writeSingerFiles("state.json", IOUtils.toString(taskStateFile, StandardCharsets.UTF_8));
             } catch (FileNotFoundException e) {
                 this.writeSingerFiles("state.json", "{}");
