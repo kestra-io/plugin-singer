@@ -3,7 +3,7 @@ package io.kestra.plugin.singer.taps;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.JacksonMapper;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import io.kestra.core.junit.annotations.KestraTest;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 import static io.kestra.core.utils.Rethrow.throwFunction;
 
-@MicronautTest
+@KestraTest
 public abstract class TapsTest {
     public Map<StreamType, List<Map<String, Object>>> groupedByType(RunContext runContext, URI internalStorageUri) throws IOException {
         String rawOutput = new BufferedReader(new InputStreamReader(runContext.storage().getFile(internalStorageUri))).lines().collect(Collectors.joining("\n"));

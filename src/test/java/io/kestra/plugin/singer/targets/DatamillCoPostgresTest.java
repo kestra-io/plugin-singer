@@ -9,7 +9,7 @@ import io.kestra.plugin.singer.models.DiscoverMetadata;
 import io.kestra.plugin.singer.models.StreamsConfiguration;
 import io.kestra.plugin.singer.taps.AbstractPythonTap;
 import io.kestra.plugin.singer.taps.PipelinewiseMysql;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import io.kestra.core.junit.annotations.KestraTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.IsNot.not;
 
-@MicronautTest
+@KestraTest
 class DatamillCoPostgresTest {
     @Inject
     private RunContextFactory runContextFactory;
