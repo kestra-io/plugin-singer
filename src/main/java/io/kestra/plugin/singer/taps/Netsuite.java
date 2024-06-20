@@ -95,7 +95,6 @@ public class Netsuite extends AbstractPythonTap implements RunnableTask<Abstract
     private Boolean isSandbox;
 
     @NotNull
-    @NotEmpty
     @Schema(
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
