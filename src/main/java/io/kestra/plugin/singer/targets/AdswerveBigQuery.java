@@ -162,7 +162,7 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
 
     @Override
     public List<String> pipPackages() {
-        return Collections.singletonList("git+https://github.com/adswerve/target-bigquery.git@0.12.5");
+        return Collections.singletonList("git+https://github.com/kestra-io/target-bigquery.git@fix");
     }
 
     @Override
