@@ -56,10 +56,10 @@ public class BigQuery extends AbstractPythonTap implements RunnableTask<Abstract
         description = "This could cause records to be missed that were created after the last run finished, but during the same second and with the same timestamp."
     )
     @PluginProperty
+    @Builder.Default
     private Boolean startAlwaysInclusive = true;
 
     @NotNull
-    @NotEmpty
     @Schema(
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
