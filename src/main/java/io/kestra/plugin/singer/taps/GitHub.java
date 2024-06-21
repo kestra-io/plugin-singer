@@ -43,7 +43,6 @@ public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPy
     private String accessToken;
 
     @NotNull
-    @NotEmpty
     @Schema(
         title = "List of GitHub repositories.",
         description = "The repo path is relative to https://github.com/. \n" +
