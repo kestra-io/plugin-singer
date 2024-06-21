@@ -100,7 +100,7 @@ public class BigQuery extends AbstractPythonTap implements RunnableTask<Abstract
 
     @Override
     public List<String> pipPackages() {
-        return List.of("tap-bigquery");
+        return List.of("git+https://github.com/kestra-io/tap-bigquery.git@fix");
     }
 
     @Override
