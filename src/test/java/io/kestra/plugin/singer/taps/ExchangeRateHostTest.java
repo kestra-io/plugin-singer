@@ -6,6 +6,7 @@ import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.storages.StorageInterface;
 import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
+import io.kestra.plugin.core.runner.Process;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,7 @@ class ExchangeRateHostTest extends TapsTest {
         ExchangeRateHost.ExchangeRateHostBuilder<?, ?> builder = ExchangeRateHost.builder()
             .id(IdUtils.create())
             .type(ExchangeRateHost.class.getName())
+            .taskRunner(Process.INSTANCE)
             .startDate(LocalDate.now().minusDays(2))
             .type(ExchangeRateHost.class.getName());
 
