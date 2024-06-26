@@ -5,6 +5,7 @@ import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
+import io.kestra.plugin.core.runner.Process;
 import io.kestra.plugin.singer.models.DiscoverMetadata;
 import io.kestra.plugin.singer.models.StreamsConfiguration;
 import jakarta.inject.Inject;
@@ -27,6 +28,7 @@ class PipelinewiseMongoDbTest extends TapsTest {
         PipelinewiseMongoDb.PipelinewiseMongoDbBuilder<?, ?> builder = PipelinewiseMongoDb.builder()
             .id(IdUtils.create())
             .type(PipelinewiseMongoDb.class.getName())
+            .taskRunner(Process.INSTANCE)
             .host("172.17.0.1")
             .username("root")
             .password("example")
