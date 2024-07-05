@@ -211,7 +211,7 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
     private Boolean addMetadataColumns = false;
 
     @Schema(
-        title = "When `hardDelete` option is true then DELETE SQL commands will be performed in Snowflake to delete rows in tables. It iss achieved by continuously checking the  `_SDC_DELETED_AT` metadata column sent by the singer tap. Due to deleting rows requires metadata columns, `hard_delete` option automatically enables the `add_metadata_columns` option as well."
+        title = "When `hardDelete` option is true, then DELETE SQL commands will be performed in Snowflake to delete rows in tables. It is achieved by continuously checking the  `_SDC_DELETED_AT` metadata column sent by the singer tap. Due to deleting rows requiring metadata columns, `hard_delete` option automatically enables the `add_metadata_columns` option as well."
     )
     @PluginProperty
     @Builder.Default
