@@ -63,7 +63,7 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Quickbooks username."
+        title = "Quickbooks' username."
     )
     @PluginProperty(dynamic = true)
     private String realmId;
@@ -71,7 +71,7 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Quickbooks client ID."
+        title = "Quickbooks' client ID."
     )
     @PluginProperty(dynamic = true)
     private String clientId;
@@ -79,7 +79,7 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Quickbooks client secret."
+        title = "Quickbooks' client secret."
     )
     @PluginProperty(dynamic = true)
     private String clientSecret;
@@ -87,7 +87,7 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Quickbooks refresh token."
+        title = "Quickbooks' refresh token."
     )
     @PluginProperty(dynamic = true)
     private String refreshToken;

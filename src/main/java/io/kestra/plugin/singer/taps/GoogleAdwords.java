@@ -24,14 +24,14 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a google adwords.",
+    title = "A Singer tap to fetch data from Google Adwords.",
     description = "Full documentation can be found [here](https://gitlab.com/meltano/tap-adwords)"
 )
 public class GoogleAdwords extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Your Developer Token for Google AdWord Application."
+        title = "Your developer token for Google AdWord application."
     )
     @PluginProperty(dynamic = true)
     private String developerToken;
@@ -55,7 +55,7 @@ public class GoogleAdwords extends AbstractPythonTap implements RunnableTask<Abs
     @NotNull
     @NotEmpty
     @Schema(
-        title = "The Refresh Token generated through the OAuth flow run using your OAuth Client and your Developer Token."
+        title = "The Refresh Token generated through the OAuth flow run using your OAuth Client and your developer token."
     )
     @PluginProperty(dynamic = true)
     private String refreshToken;

@@ -23,7 +23,7 @@ import static io.kestra.core.utils.Rethrow.throwFunction;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer target loads data into a Json Files.",
+    title = "A Singer target loads data into JSON files.",
     description = "Full documentation can be found [here](https://github.com/andyh1203/target-jsonl)"
 )
 public class Json extends AbstractPythonTarget implements RunnableTask<Json.Output> {
@@ -78,13 +78,13 @@ public class Json extends AbstractPythonTarget implements RunnableTask<Json.Outp
     @Getter
     public static class Output implements io.kestra.core.models.tasks.Output {
         @Schema(
-            title = "Uri of the state file"
+            title = "URI of the state file."
         )
         private final URI state;
 
         @Schema(
-            title = "Uri of the generated csv",
-            description = "The key will be the name of the stream"
+            title = "URI of the generated CSV.",
+            description = "The key will be the name of the stream."
         )
         @PluginProperty(additionalProperties = URI.class)
         private final Map<String, URI> uris;

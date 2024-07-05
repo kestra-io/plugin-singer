@@ -52,7 +52,7 @@ public class PipelinewiseMysql extends AbstractPythonTap implements RunnableTask
     @NotNull
     @NotEmpty
     @Schema(
-        title = "The database hostname"
+        title = "The database hostname."
     )
     @PluginProperty(dynamic = true)
     private String host;
@@ -60,33 +60,33 @@ public class PipelinewiseMysql extends AbstractPythonTap implements RunnableTask
     @NotNull
     @NotEmpty
     @Schema(
-        title = "The database user"
+        title = "The database user."
     )
     @PluginProperty(dynamic = true)
     private String username;
 
     @Schema(
-        title = "The database user's password"
+        title = "The database user's password."
     )
     @PluginProperty(dynamic = true)
     private String password;
 
     @NotNull
     @Schema(
-        title = "The database port"
+        title = "The database port."
     )
     @PluginProperty
     private Integer port;
 
     @Schema(
-        title = "If ssl is enabled"
+        title = "If ssl is enabled."
     )
     @PluginProperty
     @Builder.Default
     private final Boolean ssl = false;
 
     @Schema(
-        title = "The list of schemas to extract tables only from particular schemas and to improve data extraction performance"
+        title = "The list of schemas to extract tables only from particular schemas and to improve data extraction performance."
     )
     @PluginProperty(dynamic = true)
     private List<String> filterDbs;

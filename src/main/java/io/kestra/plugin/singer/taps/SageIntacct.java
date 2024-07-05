@@ -39,7 +39,7 @@ public class SageIntacct extends AbstractPythonTap implements RunnableTask<Abstr
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Intacct Sender Id."
+        title = "Intacct Sender ID."
     )
     @PluginProperty(dynamic = true)
     private String senderId;
@@ -55,7 +55,7 @@ public class SageIntacct extends AbstractPythonTap implements RunnableTask<Abstr
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Intacct User Id."
+        title = "Intacct User ID."
     )
     @PluginProperty(dynamic = true)
     private String userId;

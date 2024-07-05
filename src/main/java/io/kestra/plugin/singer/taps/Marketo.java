@@ -33,7 +33,7 @@ public class Marketo extends AbstractPythonTap implements RunnableTask<AbstractP
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Endpoint url.",
+        title = "Endpoint URL.",
         description = "The base URL contains the account id (a.k.a. Munchkin id) and is therefore unique for each " +
             "Marketo subscription. Your base URL is found by logging into Marketo and navigating to the " +
             "Admin > Integration > Web Services menu. " +
@@ -55,7 +55,7 @@ public class Marketo extends AbstractPythonTap implements RunnableTask<AbstractP
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Marketo client id."
+        title = "Marketo client ID."
     )
     @PluginProperty(dynamic = true)
     private String clientId;

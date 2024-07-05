@@ -53,7 +53,7 @@ public class PipelinewiseOracle extends AbstractPythonTap implements RunnableTas
     @NotNull
     @NotEmpty
     @Schema(
-        title = "The database hostname"
+        title = "The database hostname."
     )
     @PluginProperty(dynamic = true)
     private String host;
@@ -61,33 +61,33 @@ public class PipelinewiseOracle extends AbstractPythonTap implements RunnableTas
     @NotNull
     @NotEmpty
     @Schema(
-        title = "The database user"
+        title = "The database user."
     )
     @PluginProperty(dynamic = true)
     private String username;
 
     @Schema(
-        title = "The database user's password"
+        title = "The database user's password."
     )
     @PluginProperty(dynamic = true)
     private String password;
 
     @NotNull
     @Schema(
-        title = "The database port"
+        title = "The database port."
     )
     @PluginProperty
     private Integer port;
 
     @NotNull
     @Schema(
-        title = "The database SID"
+        title = "The database SID."
     )
     @PluginProperty(dynamic = true)
     private String sid;
 
     @Schema(
-        title = "The schemas to filter"
+        title = "The schemas to filter."
     )
     @PluginProperty(dynamic = true)
     private String filterSchemas;

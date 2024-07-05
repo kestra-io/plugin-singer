@@ -34,7 +34,7 @@ public class Fastly extends AbstractPythonTap implements RunnableTask<AbstractPy
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Your Api Token."
+        title = "Your API Token."
     )
     @PluginProperty(dynamic = true)
     private String apiToken;

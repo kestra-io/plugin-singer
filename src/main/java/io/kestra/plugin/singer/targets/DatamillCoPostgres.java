@@ -28,7 +28,7 @@ public class DatamillCoPostgres extends AbstractPythonTarget implements Runnable
     @NotNull
     @NotEmpty
     @Schema(
-        title = "The database hostname"
+        title = "The database hostname."
     )
     @PluginProperty(dynamic = true)
     private String host;
@@ -36,19 +36,19 @@ public class DatamillCoPostgres extends AbstractPythonTarget implements Runnable
     @NotNull
     @NotEmpty
     @Schema(
-        title = "The database user"
+        title = "The database user."
     )
     @PluginProperty(dynamic = true)
     private String username;
 
     @Schema(
-        title = "The database user's password"
+        title = "The database user's password."
     )
     @PluginProperty(dynamic = true)
     private String password;
 
     @Schema(
-        title = "The database name"
+        title = "The database name."
     )
     @PluginProperty(dynamic = true)
     private String dbName;
@@ -61,14 +61,14 @@ public class DatamillCoPostgres extends AbstractPythonTarget implements Runnable
     private Integer port;
 
     @Schema(
-        title = "The database schema"
+        title = "The database schema."
     )
     @PluginProperty(dynamic = true)
     @Builder.Default
     private final String schema = "public";
 
     @Schema(
-        title = "Refer to the [libpq](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS) docs for more information about SSL"
+        title = "Refer to the [libpq](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS) docs for more information about SSL."
     )
     @PluginProperty(dynamic = true)
     @Builder.Default

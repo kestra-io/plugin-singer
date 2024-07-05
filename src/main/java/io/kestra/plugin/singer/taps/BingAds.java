@@ -24,14 +24,14 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a Bing ads.",
+    title = "A Singer tap to fetch data from Bing Ads.",
     description = "Full documentation can be found [here](https://github.com/singer-io/tap-bing-ads)"
 )
 public class BingAds extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Your Developer Token for Bing Ads Application."
+        title = "Your developer token for Bing Ads application."
     )
     @PluginProperty(dynamic = true)
     private String developerToken;

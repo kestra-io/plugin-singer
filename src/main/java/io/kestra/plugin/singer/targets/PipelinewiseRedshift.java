@@ -28,7 +28,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
     @NotNull
     @NotEmpty
     @Schema(
-        title = "The database hostname"
+        title = "The database hostname."
     )
     @PluginProperty(dynamic = true)
     private String host;
@@ -36,26 +36,26 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
     @NotNull
     @NotEmpty
     @Schema(
-        title = "The database user"
+        title = "The database user."
     )
     @PluginProperty(dynamic = true)
     private String username;
 
     @Schema(
-        title = "The database user's password"
+        title = "The database user's password."
     )
     @PluginProperty(dynamic = true)
     private String password;
 
     @Schema(
-        title = "The database name"
+        title = "The database name."
     )
     @PluginProperty(dynamic = true)
     private String dbName;
 
     @NotNull
     @Schema(
-        title = "The database port"
+        title = "The database port."
     )
     @PluginProperty
     private Integer port;
@@ -63,7 +63,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
     @NotEmpty
     @NotNull
     @Schema(
-        title = "The S3 bucket name"
+        title = "The S3 bucket name."
     )
     @PluginProperty(dynamic = true)
     private String s3Bucket;
@@ -78,7 +78,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
     private String defaultTargetSchema;
 
     @Schema(
-        title = "S3 Access Key Id.",
+        title = "S3 Access Key ID.",
         description = "Used for S3 and Redshift copy operations."
     )
     @PluginProperty(dynamic = true)

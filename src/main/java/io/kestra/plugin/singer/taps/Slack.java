@@ -24,17 +24,15 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a GitHub api.",
+    title = "A Singer tap to fetch data from Slack.",
     description = "Full documentation can be found [here](https://github.com/Mashey/tap-slack)"
 )
 public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
     @Schema(
-        title = "a GitHub personnal access token",
-        description = "Login to your GitHub account, " +
-            "go to the [Personal Access Tokens](https://github.com/settings/tokens) settings page, " +
-            "and generate a new token with at least the `repo` scope."
+        title = "Slack Access Token.",
+        description = "More details on Slack Access Tokens can be found [here](https://slack.dev/python-slack-sdk/installation/)."
     )
     @PluginProperty(dynamic = true)
     private String apiToken;

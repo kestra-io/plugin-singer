@@ -30,70 +30,70 @@ import java.util.Map;
 public class Oracle extends AbstractPythonTarget implements RunnableTask<AbstractPythonTarget.Output> {
     @NotEmpty
     @Schema(
-        title = "The database hostname"
+        title = "The database hostname."
     )
     @PluginProperty(dynamic = true)
     private String host;
 
     @Schema(
-        title = "The database name"
+        title = "The database name."
     )
     @PluginProperty(dynamic = true)
     private String database;
 
     @NotNull
     @Schema(
-        title = "The database port"
+        title = "The database port."
     )
     @PluginProperty
     private Integer port;
 
     @NotEmpty
     @Schema(
-        title = "The database user"
+        title = "The database user."
     )
     @PluginProperty(dynamic = true)
     private String username;
 
     @NotEmpty
     @Schema(
-        title = "The database user's password"
+        title = "The database user's password."
     )
     @PluginProperty(dynamic = true)
     private String password;
 
     @Schema(
-        title = "SQLAlchemy driver name"
+        title = "SQLAlchemy driver name."
     )
     @PluginProperty(dynamic = true)
     private String driverName;
 
     @Schema(
-        title = "Use float data type for numbers (otherwise number type is used)"
+        title = "Use float data type for numbers (otherwise number type is used)."
     )
     @PluginProperty
     private Boolean preferFloatOverNumeric;
 
     @Schema(
-        title = "Config object for stream maps capability"
+        title = "Config object for stream maps capability."
     )
     @PluginProperty(dynamic = true)
     private String streamMaps;
 
     @Schema(
-        title = "User-defined config values to be used within map expressions"
+        title = "User-defined config values to be used within map expressions."
     )
     @PluginProperty(dynamic = true)
     private String streamMapConfig;
 
     @Schema(
-        title = "Enable schema flattening and automatically expand nested properties"
+        title = "Enable schema flattening and automatically expand nested properties."
     )
     @PluginProperty
     private Boolean flatteningEnabled;
 
     @Schema(
-        title = "The max depth to flatten schemas"
+        title = "The max depth to flatten schemas."
     )
     @PluginProperty
     private Integer flatteningMaxDepth;

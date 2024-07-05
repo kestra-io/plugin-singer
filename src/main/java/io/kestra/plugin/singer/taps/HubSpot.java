@@ -26,7 +26,7 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a HubSpot api.",
+    title = "A Singer tap to fetch data from a HubSpot API.",
     description = "Full documentation can be found [here](https://github.com/potloc/tap-hubspot)"
 )
 public class HubSpot extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
