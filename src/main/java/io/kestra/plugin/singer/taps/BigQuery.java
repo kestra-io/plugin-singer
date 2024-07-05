@@ -28,7 +28,7 @@ import jakarta.validation.constraints.NotNull;
 )
 public class BigQuery extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @Schema(
-        title = "The json service account key as string "
+        title = "The JSON service account key as string."
     )
     @PluginProperty(dynamic = true)
     protected String serviceAccount;

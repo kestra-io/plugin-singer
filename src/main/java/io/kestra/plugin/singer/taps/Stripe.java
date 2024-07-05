@@ -34,7 +34,7 @@ public class Stripe extends AbstractPythonTap implements RunnableTask<AbstractPy
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Stripe account id.",
+        title = "Stripe account ID.",
         description = "Ex. acct_1a2b3c4d5e"
     )
     @PluginProperty(dynamic = true)

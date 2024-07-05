@@ -52,74 +52,74 @@ import java.util.Map;
 public class PipelinewiseSqlServer extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotEmpty
     @Schema(
-        title = "The database hostname"
+        title = "The database hostname."
     )
     @PluginProperty(dynamic = true)
     private String host;
 
     @NotEmpty
     @Schema(
-        title = "The database name"
+        title = "The database name."
     )
     @PluginProperty(dynamic = true)
     private String database;
 
     @NotNull
     @Schema(
-        title = "The database port"
+        title = "The database port."
     )
     @PluginProperty
     private Integer port;
 
     @NotEmpty
     @Schema(
-        title = "The database user"
+        title = "The database user."
     )
     @PluginProperty(dynamic = true)
     private String username;
 
     @NotEmpty
     @Schema(
-        title = "The database user's password"
+        title = "The database user's password."
     )
     @PluginProperty(dynamic = true)
     private String password;
 
     @Schema(
-        title = "The list of schemas to extract tables only from particular schemas and to improve data extraction performance"
+        title = "The list of schemas to extract tables only from particular schemas and to improve data extraction performance."
     )
     @PluginProperty(dynamic = true)
     private List<String> filterDbs;
 
     @NotNull
     @Schema(
-        title = "Emit Date datatypes as-is without converting them to datetime"
+        title = "Emit Date datatypes as-is without converting them to datetime."
     )
     @PluginProperty
     @Builder.Default
     private Boolean useDateDatatype = true;
 
     @Schema(
-        title = "TDS version to use when communicating with SQL Server (default is 7.3)"
+        title = "TDS version to use when communicating with SQL Server (default is 7.3)."
     )
     @PluginProperty(dynamic = true)
     private String tdsVersion;
 
     @Schema(
-        title = "The characterset for the database / source system. The default is utf8, however older databases might use a charactersets like cp1252 for the encoding"
+        title = "The characterset for the database / source system. The default is utf8, however older databases might use a charactersets like cp1252 for the encoding."
     )
     @PluginProperty(dynamic = true)
     private String characterSet;
 
     @Schema(
-        title = "Emit all numeric values as strings and treat floats as string data types for the target (default false)",
+        title = "Emit all numeric values as strings and treat floats as string data types for the target (default false).",
         description = "When true, the resulting SCHEMA message will contain an attribute in additionalProperties containing the scale and precision of the discovered property."
     )
     @PluginProperty
     private Boolean useSingerDecimal;
 
     @Schema(
-        title = "A numeric setting adjusting the internal buffersize for the tap (default 10000)",
+        title = "A numeric setting adjusting the internal buffersize for the tap (default 10000).",
         description = "The common query tuning scenario is for SELECT statements that return a large number of rows over a slow network. Increasing arraysize can improve performance by reducing the number of round-trips to the database. However increasing this value increases the amount of memory required."
     )
     @PluginProperty

@@ -33,7 +33,7 @@ public abstract class AbstractPythonTarget extends AbstractPythonSinger {
     };
 
     @Schema(
-        title = "The raw data from a tap"
+        title = "The raw data from a tap."
     )
     @NotNull
     @Valid

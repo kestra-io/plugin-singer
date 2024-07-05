@@ -29,7 +29,7 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Snowflake account name",
+        title = "Snowflake account name.",
         description = "(i.e. rtXXXXX.eu-central-1)"
     )
     @PluginProperty(dynamic = true)
@@ -38,7 +38,7 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
     @NotNull
     @NotEmpty
     @Schema(
-        title = "The database name"
+        title = "The database name."
     )
     @PluginProperty(dynamic = true)
     private String database;
@@ -46,13 +46,13 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
     @NotNull
     @NotEmpty
     @Schema(
-        title = "The database user"
+        title = "The database user."
     )
     @PluginProperty(dynamic = true)
     private String username;
 
     @Schema(
-        title = "The database user's password"
+        title = "The database user's password."
     )
     @PluginProperty(dynamic = true)
     private String password;
@@ -60,49 +60,49 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Snowflake virtual warehouse name"
+        title = "Snowflake virtual warehouse name."
     )
     @PluginProperty(dynamic = true)
     private String warehouse;
 
     @Schema(
-        title = "Snowflake role to use. If not defined then the user's default role will be used"
+        title = "Snowflake role to use. If not defined then the user's default role will be used."
     )
     @PluginProperty(dynamic = true)
     private String role;
 
     @Schema(
-        title = "S3 Access Key Id. If not provided, `AWS_ACCESS_KEY_ID` environment variable or IAM role will be used "
+        title = "S3 Access Key ID. If not provided, `AWS_ACCESS_KEY_ID` environment variable or IAM role will be used."
     )
     @PluginProperty(dynamic = true)
     private String awsAccessKeyId;
 
     @Schema(
-        title = "S3 Secret Access Key. If not provided, `AWS_SECRET_ACCESS_KEY` environment variable or IAM role will be used "
+        title = "S3 Secret Access Key. If not provided, `AWS_SECRET_ACCESS_KEY` environment variable or IAM role will be used."
     )
     @PluginProperty(dynamic = true)
     private String awsSecretAccessKey;
 
     @Schema(
-        title = "AWS Session token. If not provided, `AWS_SESSION_TOKEN` environment variable will be used "
+        title = "AWS Session token. If not provided, `AWS_SESSION_TOKEN` environment variable will be used."
     )
     @PluginProperty(dynamic = true)
     private String awsSessionToken;
 
     @Schema(
-        title = "AWS profile name for profile based authentication. If not provided, `AWS_PROFILE` environment variable will be used. "
+        title = "AWS profile name for profile based authentication. If not provided, `AWS_PROFILE` environment variable will be used."
     )
     @PluginProperty(dynamic = true)
     private String awsProfile;
 
     @Schema(
-        title = "S3 Bucket name. Required if to use S3 External stage. When this is defined then `stage` has to be defined as well. "
+        title = "S3 Bucket name. Required if to use S3 External stage. When this is defined then `stage` has to be defined as well."
     )
     @PluginProperty(dynamic = true)
     private String s3Bucket;
 
     @Schema(
-        title = "A static prefix before the generated S3 key names. Using prefixes you can upload files into specific directories in the S3 bucket. "
+        title = "A static prefix before the generated S3 key names. Using prefixes you can upload files into specific directories in the S3 bucket."
     )
     @PluginProperty(dynamic = true)
     private String s3KeyPrefix;
@@ -114,13 +114,13 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
     private String s3EndpointUrl;
 
     @Schema(
-        title = "Default region when creating new connections "
+        title = "Default region when creating new connections."
     )
     @PluginProperty(dynamic = true)
     private String s3RegionName;
 
     @Schema(
-        title = "S3 ACL name to set on the uploaded files                                                   "
+        title = "S3 ACL name to set on the uploaded files."                                                  "
     )
     @PluginProperty(dynamic = true)
     private String s3Acl;
@@ -190,14 +190,14 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
     private String schemaMapping;
 
     @Schema(
-        title = "By default the connector caches the available table structures in Snowflake at startup. In this way it doesn't need to run additional queries when ingesting data to check if altering the target tables is required. With `disable_table_cache` option you can turn off this caching. You will always see the most recent table structures but will cause an extra query runtime. "
+        title = "By default the connector caches the available table structures in Snowflake at startup. In this way it doesn't need to run additional queries when ingesting data to check if altering the target tables is required. With `disable_table_cache` option you can turn off this caching. You will always see the most recent table structures but will cause an extra query runtime."
     )
     @PluginProperty(dynamic = true)
     @Builder.Default
     private Boolean disableTableCache = false;
 
     @Schema(
-        title = "When this is defined, Client-Side Encryption is enabled. The data in S3 will be encrypted, No third parties, including Amazon AWS and any ISPs, can see data in the clear. Snowflake COPY command will decrypt the data once it's in Snowflake. The master key must be 256-bit length and must be encoded as base64 string. "
+        title = "When this is defined, Client-Side Encryption is enabled. The data in S3 will be encrypted. No third parties, including Amazon AWS and any ISPs, can see data in the clear. Snowflake COPY command will decrypt the data once it is in Snowflake. The master key must be 256-bit length and must be encoded as base64 string."
     )
     @PluginProperty(dynamic = true)
     private String clientSideEncryptionMasterKey;
@@ -211,28 +211,28 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
     private Boolean addMetadataColumns = false;
 
     @Schema(
-        title = "When `hardDelete` option is true then DELETE SQL commands will be performed in Snowflake to delete rows in tables. It's achieved by continuously checking the  `_SDC_DELETED_AT` metadata column sent by the singer tap. Due to deleting rows requires metadata columns, `hard_delete` option automatically enables the `add_metadata_columns` option as well. "
+        title = "When `hardDelete` option is true, then DELETE SQL commands will be performed in Snowflake to delete rows in tables. It is achieved by continuously checking the  `_SDC_DELETED_AT` metadata column sent by the singer tap. Due to deleting rows requiring metadata columns, `hard_delete` option automatically enables the `add_metadata_columns` option as well."
     )
     @PluginProperty
     @Builder.Default
     private Boolean hardDelete = false;
 
     @Schema(
-        title = "(Default: 0) Object type RECORD items from taps can be loaded into VARIANT columns as JSON (default) or we can flatten the schema by creating columns automatically.<br><br>When value is 0 (default) then flattening functionality is turned off. "
+        title = "(Default: 0) Object type RECORD items from taps can be loaded into VARIANT columns as JSON (default) or we can flatten the schema by creating columns automatically.<br><br>When value is 0 (default) then flattening functionality is turned off."
     )
     @PluginProperty
     @Builder.Default
     private Integer dataFlatteningMaxLevel = 0;
 
     @Schema(
-        title = "Log based and Incremental replications on tables with no Primary Key cause duplicates when merging UPDATE events. When set to true, stop loading data if no Primary Key is defined. "
+        title = "Log based and Incremental replications on tables with no Primary Key cause duplicates when merging UPDATE events. When set to true, stop loading data if no Primary Key is defined."
     )
     @PluginProperty
     @Builder.Default
     private Boolean primaryKeyRequired = true;
 
     @Schema(
-        title = "Validate every single record message to the corresponding JSON schema. This option is disabled by default and invalid RECORD messages will fail only at load time by Snowflake. Enabling this option will detect invalid records earlier but could cause performance degradation. "
+        title = "Validate every single record message to the corresponding JSON schema. This option is disabled by default and invalid RECORD messages will fail only at load time by Snowflake. Enabling this option will detect invalid records earlier but could cause performance degradation."
     )
     @PluginProperty(dynamic = true)
     @Builder.Default
@@ -259,13 +259,13 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
     private Boolean archiveLoadFiles = false;
 
     @Schema(
-        title = "(Default: `archive`) When `archive_load_files` is enabled, the archived files will be placed in the archive S3 bucket under this prefix"
+        title = "(Default: `archive`) When `archive_load_files` is enabled, the archived files will be placed in the archive S3 bucket under this prefix."
     )
     @PluginProperty(dynamic = true)
     private String archiveLoadFilesS3Prefix;
 
     @Schema(
-        title = "(Default: Value of `s3_bucket`) When `archive_load_files` is enabled, the archived files will be placed in this bucket"
+        title = "(Default: Value of `s3_bucket`) When `archive_load_files` is enabled, the archived files will be placed in this bucket."
     )
     @PluginProperty(dynamic = true)
     private String archiveLoadFilesS3Bucket;

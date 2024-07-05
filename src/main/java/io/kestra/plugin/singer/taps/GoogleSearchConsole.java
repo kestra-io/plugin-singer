@@ -24,7 +24,7 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a google search console.",
+    title = "A Singer tap to fetch data from the Google Search console.",
     description = "Full documentation can be found [here](https://github.com/singer-io/tap-google-search-console)"
 )
 public class GoogleSearchConsole extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
@@ -47,7 +47,7 @@ public class GoogleSearchConsole extends AbstractPythonTap implements RunnableTa
     @NotNull
     @NotEmpty
     @Schema(
-        title = "The Refresh Token generated through the OAuth flow run using your OAuth Client and your Developer Token."
+        title = "The Refresh Token generated through the OAuth flow run using your OAuth Client and your developer token."
     )
     @PluginProperty(dynamic = true)
     private String refreshToken;
@@ -55,8 +55,8 @@ public class GoogleSearchConsole extends AbstractPythonTap implements RunnableTa
     @NotNull
     @NotEmpty
     @Schema(
-        title = "website URL properties",
-        description = "Do not include the domain-level property in the list"
+        title = "Website URL properties.",
+        description = "Do not include the domain-level property in the list."
     )
     @PluginProperty(dynamic = true)
     private List<String> siteUrls;

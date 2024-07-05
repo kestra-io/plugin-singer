@@ -23,13 +23,13 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a exchangerate.host api.",
+    title = "A Singer tap to fetch data from a exchangerate.host API.",
     description = "Full documentation can be found [here](https://github.com/anelendata/tap-exchangeratehost)"
 )
 public class ExchangeRateHost extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotEmpty
     @Schema(
-        title = "the exchange rates currency used for convertion"
+        title = "The exchange rates currency used for convertion."
     )
     @PluginProperty(dynamic = true)
     @Builder.Default

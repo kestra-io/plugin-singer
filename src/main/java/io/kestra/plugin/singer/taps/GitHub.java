@@ -27,14 +27,14 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a GitHub api.",
+    title = "A Singer tap to fetch data from a GitHub API.",
     description = "Full documentation can be found [here](https://github.com/singer-io/tap-github)"
 )
 public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
     @Schema(
-        title = "a GitHub personnal access token",
+        title = "A GitHub personal access token.",
         description = "Login to your GitHub account, " +
             "go to the [Personal Access Tokens](https://github.com/settings/tokens) settings page, " +
             "and generate a new token with at least the `repo` scope."
@@ -62,7 +62,7 @@ public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPy
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Timeout for each request on github api."
+        title = "Timeout for each request on github API."
     )
     @PluginProperty
     @Builder.Default

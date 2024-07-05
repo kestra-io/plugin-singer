@@ -34,7 +34,7 @@ public class ChargeBee extends AbstractPythonTap implements RunnableTask<Abstrac
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Your Api Key."
+        title = "Your API Key."
     )
     @PluginProperty(dynamic = true)
     private String apiKey;
@@ -42,7 +42,7 @@ public class ChargeBee extends AbstractPythonTap implements RunnableTask<Abstrac
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Your site url.",
+        title = "Your site URL.",
         description = "mostly in the form {site}.chargebee.com"
     )
     @PluginProperty(dynamic = true)

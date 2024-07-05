@@ -34,7 +34,7 @@ public class Netsuite extends AbstractPythonTap implements RunnableTask<Abstract
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Your account Id.",
+        title = "Your account ID.",
         description = "This can be found under Setup -> Company -> Company Information. Look for Account Id. Note `_SB` is for Sandbox account."
     )
     @PluginProperty(dynamic = true)
@@ -43,7 +43,7 @@ public class Netsuite extends AbstractPythonTap implements RunnableTask<Abstract
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Your consumer key for token based authentication consumer key for SOAP connection",
+        title = "Your consumer key for token based authentication consumer key for SOAP connection.",
         description = "Visit [this page](https://support.cazoomi.com/hc/en-us/articles/360010093392-How-to-Setup-NetSuite-Token-Based-Authentication-as-Authentication-Type) for details."
     )
     @PluginProperty(dynamic = true)
@@ -79,7 +79,7 @@ public class Netsuite extends AbstractPythonTap implements RunnableTask<Abstract
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Behaviour when new fields are discovered",
+        title = "Behaviour when new fields are discovered.",
         description = "When new fields are discovered in NetSuite objects, the select_fields_by_default key describes whether or not the tap will select those fields by default."
     )
     @PluginProperty(dynamic = true)
@@ -88,7 +88,7 @@ public class Netsuite extends AbstractPythonTap implements RunnableTask<Abstract
     @NotNull
     @NotEmpty
     @Schema(
-        title = "Is this sandbox account",
+        title = "Is this sandbox account.",
         description = "This should always be set to `true` if you are connecting Production account of NetSuite. Set it to `false` if you want to connect to SandBox account."
     )
     @PluginProperty(dynamic = true)

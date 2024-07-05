@@ -30,7 +30,7 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
     @NotNull
     @NotEmpty
     @Schema(
-        title = "The BigQuery project"
+        title = "The BigQuery project."
     )
     @PluginProperty(dynamic = true)
     private String projectId;
@@ -38,13 +38,13 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
     @NotNull
     @NotEmpty
     @Schema(
-        title = "The BigQuery dataset"
+        title = "The BigQuery dataset."
     )
     @PluginProperty(dynamic = true)
     private String datasetId;
 
     @Schema(
-        title = "The Dataset location"
+        title = "The Dataset location."
     )
     @PluginProperty(dynamic = true)
     private String location;
@@ -67,39 +67,39 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
     private final Boolean addMetadataColumns = false;
 
     @Schema(
-        title = "The replication method, `append` or `truncate`"
+        title = "The replication method, `append` or `truncate`."
     )
     @PluginProperty
     @Builder.Default
     private final ReplicationMethod replicationMethod = ReplicationMethod.append;
 
     @Schema(
-        title = "Add prefix to table name"
+        title = "Add prefix to table name."
     )
     @PluginProperty(dynamic = true)
     private String tablePrefix;
 
     @Schema(
-        title = "Add suffix to table name"
+        title = "Add suffix to table name."
     )
     @PluginProperty(dynamic = true)
     private String tableSuffix;
 
     @Schema(
-        title = "Maximum cache size in MB"
+        title = "Maximum cache size in MB."
     )
     @PluginProperty
     @Builder.Default
     private final Integer maxCache = 50;
 
     @Schema(
-        title = "The json service account key as string "
+        title = "The JSON service account key as string."
     )
     @PluginProperty(dynamic = true)
     protected String serviceAccount;
 
     @Schema(
-        title = "Enable control state flush",
+        title = "Enable control state flush.",
         description = "default: merges multiple state messages from the tap into the state file, if true : uses the last state message as the state file."
     )
     @PluginProperty
@@ -107,7 +107,7 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
     protected Boolean mergeStateMessages = false;
 
     @Schema(
-        title = "The json service account key as string "
+        title = "Table configs."
     )
     @PluginProperty
     protected Map<String, Object> tableConfigs;

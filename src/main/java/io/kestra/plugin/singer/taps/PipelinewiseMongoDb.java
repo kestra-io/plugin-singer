@@ -23,14 +23,14 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a MongoDb database.",
+    title = "A Singer tap to fetch data from a MongoDB database.",
     description = "Full documentation can be found [here](https://transferwise.github.io/pipelinewise/connectors/taps/mongodb.html)"
 )
 public class PipelinewiseMongoDb extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
     @Schema(
-        title = "The database hostname"
+        title = "The database hostname."
     )
     @PluginProperty(dynamic = true)
     private String host;
@@ -38,20 +38,20 @@ public class PipelinewiseMongoDb extends AbstractPythonTap implements RunnableTa
     @NotNull
     @NotEmpty
     @Schema(
-        title = "The database user"
+        title = "The database user."
     )
     @PluginProperty(dynamic = true)
     private String username;
 
     @Schema(
-        title = "The database user's password"
+        title = "The database user's password."
     )
     @PluginProperty(dynamic = true)
     private String password;
 
     @NotNull
     @Schema(
-        title = "The database port"
+        title = "The database port."
     )
     @PluginProperty
     private Integer port;
@@ -99,14 +99,14 @@ public class PipelinewiseMongoDb extends AbstractPythonTap implements RunnableTa
 
     @Schema(
         title = "The size of the buffer that holds detected update operations in memory.",
-        description = "For LOG_BASED only, the buffer is flushed once the size is reached"
+        description = "For LOG_BASED only, the buffer is flushed once the size is reached."
     )
     @PluginProperty
     @Builder.Default
     private final Integer updateBufferSize = 1;
 
     @Schema(
-        title = "The maximum amount of time in milliseconds waits for new data changes before exiting..",
+        title = "The maximum amount of time in milliseconds waits for new data changes before exiting.",
         description = "For LOG_BASED only."
     )
     @PluginProperty

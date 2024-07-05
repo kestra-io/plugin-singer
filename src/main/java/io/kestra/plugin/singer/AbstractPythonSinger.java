@@ -63,7 +63,7 @@ public abstract class AbstractPythonSinger extends Task {
     protected transient Path workingDirectory;
 
     @Schema(
-        title = "The name of singer state file"
+        title = "The name of Singer state file."
     )
     @PluginProperty(dynamic = true)
     @NotNull
@@ -71,19 +71,19 @@ public abstract class AbstractPythonSinger extends Task {
     protected String stateName = "singer-state";
 
     @Schema(
-        title = "Override default pip packages to use a specific version"
+        title = "Override default pip packages to use a specific version."
     )
     @PluginProperty(dynamic = true)
     protected List<String> pipPackages;
 
     @Schema(
-        title = "Override default singer command"
+        title = "Override default singer command."
     )
     @PluginProperty(dynamic = true)
     protected String command;
 
     @Schema(
-        title = "Docker options when for the `DOCKER` runner",
+        title = "Docker options when for the `DOCKER` runner.",
         defaultValue = "{image=" + DEFAULT_IMAGE + ", pullPolicy=ALWAYS}"
     )
     @PluginProperty
