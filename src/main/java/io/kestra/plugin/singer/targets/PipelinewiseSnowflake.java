@@ -120,7 +120,7 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
     private String s3RegionName;
 
     @Schema(
-        title = "S3 ACL name to set on the uploaded files."                                                  "
+        title = "S3 ACL name to set on the uploaded files."
     )
     @PluginProperty(dynamic = true)
     private String s3Acl;
