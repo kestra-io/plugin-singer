@@ -40,8 +40,6 @@ public abstract class AbstractPythonTarget extends AbstractPythonSinger {
     private String from;
 
     protected AbstractPythonTarget.Output runTarget(RunContext runContext) throws Exception {
-        this.setup(runContext);
-
         // from
         URI from = new URI(runContext.render(this.from));
         Path tempFile = runContext.workingDir().createTempFile();

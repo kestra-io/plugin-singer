@@ -12,14 +12,17 @@ import io.kestra.core.models.tasks.Task;
 import io.kestra.core.models.tasks.runners.AbstractLogConsumer;
 import io.kestra.core.models.tasks.runners.DefaultLogConsumer;
 import io.kestra.core.models.tasks.runners.ScriptService;
+import io.kestra.core.models.tasks.runners.TaskRunner;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.JacksonMapper;
 import io.kestra.core.utils.IdUtils;
 import io.kestra.plugin.scripts.exec.scripts.models.DockerOptions;
 import io.kestra.plugin.scripts.exec.scripts.models.RunnerType;
 import io.kestra.plugin.scripts.exec.scripts.runners.CommandsWrapper;
+import io.kestra.plugin.scripts.runner.docker.Docker;
 import io.kestra.plugin.singer.models.Metric;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.io.FileUtils;
@@ -83,14 +86,31 @@ public abstract class AbstractPythonSinger extends Task {
     protected String command;
 
     @Schema(
-        title = "Docker options when for the `DOCKER` runner.",
-        defaultValue = "{image=" + DEFAULT_IMAGE + ", pullPolicy=ALWAYS}"
+        title = "Deprecated, use 'taskRunner' instead"
+    )
+    @PluginProperty
+    @Deprecated
+    private DockerOptions docker;
+
+    @Schema(
+        title = "The task runner to use.",
+        description = "Task runners are provided by plugins, each have their own properties."
     )
     @PluginProperty
     @Builder.Default
-    protected DockerOptions docker = DockerOptions.builder().build();
+    @Valid
+    private TaskRunner taskRunner = Docker.INSTANCE;
+
+    @Schema(title = "The task runner container image, only used if the task runner is container-based.")
+    @PluginProperty(dynamic = true)
+    @Builder.Default
+    private String containerImage = DEFAULT_IMAGE;
 
     protected DockerOptions injectDefaults(DockerOptions original) {
+        if (original == null) {
+            return null;
+        }
+
         var builder = original.toBuilder();
         if (original.getImage() == null) {
             builder.image(DEFAULT_IMAGE);
@@ -109,35 +129,24 @@ public abstract class AbstractPythonSinger extends Task {
         return this.command != null ? runContext.render(this.command) : this.command();
     }
 
-    protected void setup(RunContext runContext) throws Exception {
+    protected void run(RunContext runContext, String command, AbstractLogConsumer logConsumer) throws Exception {
         CommandsWrapper commandsWrapper = new CommandsWrapper(runContext);
         workingDirectory = commandsWrapper.getWorkingDirectory();
 
         configSetupCommands(runContext);
 
-        commandsWrapper.withWarningOnStdErr(true)
-            .withRunnerType(RunnerType.DOCKER)
+        commandsWrapper
+            .withWarningOnStdErr(true)
             .withDockerOptions(this.injectDefaults(getDocker()))
-            .withLogConsumer(new DefaultLogConsumer(runContext))
+            .withTaskRunner(this.taskRunner)
+            .withContainerImage(this.containerImage)
+            .withLogConsumer(logConsumer)
             .withCommands(ScriptService.scriptCommands(
                 List.of("/bin/sh", "-c"),
                 Stream.of(
                     pipInstallCommands(runContext),
                     logSetupCommands()
                 ).flatMap(Function.identity()).toList(),
-                Collections.emptyList()
-            )).run();
-    }
-
-    protected void run(RunContext runContext, String command, AbstractLogConsumer logConsumer) throws Exception {
-        new CommandsWrapper(runContext)
-            .withWarningOnStdErr(true)
-            .withRunnerType(RunnerType.DOCKER)
-            .withDockerOptions(this.injectDefaults(getDocker()))
-            .withLogConsumer(logConsumer)
-            .withCommands(ScriptService.scriptCommands(
-                List.of("/bin/sh", "-c"),
-                Collections.emptyList(),
                 List.of(command)
             ))
             .withEnv(this.environmentVariables(runContext))

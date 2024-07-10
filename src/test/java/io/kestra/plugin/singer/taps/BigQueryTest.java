@@ -6,6 +6,7 @@ import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
+import io.kestra.plugin.core.runner.Process;
 import io.kestra.plugin.singer.models.DiscoverMetadata;
 import io.kestra.plugin.singer.models.StreamsConfiguration;
 import jakarta.inject.Inject;
@@ -31,6 +32,7 @@ class BigQueryTest extends TapsTest {
 
         BigQuery.BigQueryBuilder<?, ?> builder = BigQuery.builder()
             .id(IdUtils.create())
+            .taskRunner(Process.INSTANCE)
             .type(ExchangeRateHost.class.getName())
             .serviceAccount(serviceAccount)
             .startAlwaysInclusive(false)
