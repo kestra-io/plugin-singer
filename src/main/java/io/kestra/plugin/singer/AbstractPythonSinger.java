@@ -129,36 +129,24 @@ public abstract class AbstractPythonSinger extends Task {
         return this.command != null ? runContext.render(this.command) : this.command();
     }
 
-    protected void setup(RunContext runContext) throws Exception {
+    protected void run(RunContext runContext, String command, AbstractLogConsumer logConsumer) throws Exception {
         CommandsWrapper commandsWrapper = new CommandsWrapper(runContext);
         workingDirectory = commandsWrapper.getWorkingDirectory();
 
         configSetupCommands(runContext);
 
-        commandsWrapper.withWarningOnStdErr(true)
-            .withRunnerType(RunnerType.DOCKER)
+        commandsWrapper
+            .withWarningOnStdErr(true)
             .withDockerOptions(this.injectDefaults(getDocker()))
             .withTaskRunner(this.taskRunner)
             .withContainerImage(this.containerImage)
+            .withLogConsumer(logConsumer)
             .withCommands(ScriptService.scriptCommands(
                 List.of("/bin/sh", "-c"),
                 Stream.of(
                     pipInstallCommands(runContext),
                     logSetupCommands()
                 ).flatMap(Function.identity()).toList(),
-                Collections.emptyList()
-            )).run();
-    }
-
-    protected void run(RunContext runContext, String command, AbstractLogConsumer logConsumer) throws Exception {
-        new CommandsWrapper(runContext)
-            .withWarningOnStdErr(true)
-            .withRunnerType(RunnerType.DOCKER)
-            .withDockerOptions(this.injectDefaults(getDocker()))
-            .withLogConsumer(logConsumer)
-            .withCommands(ScriptService.scriptCommands(
-                List.of("/bin/sh", "-c"),
-                Collections.emptyList(),
                 List.of(command)
             ))
             .withEnv(this.environmentVariables(runContext))

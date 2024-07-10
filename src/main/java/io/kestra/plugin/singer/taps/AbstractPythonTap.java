@@ -58,8 +58,6 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger implements 
     abstract public List<Feature> features();
 
     public void initEnvDiscoveryAndState(RunContext runContext) throws Exception {
-        this.setup(runContext);
-
         // catalog or properties
         if (this.features().contains(Feature.PROPERTIES) || this.features().contains(Feature.CATALOG)) {
             DiscoverStreams discoverProperties = this.discover(runContext, this.finalCommand(runContext));
