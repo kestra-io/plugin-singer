@@ -6,6 +6,7 @@ import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
+import io.kestra.plugin.core.runner.Process;
 import io.kestra.plugin.singer.models.DiscoverMetadata;
 import io.kestra.plugin.singer.models.StreamsConfiguration;
 import io.kestra.plugin.singer.taps.AbstractPythonTap;
@@ -80,6 +81,7 @@ class AdswerveBigQueryTest {
             .builder()
             .id(IdUtils.create() + "_bq")
             .type(io.kestra.plugin.singer.targets.AdswerveBigQuery.class.getName())
+            .taskRunner(Process.INSTANCE)
             .from(tapOutput.getRaw().toString())
             .stateName(stateName)
             .serviceAccount(serviceAccount)
