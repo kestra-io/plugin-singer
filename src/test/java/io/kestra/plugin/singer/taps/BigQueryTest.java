@@ -32,7 +32,7 @@ class BigQueryTest extends TapsTest {
 
         BigQuery.BigQueryBuilder<?, ?> builder = BigQuery.builder()
             .id(IdUtils.create())
-            .taskRunner(Process.INSTANCE)
+            .taskRunner(Process.instance())
             .type(ExchangeRateHost.class.getName())
             .serviceAccount(serviceAccount)
             .startAlwaysInclusive(false)

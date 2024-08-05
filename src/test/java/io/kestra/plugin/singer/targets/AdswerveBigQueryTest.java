@@ -81,7 +81,7 @@ class AdswerveBigQueryTest {
             .builder()
             .id(IdUtils.create() + "_bq")
             .type(io.kestra.plugin.singer.targets.AdswerveBigQuery.class.getName())
-            .taskRunner(Process.INSTANCE)
+            .taskRunner(Process.instance())
             .from(tapOutput.getRaw().toString())
             .stateName(stateName)
             .serviceAccount(serviceAccount)
