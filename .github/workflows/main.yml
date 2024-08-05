@@ -50,7 +50,7 @@ jobs:
           docker compose -f docker-compose-ci.yml exec postgres sh -c "psql -d postgres -U postgres -c 'CREATE DATABASE sync' > /dev/null"
           docker compose -f docker-compose-ci.yml exec mongo sh -c "mongoimport --authenticationDatabase admin -c books  "mongodb://root:example@localhost/samples" /tmp/docker/mongo.jsonl > /dev/null"
           docker compose -f docker-compose-ci.yml exec mysql sh -c "mysql -u root -pmysql_passwd < /tmp/docker/mysql.sql"
-          docker compose -f docker-compose-ci.yml exec sqlserver sh -c "/opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P SQLServer_Passwd -d msdb -i /tmp/docker/sqlserver.sql > /dev/null"
+          docker compose -f docker-compose-ci.yml exec sqlserver sh -c "/opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P SQLServer_Passwd -C -d msdb -i /tmp/docker/sqlserver.sql > /dev/null"
           docker compose -f docker-compose-ci.yml exec oracle sh -c "sqlplus -s system/oracle_passwd@localhost @/tmp/docker/oracle.sql > /dev/null"
 
       # Caches
