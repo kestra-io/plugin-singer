@@ -10,14 +10,13 @@ import io.kestra.core.models.executions.metrics.Counter;
 import io.kestra.core.models.executions.metrics.Timer;
 import io.kestra.core.models.tasks.Task;
 import io.kestra.core.models.tasks.runners.AbstractLogConsumer;
-import io.kestra.core.models.tasks.runners.DefaultLogConsumer;
 import io.kestra.core.models.tasks.runners.ScriptService;
 import io.kestra.core.models.tasks.runners.TaskRunner;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.JacksonMapper;
 import io.kestra.core.utils.IdUtils;
+import io.kestra.plugin.core.runner.Process;
 import io.kestra.plugin.scripts.exec.scripts.models.DockerOptions;
-import io.kestra.plugin.scripts.exec.scripts.models.RunnerType;
 import io.kestra.plugin.scripts.exec.scripts.runners.CommandsWrapper;
 import io.kestra.plugin.scripts.runner.docker.Docker;
 import io.kestra.plugin.singer.models.Metric;
@@ -41,6 +40,9 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
+
+import static io.kestra.plugin.scripts.exec.scripts.models.RunnerType.DOCKER;
+import static io.kestra.plugin.scripts.exec.scripts.models.RunnerType.PROCESS;
 
 @SuperBuilder
 @ToString
@@ -89,7 +91,6 @@ public abstract class AbstractPythonSinger extends Task {
         title = "Deprecated, use 'taskRunner' instead"
     )
     @PluginProperty
-    @Deprecated
     private DockerOptions docker;
 
     @Schema(
@@ -135,10 +136,16 @@ public abstract class AbstractPythonSinger extends Task {
 
         configSetupCommands(runContext);
 
+        var taskRunner = switch (this.taskRunner) {
+            case Docker ignored -> Docker.from(this.getDocker()).toBuilder().fileHandlingStrategy(Docker.FileHandlingStrategy.MOUNT).build();
+            case Process ignored -> Process.instance();
+            default -> throw new IllegalStateException("Unexpected value: " + this.taskRunner);
+        };
+
         commandsWrapper
             .withWarningOnStdErr(true)
             .withDockerOptions(this.injectDefaults(getDocker()))
-            .withTaskRunner(this.taskRunner)
+            .withTaskRunner(taskRunner)
             .withContainerImage(this.containerImage)
             .withLogConsumer(logConsumer)
             .withCommands(ScriptService.scriptCommands(
