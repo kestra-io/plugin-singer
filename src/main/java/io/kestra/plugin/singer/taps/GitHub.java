@@ -60,7 +60,6 @@ public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPy
     private LocalDate startDate;
 
     @NotNull
-    @NotEmpty
     @Schema(
         title = "Timeout for each request on github API."
     )
