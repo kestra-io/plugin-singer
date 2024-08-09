@@ -41,6 +41,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static io.kestra.plugin.scripts.exec.scripts.models.RunnerType.DOCKER;
+import static io.kestra.plugin.scripts.exec.scripts.models.RunnerType.PROCESS;
+
 @SuperBuilder
 @ToString
 @EqualsAndHashCode
@@ -134,7 +137,7 @@ public abstract class AbstractPythonSinger extends Task {
         configSetupCommands(runContext);
 
         var taskRunner = switch (this.taskRunner) {
-            case Docker ignored -> Docker.from(this.getDocker());
+            case Docker ignored -> Docker.from(this.getDocker()).toBuilder().fileHandlingStrategy(Docker.FileHandlingStrategy.MOUNT).build();
             case Process ignored -> Process.instance();
             default -> throw new IllegalStateException("Unexpected value: " + this.taskRunner);
         };
@@ -161,14 +164,13 @@ public abstract class AbstractPythonSinger extends Task {
         ArrayList<String> finalRequirements = new ArrayList<>(this.pipPackages != null ? runContext.render(this.pipPackages) : this.pipPackages());
         finalRequirements.add("python-json-logger");
 
-        return Stream.of(
+        return Stream.concat(
             Stream.of(
                 "set -o errexit",
                 "pip install pip --upgrade > /dev/null"
             ),
-            finalRequirements.stream().map("pip install --target . %s > /dev/null"::formatted),
-            Stream.of("chmod -R 755 bin")
-        ).flatMap(Function.identity());
+            finalRequirements.stream().map("pip install --target . %s > /dev/null"::formatted)
+        );
     }
 
 
