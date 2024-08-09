@@ -42,7 +42,6 @@ public class BigQuery extends AbstractPythonTap implements RunnableTask<Abstract
     protected List<Stream> streams;
 
     @NotNull
-    @NotEmpty
     @Schema(
         title = "Limits the number of records returned in each stream, applied as a limit in the query."
     )
@@ -50,7 +49,6 @@ public class BigQuery extends AbstractPythonTap implements RunnableTask<Abstract
     private Integer limit;
 
     @NotNull
-    @NotEmpty
     @Schema(
         title = "When replicating incrementally, disable to only select records whose `datetime_key` is greater than the maximum value replicated in the last run, by excluding records whose timestamps match exactly.",
         description = "This could cause records to be missed that were created after the last run finished, but during the same second and with the same timestamp."

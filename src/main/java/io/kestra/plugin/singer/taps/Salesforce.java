@@ -29,7 +29,6 @@ import jakarta.validation.constraints.NotNull;
 )
 public class Salesforce extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
-    @NotEmpty
     @Schema(
         title = "This is used to switch the behavior of the tap between using Salesforce's `REST` and `BULK` APIs."
     )
