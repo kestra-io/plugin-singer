@@ -45,7 +45,6 @@ public class FacebookAds extends AbstractPythonTap implements RunnableTask<Abstr
     private String accessToken;
 
     @NotNull
-    @NotEmpty
     @Schema(
         title = "How many Days before the Start Date to fetch Ads Insights for."
     )

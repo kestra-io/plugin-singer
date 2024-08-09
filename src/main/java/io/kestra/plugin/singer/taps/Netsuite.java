@@ -77,7 +77,6 @@ public class Netsuite extends AbstractPythonTap implements RunnableTask<Abstract
     private String tokenSecret;
 
     @NotNull
-    @NotEmpty
     @Schema(
         title = "Behaviour when new fields are discovered.",
         description = "When new fields are discovered in NetSuite objects, the select_fields_by_default key describes whether or not the tap will select those fields by default."
@@ -86,7 +85,6 @@ public class Netsuite extends AbstractPythonTap implements RunnableTask<Abstract
     private Boolean selectFieldsByDefault;
 
     @NotNull
-    @NotEmpty
     @Schema(
         title = "Is this sandbox account.",
         description = "This should always be set to `true` if you are connecting Production account of NetSuite. Set it to `false` if you want to connect to SandBox account."
