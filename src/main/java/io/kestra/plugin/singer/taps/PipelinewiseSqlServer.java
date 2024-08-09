@@ -169,7 +169,7 @@ public class PipelinewiseSqlServer extends AbstractPythonTap implements Runnable
 
     @Override
     public List<String> pipPackages() {
-        return Collections.singletonList("tap-mssql");
+        return Collections.singletonList("tap-mssql==2.3.1");
     }
 
     @Override
