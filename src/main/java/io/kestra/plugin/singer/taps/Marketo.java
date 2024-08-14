@@ -37,7 +37,7 @@ public class Marketo extends AbstractPythonTap implements RunnableTask<AbstractP
         description = "The base URL contains the account id (a.k.a. Munchkin id) and is therefore unique for each " +
             "Marketo subscription. Your base URL is found by logging into Marketo and navigating to the " +
             "Admin > Integration > Web Services menu. " +
-            "It is labled as “Endpoint:” underneath the “REST API” section as shown in the following screenshots."
+            "It is labeled as “Endpoint:” underneath the “REST API” section as shown in the following screenshots."
     )
     @PluginProperty(dynamic = true)
     private String endpoint;

@@ -73,8 +73,8 @@ public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPyt
 
     @Schema(
         title = "Channels to Sync.",
-        description = "By default the tap will sync all channels it has been invited to, but this can be overriden " +
-            "to limit it ot specific channels. Note this needs to be channel ID, not the name, as recommended " +
+        description = "By default the tap will sync all channels it has been invited to, but this can be overridden " +
+            "to limit it to specific channels. Note this needs to be channel ID, not the name, as recommended " +
             "by the Slack API. To get the ID for a channel, either use the Slack API or find it in the URL."
     )
     @PluginProperty(dynamic = true)

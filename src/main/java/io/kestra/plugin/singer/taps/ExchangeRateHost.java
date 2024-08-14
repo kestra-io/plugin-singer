@@ -29,7 +29,7 @@ import jakarta.validation.constraints.NotNull;
 public class ExchangeRateHost extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotEmpty
     @Schema(
-        title = "The exchange rates currency used for convertion."
+        title = "The exchange rates currency used for conversion."
     )
     @PluginProperty(dynamic = true)
     @Builder.Default
