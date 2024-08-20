@@ -53,7 +53,7 @@ public abstract class AbstractPythonTarget extends AbstractPythonSinger {
         AbstractPythonTarget.Output.OutputBuilder builder = AbstractPythonTarget.Output.builder();
 
         if (!this.stateRecords.isEmpty()) {
-            builder.state(this.saveState(runContext, runContext.render(this.stateName), this.stateRecords));
+            builder.stateKey(this.saveState(runContext, runContext.render(this.stateName), this.stateRecords));
         }
 
         return builder.build();
@@ -92,8 +92,8 @@ public abstract class AbstractPythonTarget extends AbstractPythonSinger {
     @Getter
     public static class Output implements io.kestra.core.models.tasks.Output {
         @Schema(
-            title = "Uri of the state file"
+            title = "Key of the state in KV Store"
         )
-        private final URI state;
+        private final String stateKey;
     }
 }

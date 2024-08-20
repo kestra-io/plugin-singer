@@ -47,7 +47,7 @@ public class Csv extends AbstractPythonTarget implements RunnableTask<Csv.Output
     @Builder.Default
     private final String quoteCharacters = "\"";
 
-    private File destinationDirectory(RunContext runContext) throws IOException {
+    private File destinationDirectory(RunContext runContext) {
         return new File(workingDirectory.toFile(), "destination");
     }
 
@@ -80,7 +80,7 @@ public class Csv extends AbstractPythonTarget implements RunnableTask<Csv.Output
         AbstractPythonTarget.Output output = this.runTarget(runContext);
 
         return Output.builder()
-            .state(output.getState())
+            .stateKey(output.getStateKey())
             .uris(Arrays.stream(Objects.requireNonNull(destinationDirectory(runContext).listFiles()))
                 .map(throwFunction(o -> {
                     List<String> name = new ArrayList<>(Arrays.asList(o.getName().split("-")));
@@ -99,9 +99,9 @@ public class Csv extends AbstractPythonTarget implements RunnableTask<Csv.Output
     @Getter
     public static class Output implements io.kestra.core.models.tasks.Output {
         @Schema(
-            title = "Uri of the state file"
+            title = "Key of the state in KV Store"
         )
-        private final URI state;
+        private final String stateKey;
 
         @Schema(
             title = "Uri of the generated csv",

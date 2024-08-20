@@ -79,6 +79,6 @@ class DatamillCoPostgresTest {
         AbstractPythonTarget.Output output = task.run(runContext);
 
         assertThat(runContext.metrics().stream().filter(r -> r.getName().equals("singer.record.count")).mapToDouble(value -> (Double) value.getValue()).sum(), is(24D));
-        assertThat(output.getState(), not((nullValue())));
+        assertThat(output.getStateKey(), not((nullValue())));
     }
 }

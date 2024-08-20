@@ -27,7 +27,7 @@ class BigQueryTest extends TapsTest {
 
     @Test
     void run() throws Exception {
-        URL resource = BigQueryTest.class.getClassLoader().getResource("gcp-service-account.yml");
+        URL resource = BigQueryTest.class.getClassLoader().getResource("gcp-service-account.json");
         String serviceAccount = CharStreams.toString(new InputStreamReader(new FileInputStream(Objects.requireNonNull(resource).getFile())));
 
         BigQuery.BigQueryBuilder<?, ?> builder = BigQuery.builder()
