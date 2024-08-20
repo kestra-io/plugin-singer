@@ -14,7 +14,7 @@ import io.kestra.core.models.tasks.runners.ScriptService;
 import io.kestra.core.models.tasks.runners.TaskRunner;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.JacksonMapper;
-import io.kestra.core.utils.IdUtils;
+import io.kestra.core.storages.StorageContext;
 import io.kestra.plugin.core.runner.Process;
 import io.kestra.plugin.scripts.exec.scripts.models.DockerOptions;
 import io.kestra.plugin.scripts.exec.scripts.runners.CommandsWrapper;
@@ -30,9 +30,7 @@ import org.slf4j.Logger;
 
 import jakarta.validation.constraints.NotNull;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -237,24 +235,13 @@ public abstract class AbstractPythonSinger extends Task {
             });
     }
 
-    protected File writeJsonTempFile(Object value) throws IOException {
-        File tempFile = workingDirectory.resolve(IdUtils.create() + ".json").toFile();
-
-        try (FileWriter fileWriter = new FileWriter(tempFile)) {
-            fileWriter.write(MAPPER.writeValueAsString(value));
-            fileWriter.flush();
-        }
-
-        return tempFile;
-    }
-
-    public URI saveState(RunContext runContext) throws IOException, IllegalVariableEvaluationException {
-        return this.saveState(runContext, runContext.render(this.stateName), this.stateRecords);
-    }
-
-    public URI saveState(RunContext runContext, String state, Map<String, Object> stateRecords) throws IOException {
-        File tempFile = this.writeJsonTempFile(stateRecords);
-        return runContext.storage().putTaskStateFile(tempFile, state, "state.json");
+    public String saveState(RunContext runContext, String state, Map<String, Object> stateRecords) throws IOException {
+        return runContext.stateStore().putState(
+            state,
+            "state.json",
+            runContext.storage().getTaskStorageContext().map(StorageContext.Task::getTaskRunValue).orElse(null),
+            MAPPER.writeValueAsBytes(stateRecords)
+        );
     }
 
     public void stateMessage(Map<String, Object> stateValue) {

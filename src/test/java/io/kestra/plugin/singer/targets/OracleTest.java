@@ -67,6 +67,6 @@ class OracleTest {
         runContext = TestsUtils.mockRunContext(runContextFactory, target, ImmutableMap.of());
         AbstractPythonTarget.Output output = target.run(runContext);
 
-        assertThat(output.getState(), not((nullValue())));
+        assertThat(output.getStateKey(), not((nullValue())));
     }
 }

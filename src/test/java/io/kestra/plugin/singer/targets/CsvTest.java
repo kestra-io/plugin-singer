@@ -73,6 +73,6 @@ class CsvTest {
         assertThat(output.getUris().size(), is(2));
         assertThat(output.getUris().keySet(), containsInAnyOrder("Northwind-Region", "Northwind-Category"));
 
-        assertThat(output.getState(), not((nullValue())));
+        assertThat(output.getStateKey(), not((nullValue())));
     }
 }

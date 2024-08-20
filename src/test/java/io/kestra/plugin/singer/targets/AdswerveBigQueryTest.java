@@ -6,7 +6,6 @@ import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
-import io.kestra.plugin.core.runner.Process;
 import io.kestra.plugin.singer.models.DiscoverMetadata;
 import io.kestra.plugin.singer.models.StreamsConfiguration;
 import io.kestra.plugin.singer.taps.AbstractPythonTap;
@@ -41,7 +40,7 @@ class AdswerveBigQueryTest {
 
     @Test
     void run() throws Exception {
-        URL resource = AdswerveBigQueryTest.class.getClassLoader().getResource("gcp-service-account.yml");
+        URL resource = AdswerveBigQueryTest.class.getClassLoader().getResource("gcp-service-account.json");
         String serviceAccount = CharStreams.toString(new InputStreamReader(new FileInputStream(Objects.requireNonNull(resource).getFile())));
 
         String stateName = IdUtils.create();
@@ -81,7 +80,6 @@ class AdswerveBigQueryTest {
             .builder()
             .id(IdUtils.create() + "_bq")
             .type(io.kestra.plugin.singer.targets.AdswerveBigQuery.class.getName())
-            .taskRunner(Process.instance())
             .from(tapOutput.getRaw().toString())
             .stateName(stateName)
             .serviceAccount(serviceAccount)
@@ -94,6 +92,6 @@ class AdswerveBigQueryTest {
         runContext = TestsUtils.mockRunContext(runContextFactory, task, ImmutableMap.of());
         AbstractPythonTarget.Output output = task.run(runContext);
 
-        assertThat(output.getState(), not((nullValue())));
+        assertThat(output.getStateKey(), not((nullValue())));
     }
 }

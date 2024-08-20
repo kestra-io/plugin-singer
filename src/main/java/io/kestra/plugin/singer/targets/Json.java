@@ -27,7 +27,7 @@ import static io.kestra.core.utils.Rethrow.throwFunction;
     description = "Full documentation can be found [here](https://github.com/andyh1203/target-jsonl)"
 )
 public class Json extends AbstractPythonTarget implements RunnableTask<Json.Output> {
-    private File destinationDirectory() throws IOException {
+    private File destinationDirectory() {
         return new File(workingDirectory.toFile(), "destination");
     }
 
@@ -59,7 +59,7 @@ public class Json extends AbstractPythonTarget implements RunnableTask<Json.Outp
         AbstractPythonTarget.Output output = this.runTarget(runContext);
 
         return Output.builder()
-            .state(output.getState())
+            .stateKey(output.getStateKey())
             .uris(Arrays.stream(Objects.requireNonNull(destinationDirectory().listFiles()))
                 .map(throwFunction(o -> {
                     List<String> name = new ArrayList<>(Arrays.asList(o.getName().split("\\.")));
@@ -78,9 +78,9 @@ public class Json extends AbstractPythonTarget implements RunnableTask<Json.Outp
     @Getter
     public static class Output implements io.kestra.core.models.tasks.Output {
         @Schema(
-            title = "URI of the state file."
+            title = "Key of the state in KV Store"
         )
-        private final URI state;
+        private final String stateKey;
 
         @Schema(
             title = "URI of the generated CSV.",

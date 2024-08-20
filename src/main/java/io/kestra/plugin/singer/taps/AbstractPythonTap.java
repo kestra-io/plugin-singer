@@ -6,6 +6,7 @@ import io.kestra.core.models.executions.metrics.Counter;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.models.tasks.runners.DefaultLogConsumer;
 import io.kestra.core.runners.RunContext;
+import io.kestra.core.storages.StorageContext;
 import io.kestra.plugin.singer.AbstractPythonSinger;
 import io.kestra.plugin.singer.models.DiscoverStreams;
 import io.kestra.plugin.singer.models.Feature;
@@ -67,7 +68,11 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger implements 
         // state
         if (this.features().contains(Feature.STATE)) {
             try {
-                InputStream taskStateFile = runContext.storage().getTaskStateFile(runContext.render(this.stateName), "state.json");
+                InputStream taskStateFile = runContext.stateStore().getState(
+                    runContext.render(this.stateName),
+                    "state.json",
+                    runContext.storage().getTaskStorageContext().map(StorageContext.Task::getTaskRunValue).orElse(null)
+                );
                 this.writeSingerFiles("state.json", IOUtils.toString(taskStateFile, StandardCharsets.UTF_8));
             } catch (FileNotFoundException e) {
                 this.writeSingerFiles("state.json", "{}");
@@ -97,7 +102,7 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger implements 
             .raw(runContext.storage().putFile(this.rawSingerStream.getLeft()));
 
         if (this.features().contains(Feature.STATE)) {
-            this.saveState(runContext);
+            this.saveState(runContext, runContext.render(this.stateName), this.stateRecords);
         }
 
         return outputBuilder
