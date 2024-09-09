@@ -63,7 +63,7 @@ public abstract class AbstractPythonSinger extends Task {
     protected transient Path workingDirectory;
 
     @Schema(
-        title = "The name of Singer state file."
+        title = "The name of Singer state file stored in KV Store."
     )
     @PluginProperty(dynamic = true)
     @NotNull

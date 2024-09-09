@@ -99,13 +99,13 @@ public class Csv extends AbstractPythonTarget implements RunnableTask<Csv.Output
     @Getter
     public static class Output implements io.kestra.core.models.tasks.Output {
         @Schema(
-            title = "Key of the state in KV Store"
+            title = "Key of the state file stored in the KV Store"
         )
         private final String stateKey;
 
         @Schema(
-            title = "Uri of the generated csv",
-            description = "The key will be the name of the stream"
+            title = "URIs of the generated CSV files",
+            description = "The key corresponds to the name of the stream"
         )
         @PluginProperty(additionalProperties = URI.class)
         private final Map<String, URI> uris;
