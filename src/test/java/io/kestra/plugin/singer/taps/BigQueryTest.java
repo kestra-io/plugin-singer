@@ -33,10 +33,11 @@ class BigQueryTest extends TapsTest {
         BigQuery.BigQueryBuilder<?, ?> builder = BigQuery.builder()
             .id(IdUtils.create())
             .taskRunner(Process.instance())
-            .type(ExchangeRateHost.class.getName())
+            .type(BigQuery.class.getName())
             .serviceAccount(serviceAccount)
             .startAlwaysInclusive(false)
             .startDateTime(Instant.parse("2013-09-08T16:19:12Z"))
+            .limit(1)
             .streams(Collections.singletonList(
                 BigQuery.Stream.builder()
                     .name("covid19_nyt_us_states")
@@ -53,6 +54,7 @@ class BigQueryTest extends TapsTest {
             .streamsConfigurations(Collections.singletonList(
                 StreamsConfiguration.builder()
                     .replicationMethod(DiscoverMetadata.ReplicationMethod.FULL_TABLE)
+                    .selected(true)
                     .build()
             ));
 
