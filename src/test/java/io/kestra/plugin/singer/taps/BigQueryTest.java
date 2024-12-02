@@ -7,6 +7,7 @@ import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
 import io.kestra.plugin.core.runner.Process;
+import io.kestra.plugin.scripts.runner.docker.Docker;
 import io.kestra.plugin.singer.models.DiscoverMetadata;
 import io.kestra.plugin.singer.models.StreamsConfiguration;
 import jakarta.inject.Inject;
@@ -32,7 +33,7 @@ class BigQueryTest extends TapsTest {
 
         BigQuery.BigQueryBuilder<?, ?> builder = BigQuery.builder()
             .id(IdUtils.create())
-            .taskRunner(Process.instance())
+            .taskRunner(Docker.instance())
             .type(BigQuery.class.getName())
             .serviceAccount(serviceAccount)
             .startAlwaysInclusive(false)
@@ -67,7 +68,7 @@ class BigQueryTest extends TapsTest {
 
         assertThat(groupedByType.get(StreamType.SCHEMA).size(), is(1));
         assertThat(groupedByType.get(StreamType.SCHEMA).get(0).get("stream"), is("covid19_nyt_us_states"));
-        assertThat(groupedByType.get(StreamType.RECORD).size(), is(17));
+        assertThat(groupedByType.get(StreamType.RECORD).size(), is(61942));
         assertThat(groupedByType.get(StreamType.STATE).size(), is(2));
 
         // rerun, since we have startAlwaysInclusive false, we won't retrieve any record

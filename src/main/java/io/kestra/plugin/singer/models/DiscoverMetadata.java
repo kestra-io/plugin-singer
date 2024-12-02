@@ -57,6 +57,15 @@ public class DiscoverMetadata {
     @JsonProperty("sql-datatype")
     String sqlDatatype;
 
+    @JsonProperty("table")
+    String table;
+
+    @JsonProperty("columns")
+    List<String> columns;
+
+    @JsonProperty("datetime_key")
+    String datetime_key;
+
     @Getter(AccessLevel.NONE)
     Map<String, Object> extra;
 
