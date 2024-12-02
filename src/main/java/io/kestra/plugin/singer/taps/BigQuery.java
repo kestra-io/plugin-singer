@@ -73,7 +73,7 @@ public class BigQuery extends AbstractPythonTap implements RunnableTask<Abstract
 
     public List<Feature> features() {
         return Arrays.asList(
-            Feature.CATALOG,
+            Feature.PROPERTIES,
             Feature.DISCOVER,
             Feature.STATE
         );
