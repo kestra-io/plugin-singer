@@ -69,13 +69,13 @@ class SqlServerTest {
         SqlServer target = SqlServer.builder()
             .id(IdUtils.create())
             .type(PipelinewiseSqlServer.class.getName())
-            .from(tapOutput.getRaw().toString())
+            .from(Property.of(tapOutput.getRaw().toString()))
             .host("172.17.0.1")
             .database("msdb")
             .username("SA")
             .password("SQLServer_Passwd")
-            .port(57037)
-            .defaultTargetSchema("target")
+            .port(Property.of(57037))
+            .defaultTargetSchema(Property.of("target"))
             .build();
 
         runContext = TestsUtils.mockRunContext(runContextFactory, target, ImmutableMap.of());

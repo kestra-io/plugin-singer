@@ -44,11 +44,11 @@ public class GenericTarget extends AbstractPythonTarget implements RunnableTask<
         description = "Will be save on config.json and used as arguments"
     )
     @PluginProperty(dynamic = true)
-    private Map<String, Object> configs;
+    private Property<Map<String, Object>> configs;
 
     @Override
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException, IOException {
-        return runContext.render(this.configs);
+        return runContext.render(this.configs).asMap(String.class, Object.class);
     }
 
     @Override

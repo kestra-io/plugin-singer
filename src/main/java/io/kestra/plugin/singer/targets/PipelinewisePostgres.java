@@ -45,53 +45,46 @@ public class PipelinewisePostgres extends AbstractPythonTarget implements Runnab
     @Schema(
         title = "The database user's password."
     )
-    @PluginProperty(dynamic = true)
-    private String password;
+    private Property<String> password;
 
     @Schema(
         title = "The database name."
     )
-    @PluginProperty(dynamic = true)
-    private String dbName;
+    private Property<String> dbName;
 
     @NotNull
     @Schema(
         title = "The database port."
     )
-    @PluginProperty
-    private Integer port;
+    private Property<Integer> port;
 
     @Schema(
         title = "Maximum number of rows in each batch.",
         description = "At the end of each batch, the rows in the batch are loaded into Postgres."
     )
-    @PluginProperty
     @Builder.Default
-    private final Integer batchSizeRows = 100000;
+    private final Property<Integer> batchSizeRows = Property.of(100000);
 
     @Schema(
         title = "Flush and load every stream into Postgres when one batch is full.",
         description = "Warning: This may trigger the COPY command to use files with low number of records.."
     )
-    @PluginProperty
     @Builder.Default
-    private final Boolean flushAllStreams = false;
+    private final Property<Boolean> flushAllStreams = Property.of(false);
 
     @Schema(
         title = "The number of threads used to flush tables.",
         description = "0 will create a thread for each stream, up to parallelism_max. -1 will create a thread for " +
             "each CPU core. Any other positive number will create that number of threads, up to parallelism_max."
     )
-    @PluginProperty
     @Builder.Default
-    private final Integer parallelism = 0;
+    private final Property<Integer> parallelism = Property.of(0);
 
     @Schema(
         title = "Max number of parallel threads to use when flushing tables."
     )
-    @PluginProperty
     @Builder.Default
-    private final Integer maxParallelism = 16;
+    private final Property<Integer> maxParallelism = Property.of(16);
 
     @Schema(
         title = "Add singer Metadata columns.",
@@ -102,9 +95,8 @@ public class PipelinewisePostgres extends AbstractPythonTarget implements Runnab
             "Enabling metadata columns will flag the deleted rows by setting the `_SDC_DELETED_AT` metadata column. " +
             "Without the `add_metadata_columns` option the deleted rows from singer taps will not be recognisable in Postgres."
     )
-    @PluginProperty
     @Builder.Default
-    private final Boolean addMetadataColumns = false;
+    private final Property<Boolean> addMetadataColumns = Property.of(false);
 
     @Schema(
         title = "Delete rows on Postgres.",
@@ -113,72 +105,66 @@ public class PipelinewisePostgres extends AbstractPythonTarget implements Runnab
             "by the singer tap. Due to deleting rows requires metadata columns, hard_delete option automatically " +
             "enables the add_metadata_columns option as well."
     )
-    @PluginProperty
     @Builder.Default
-    private final Boolean hardDelete = false;
+    private final Property<Boolean> hardDelete = Property.of(false);
 
     @Schema(
         title = "Object type RECORD items from taps can be transformed to flattened columns by creating columns automatically.",
         description = "When value is 0 (default) then flattening functionality is turned off."
     )
-    @PluginProperty
     @Builder.Default
-    private final Integer dataFlatteningMaxLevel = 0;
+    private final Property<Integer> dataFlatteningMaxLevel = Property.of(0);
 
     @Schema(
         title = "Log based and Incremental replications on tables with no Primary Key cause duplicates when merging UPDATE events.",
         description = "When set to true, stop loading data if no Primary Key is defined."
     )
-    @PluginProperty
     @Builder.Default
-    private final Boolean primaryKeyRequired = true;
+    private final Property<Boolean> primaryKeyRequired = Property.of(true);
 
     @Schema(
         title = "Validate every single record message to the corresponding JSON schema.",
         description = "This option is disabled by default and invalid RECORD messages will fail only at load time by " +
             "Postgres. Enabling this option will detect invalid records earlier but could cause performance degradation.."
     )
-    @PluginProperty
     @Builder.Default
-    private final Boolean validateRecords = false;
+    private final Property<Boolean> validateRecords = Property.of(false);
 
     @Schema(
         title = "Name of the schema where the tables will be created.",
         description = "If `schemaMapping` is not defined then every stream sent by the tap is loaded into this schema."
     )
-    @PluginProperty(dynamic = true)
-    private String defaultTargetSchema;
+    private Property<String> defaultTargetSchema;
 
     @Schema(
         title = "Grant USAGE privilege on newly created schemas and grant SELECT privilege on newly created."
     )
-    @PluginProperty(dynamic = true)
-    private String defaultTargetSchemaSelectPermission;
+    private Property<String> defaultTargetSchemaSelectPermission;
 
     @Override
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
             .put("user", runContext.render(this.username))
-            .put("password", runContext.render(this.password))
+            .put("password", runContext.render(this.password).as(String.class).orElse(null))
             .put("host", runContext.render(this.host))
-            .put("port", this.port)
-            .put("dbname", runContext.render(this.dbName))
-            .put("batch_size_rows", this.batchSizeRows)
-            .put("flush_all_streams", this.flushAllStreams)
-            .put("parallelism", this.parallelism)
-            .put("max_parallelism", this.maxParallelism)
-            .put("add_metadata_columns", this.addMetadataColumns)
-            .put("hard_delete", this.hardDelete)
-            .put("data_flattening_max_level", this.dataFlatteningMaxLevel)
-            .put("primary_key_required", this.primaryKeyRequired)
-            .put("validate_records", this.validateRecords);
+            .put("port", runContext.render(this.port).as(Integer.class).orElseThrow())
+            .put("dbname", runContext.render(this.dbName).as(String.class).orElse(null))
+            .put("batch_size_rows", runContext.render(this.batchSizeRows).as(Integer.class).orElseThrow())
+            .put("flush_all_streams", runContext.render(this.flushAllStreams).as(Boolean.class).orElseThrow())
+            .put("parallelism", runContext.render(this.parallelism).as(Integer.class).orElseThrow())
+            .put("max_parallelism", runContext.render(this.maxParallelism).as(Integer.class).orElseThrow())
+            .put("add_metadata_columns", runContext.render(this.addMetadataColumns).as(Boolean.class).orElseThrow())
+            .put("hard_delete", runContext.render(this.hardDelete).as(Boolean.class).orElseThrow())
+            .put("data_flattening_max_level", runContext.render(this.dataFlatteningMaxLevel).as(Integer.class).orElseThrow())
+            .put("primary_key_required", runContext.render(this.primaryKeyRequired).as(Boolean.class).orElseThrow())
+            .put("validate_records", runContext.render(this.validateRecords).as(Boolean.class).orElseThrow());
 
         if (this.defaultTargetSchema != null) {
-            builder.put("default_target_schema", runContext.render(this.defaultTargetSchema));
+            builder.put("default_target_schema", runContext.render(this.defaultTargetSchema).as(String.class).orElseThrow());
         }
 
         if (this.defaultTargetSchema != null) {
-            builder.put("default_target_schema_select_permission", runContext.render(this.defaultTargetSchemaSelectPermission));
+            builder.put("default_target_schema_select_permission", runContext.render(this.defaultTargetSchemaSelectPermission).as(String.class).orElseThrow());
         }
 
         return builder.build();

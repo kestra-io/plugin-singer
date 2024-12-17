@@ -47,8 +47,7 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
     @Schema(
         title = "The Dataset location."
     )
-    @PluginProperty(dynamic = true)
-    private String location;
+    private Property<String> location;
 
     @NotNull
     @Schema(
@@ -56,62 +55,54 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
         description = "This option is disabled by default and invalid RECORD messages will fail only at load time by " +
             "Postgres. Enabling this option will detect invalid records earlier but could cause performance degradation.."
     )
-    @PluginProperty
-    private final Boolean validateRecords = false;
+    private final Property<Boolean> validateRecords = Property.of(false);
 
     @Schema(
         title = "Add singer Metadata columns.",
         description = "Add `_time_extracted` and `_time_loaded` metadata columns."
     )
-    @PluginProperty
     @Builder.Default
-    private final Boolean addMetadataColumns = false;
+    private final Property<Boolean> addMetadataColumns = Property.of(false);
 
     @Schema(
         title = "The replication method, `append` or `truncate`."
     )
-    @PluginProperty
     @Builder.Default
-    private final ReplicationMethod replicationMethod = ReplicationMethod.append;
+    private final Property<ReplicationMethod> replicationMethod = Property.of(ReplicationMethod.append);
 
     @Schema(
         title = "Add prefix to table name."
     )
-    @PluginProperty(dynamic = true)
-    private String tablePrefix;
+    private Property<String> tablePrefix;
 
     @Schema(
         title = "Add suffix to table name."
     )
-    @PluginProperty(dynamic = true)
-    private String tableSuffix;
+    private Property<String> tableSuffix;
 
     @Schema(
         title = "Maximum cache size in MB."
     )
     @PluginProperty
     @Builder.Default
-    private final Integer maxCache = 50;
+    private final Property<Integer> maxCache = Property.of(50);
 
     @Schema(
         title = "The JSON service account key as string."
     )
-    @PluginProperty(dynamic = true)
-    protected String serviceAccount;
+    protected Property<String> serviceAccount;
 
     @Schema(
         title = "Enable control state flush.",
         description = "default: merges multiple state messages from the tap into the state file, if true : uses the last state message as the state file."
     )
-    @PluginProperty
     @Builder.Default
-    protected Boolean mergeStateMessages = false;
+    protected Property<Boolean> mergeStateMessages = Property.of(false);
 
     @Schema(
         title = "Table configs."
     )
-    @PluginProperty
-    protected Map<String, Object> tableConfigs;
+    protected Property<Map<String, Object>> tableConfigs;
 
     @SneakyThrows
     @Override
@@ -119,29 +110,30 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
             .put("project_id", runContext.render(this.projectId))
             .put("dataset_id", runContext.render(this.datasetId))
-            .put("validate_records", this.validateRecords)
-            .put("add_metadata_columns", this.addMetadataColumns)
-            .put("replication_method", this.replicationMethod)
-            .put("max_cache", this.maxCache);
+            .put("validate_records", runContext.render(this.validateRecords).as(Boolean.class).orElseThrow())
+            .put("add_metadata_columns", runContext.render(this.addMetadataColumns).as(Boolean.class).orElseThrow())
+            .put("replication_method", runContext.render(this.replicationMethod).as(ReplicationMethod.class).orElseThrow())
+            .put("max_cache", runContext.render(this.maxCache).as(Integer.class).orElseThrow());
 
         if (this.location != null) {
-            builder.put("location", runContext.render(this.location));
+            builder.put("location", runContext.render(this.location).as(String.class).orElseThrow());
         }
 
         if (this.tablePrefix != null) {
-            builder.put("table_prefix", runContext.render(this.tablePrefix));
+            builder.put("table_prefix", runContext.render(this.tablePrefix).as(String.class).orElseThrow());
         }
 
         if (this.tableSuffix != null) {
-            builder.put("table_suffix", runContext.render(this.tableSuffix));
+            builder.put("table_suffix", runContext.render(this.tableSuffix).as(String.class).orElseThrow());
         }
 
-        if (this.mergeStateMessages) {
+        if (runContext.render(this.mergeStateMessages).as(Boolean.class).orElseThrow()) {
             builder.put("merge_state_messages", "0");
         }
 
-        if (this.tableConfigs != null) {
-            this.writeSingerFiles("table-config.json", runContext.render(this.tableConfigs));
+        var renderedConfigs = runContext.render(this.tableConfigs).asMap(String.class, Object.class);
+        if (!renderedConfigs.isEmpty()) {
+            this.writeSingerFiles("table-config.json", renderedConfigs);
             builder.put("table_config", workingDirectory.toAbsolutePath() + "/table-config.json");
         }
 
@@ -154,7 +146,7 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
         HashMap<String, String> env = new HashMap<>(super.environmentVariables(runContext));
 
         if (this.serviceAccount != null) {
-            this.writeSingerFiles("google-credentials.json", runContext.render(this.serviceAccount));
+            this.writeSingerFiles("google-credentials.json", runContext.render(this.serviceAccount).as(String.class).orElseThrow());
             env.put("GOOGLE_APPLICATION_CREDENTIALS", workingDirectory.toAbsolutePath() + "/google-credentials.json");
         }
 

@@ -48,8 +48,7 @@ public class SqlServer extends AbstractPythonTarget implements RunnableTask<Abst
     @Schema(
         title = "The database port."
     )
-    @PluginProperty
-    private Integer port;
+    private Property<Integer> port;
 
     @NotEmpty
     @Schema(
@@ -68,44 +67,37 @@ public class SqlServer extends AbstractPythonTarget implements RunnableTask<Abst
     @Schema(
         title = "Default target schema to write to."
     )
-    @PluginProperty(dynamic = true)
-    private String defaultTargetSchema;
+    private Property<String> defaultTargetSchema;
 
     @Schema(
         title = "Prefix to add to table name. Useful if retrieving data from multiple taps for easier filtering."
     )
-    @PluginProperty(dynamic = true)
-    private String tablePrefix;
+    private Property<String> tablePrefix;
 
     @Schema(
         title = "Use float data type for numbers (otherwise number type is used)."
     )
-    @PluginProperty
-    private Boolean preferFloatOverNumeric;
+    private Property<Boolean> preferFloatOverNumeric;
 
     @Schema(
         title = "Config object for stream maps capability."
     )
-    @PluginProperty(dynamic = true)
-    private String streamMaps;
+    private Property<String> streamMaps;
 
     @Schema(
         title = "User-defined config values to be used within map expressions."
     )
-    @PluginProperty(dynamic = true)
-    private String streamMapConfig;
+    private Property<String> streamMapConfig;
 
     @Schema(
         title = "Enable schema flattening and automatically expand nested properties"
     )
-    @PluginProperty
-    private Boolean flatteningEnabled;
+    private Property<Boolean> flatteningEnabled;
 
     @Schema(
         title = "The max depth to flatten schemas."
     )
-    @PluginProperty
-    private Integer flatteningMaxDepth;
+    private Property<Integer> flatteningMaxDepth;
 
     @Override
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
@@ -113,35 +105,35 @@ public class SqlServer extends AbstractPythonTarget implements RunnableTask<Abst
             .put("username", runContext.render(this.username))
             .put("password", runContext.render(this.password))
             .put("host", runContext.render(this.host))
-            .put("port", String.valueOf(this.port))
+            .put("port", String.valueOf(runContext.render(this.port).as(Integer.class).orElseThrow()))
             .put("database", runContext.render(this.database));
 
         if (this.defaultTargetSchema != null) {
-            builder.put("default_target_schema", runContext.render(this.defaultTargetSchema));
+            builder.put("default_target_schema", runContext.render(this.defaultTargetSchema).as(String.class).orElseThrow());
         }
 
         if (this.tablePrefix != null) {
-            builder.put("table_prefix", runContext.render(this.tablePrefix));
+            builder.put("table_prefix", runContext.render(this.tablePrefix).as(String.class).orElseThrow());
         }
 
         if (this.preferFloatOverNumeric != null) {
-            builder.put("prefer_float_over_numeric", StringUtils.capitalize(this.preferFloatOverNumeric.toString()));
+            builder.put("prefer_float_over_numeric", StringUtils.capitalize(runContext.render(this.preferFloatOverNumeric).as(Boolean.class).orElseThrow().toString()));
         }
 
         if (this.streamMaps != null) {
-            builder.put("stream_maps", runContext.render(this.streamMaps));
+            builder.put("stream_maps", runContext.render(this.streamMaps).as(String.class).orElseThrow());
         }
 
         if (this.streamMapConfig != null) {
-            builder.put("stream_map_config", runContext.render(this.streamMapConfig));
+            builder.put("stream_map_config", runContext.render(this.streamMapConfig).as(String.class).orElseThrow());
         }
 
         if (this.flatteningEnabled != null) {
-            builder.put("flattening_enabled", StringUtils.capitalize(this.flatteningEnabled.toString()));
+            builder.put("flattening_enabled", StringUtils.capitalize(runContext.render(this.flatteningEnabled).as(Boolean.class).orElseThrow().toString()));
         }
 
         if (this.flatteningMaxDepth != null) {
-            builder.put("flattening_max_depth", this.flatteningMaxDepth);
+            builder.put("flattening_max_depth", runContext.render(this.flatteningMaxDepth).as(Integer.class).orElseThrow());
         }
 
         return builder.build();

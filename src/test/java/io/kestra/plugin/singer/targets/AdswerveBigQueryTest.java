@@ -81,12 +81,12 @@ class AdswerveBigQueryTest {
             .builder()
             .id(IdUtils.create() + "_bq")
             .type(io.kestra.plugin.singer.targets.AdswerveBigQuery.class.getName())
-            .from(tapOutput.getRaw().toString())
+            .from(Property.of(tapOutput.getRaw().toString()))
             .stateName(Property.of(stateName))
-            .serviceAccount(serviceAccount)
+            .serviceAccount(Property.of(serviceAccount))
             .projectId(project)
             .datasetId(dataset)
-            .location("EU");
+            .location(Property.of("EU"));
 
         AdswerveBigQuery task = builder.build();
 

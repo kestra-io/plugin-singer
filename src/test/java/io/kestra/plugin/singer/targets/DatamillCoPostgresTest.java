@@ -66,13 +66,13 @@ class DatamillCoPostgresTest {
             .builder()
             .id(IdUtils.create())
             .type(io.kestra.plugin.singer.targets.DatamillCoPostgres.class.getName())
-            .from(tapOutput.getRaw().toString())
+            .from(Property.of(tapOutput.getRaw().toString()))
             .stateName(Property.of(stateName))
             .host("172.17.0.1")
             .username("postgres")
-            .password("pg_passwd")
-            .port(65432)
-            .dbName("sync");
+            .password(Property.of("pg_passwd"))
+            .port(Property.of(65432))
+            .dbName(Property.of("sync"));
 
         DatamillCoPostgres task = builder.build();
 

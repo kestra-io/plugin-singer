@@ -63,7 +63,7 @@ class CsvTest {
             .builder()
             .id(IdUtils.create())
             .type(DatamillCoPostgres.class.getName())
-            .from(tapOutput.getRaw().toString())
+            .from(Property.of(tapOutput.getRaw().toString()))
             .stateName(Property.of(stateName))
             .delimiter(";");
         Csv target = builder.build();

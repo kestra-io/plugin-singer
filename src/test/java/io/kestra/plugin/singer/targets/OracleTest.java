@@ -1,6 +1,7 @@
 package io.kestra.plugin.singer.targets;
 
 import com.google.common.collect.ImmutableMap;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.utils.IdUtils;
@@ -56,12 +57,12 @@ class OracleTest {
         Oracle target = Oracle.builder()
             .id(IdUtils.create())
             .type(Oracle.class.getName())
-            .from(tapOutput.getRaw().toString())
+            .from(Property.of(tapOutput.getRaw().toString()))
             .host("172.17.0.1")
-            .database("FREE")
+            .database(Property.of("FREE"))
             .username("system")
             .password("oracle_passwd")
-            .port(57057)
+            .port(Property.of(57057))
             .build();
 
         runContext = TestsUtils.mockRunContext(runContextFactory, target, ImmutableMap.of());
