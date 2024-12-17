@@ -73,9 +73,8 @@ public class GoogleSearchConsole extends AbstractPythonTap implements RunnableTa
     @Schema(
         title = "User Agent for your OAuth Client."
     )
-    @PluginProperty(dynamic = true)
     @Builder.Default
-    private final String userAgent = "tap-google-search-console via Kestra";
+    private final Property<String> userAgent = Property.of("tap-google-search-console via Kestra");
 
     public List<Feature> features() {
         return Arrays.asList(
@@ -95,7 +94,7 @@ public class GoogleSearchConsole extends AbstractPythonTap implements RunnableTa
             .put("start_date", runContext.render(this.startDate.toString()));
 
         if (this.userAgent != null) {
-            builder.put("user_agent", runContext.render(this.userAgent));
+            builder.put("user_agent", runContext.render(this.userAgent).as(String.class).orElseThrow());
         }
 
         return builder.build();

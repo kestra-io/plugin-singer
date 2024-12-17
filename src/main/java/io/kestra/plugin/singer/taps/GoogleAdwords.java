@@ -86,9 +86,8 @@ public class GoogleAdwords extends AbstractPythonTap implements RunnableTask<Abs
     @Schema(
         title = "How many Days before the Start Date to fetch data for Performance Reports."
     )
-    @PluginProperty
     @Builder.Default
-    private final Integer conversionWindowDays = 0;
+    private final Property<Integer> conversionWindowDays = Property.of(0);
 
     @Schema(
         title = "Primary Keys for the selected Entities (Streams)."
@@ -99,9 +98,8 @@ public class GoogleAdwords extends AbstractPythonTap implements RunnableTask<Abs
     @Schema(
         title = "User Agent for your OAuth Client."
     )
-    @PluginProperty(dynamic = true)
     @Builder.Default
-    private final String userAgent = "tap-adwords via Kestra";
+    private final Property<String> userAgent = Property.of("tap-adwords via Kestra");
 
     public List<Feature> features() {
         return Arrays.asList(
@@ -120,14 +118,14 @@ public class GoogleAdwords extends AbstractPythonTap implements RunnableTask<Abs
             .put("refresh_token", runContext.render(this.refreshToken))
             .put("customer_ids", String.join(",", runContext.render(this.customerIds)))
             .put("start_date", runContext.render(this.startDate.toString()))
-            .put("conversion_window_days", this.conversionWindowDays);
+            .put("conversion_window_days", runContext.render(this.conversionWindowDays).as(Integer.class).orElseThrow());
 
         if (this.endDate != null) {
             builder.put("end_date", runContext.render(this.endDate.toString()));
         }
 
         if (this.userAgent != null) {
-            builder.put("user_agent", runContext.render(this.userAgent));
+            builder.put("user_agent", runContext.render(this.userAgent).as(String.class).orElseThrow());
         }
 
         if (this.primaryKeys != null) {

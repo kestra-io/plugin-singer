@@ -49,9 +49,8 @@ public class FacebookAds extends AbstractPythonTap implements RunnableTask<Abstr
     @Schema(
         title = "How many Days before the Start Date to fetch Ads Insights for."
     )
-    @PluginProperty(dynamic = true)
     @Builder.Default
-    private final Integer insightsBufferDays = 0;
+    private final Property<Integer> insightsBufferDays = Property.of(0);
 
     @NotNull
     @Schema(
@@ -80,7 +79,7 @@ public class FacebookAds extends AbstractPythonTap implements RunnableTask<Abstr
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
             .put("account_id", runContext.render(this.accountId))
             .put("access_token", runContext.render(this.accessToken))
-            .put("insights_buffer_days", this.insightsBufferDays)
+            .put("insights_buffer_days", runContext.render(this.insightsBufferDays).as(Integer.class).orElseThrow())
             .put("start_date", runContext.render(this.startDate.toString()));
 
         if (this.endDate != null) {

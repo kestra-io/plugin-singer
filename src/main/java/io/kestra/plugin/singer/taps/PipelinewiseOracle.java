@@ -70,28 +70,24 @@ public class PipelinewiseOracle extends AbstractPythonTap implements RunnableTas
     @Schema(
         title = "The database user's password."
     )
-    @PluginProperty(dynamic = true)
-    private String password;
+    private Property<String> password;
 
     @NotNull
     @Schema(
         title = "The database port."
     )
-    @PluginProperty
-    private Integer port;
+    private Property<Integer> port;
 
     @NotNull
     @Schema(
         title = "The database SID."
     )
-    @PluginProperty(dynamic = true)
-    private String sid;
+    private Property<String> sid;
 
     @Schema(
         title = "The schemas to filter."
     )
-    @PluginProperty(dynamic = true)
-    private String filterSchemas;
+    private Property<String> filterSchemas;
 
     public List<Feature> features() {
         return Arrays.asList(
@@ -105,13 +101,13 @@ public class PipelinewiseOracle extends AbstractPythonTap implements RunnableTas
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
             .put("user", runContext.render(this.username))
-            .put("password", runContext.render(this.password))
+            .put("password", runContext.render(this.password).as(String.class).orElse(null))
             .put("host", runContext.render(this.host))
-            .put("port", this.port)
-            .put("sid", runContext.render(this.sid));
+            .put("port", runContext.render(this.port).as(Integer.class).orElseThrow())
+            .put("sid", runContext.render(this.sid).as(String.class).orElseThrow());
 
         if (this.filterSchemas != null) {
-            builder.put("filter_schemas", runContext.render(this.filterSchemas));
+            builder.put("filter_schemas", runContext.render(this.filterSchemas).as(String.class).orElseThrow());
         }
 
         return builder.build();

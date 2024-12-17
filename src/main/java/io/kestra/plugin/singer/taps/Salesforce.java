@@ -33,77 +33,66 @@ public class Salesforce extends AbstractPythonTap implements RunnableTask<Abstra
     @Schema(
         title = "This is used to switch the behavior of the tap between using Salesforce's `REST` and `BULK` APIs."
     )
-    @PluginProperty
     @Builder.Default
-    private final ApiType apiType = ApiType.BULK;
+    private final Property<ApiType> apiType = Property.of(ApiType.BULK);
 
     @NotNull
     @Schema(
         title = "Select by default any new fields discovered in Salesforce objects."
     )
-    @PluginProperty
     @Builder.Default
-    private final Boolean selectFieldsByDefault = true;
+    private final Property<Boolean> selectFieldsByDefault = Property.of(true);
 
     @NotNull
     @Schema(
         title = "Select by default any new fields discovered in Salesforce objects."
     )
-    @PluginProperty
     @Builder.Default
-    private final Boolean isSandbox = false;
+    private final Property<Boolean> isSandbox = Property.of(false);
 
     @NotNull
     @Schema(
         title = "Generate a STATE message every N records."
     )
-    @PluginProperty
     @Builder.Default
-    private final Integer stateMessageThreshold = 1000;
+    private final Property<Integer> stateMessageThreshold = Property.of(1000);
 
     @NotNull
     @Schema(
         title = "Maximum number of threads to use."
     )
-    @PluginProperty
     @Builder.Default
-    private final Integer maxWorkers = 8;
+    private final Property<Integer> maxWorkers = Property.of(8);
 
     @Schema(
         title = "Salesforce username."
     )
-    @PluginProperty(dynamic = true)
-    private String username;
+    private Property<String> username;
 
     @Schema(
         title = "Salesforce password."
     )
-    @PluginProperty(dynamic = true)
-    private String password;
+    private Property<String> password;
 
     @Schema(
         title = "Your Salesforce Account access token."
     )
-    @PluginProperty(dynamic = true)
-    private String securityToken;
+    private Property<String> securityToken;
 
     @Schema(
         title = "Salesforce client ID."
     )
-    @PluginProperty(dynamic = true)
-    private String clientId;
+    private Property<String> clientId;
 
     @Schema(
         title = "Salesforce client secret."
     )
-    @PluginProperty(dynamic = true)
-    private String clientSecret;
+    private Property<String> clientSecret;
 
     @Schema(
         title = "Salesforce refresh token."
     )
-    @PluginProperty(dynamic = true)
-    private String refreshToken;
+    private Property<String> refreshToken;
 
     @NotNull
     @Schema(
@@ -124,43 +113,39 @@ public class Salesforce extends AbstractPythonTap implements RunnableTask<Abstra
     @Override
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
-            .put("api_type", this.apiType)
-            .put("select_fields_by_default", this.selectFieldsByDefault)
-            .put("is_sandbox", this.isSandbox)
-            .put("state_message_threshold", this.stateMessageThreshold)
-            .put("max_workers", this.maxWorkers)
+            .put("api_type", runContext.render(this.apiType).as(ApiType.class).orElseThrow())
+            .put("select_fields_by_default", runContext.render(this.selectFieldsByDefault).as(Boolean.class).orElseThrow())
+            .put("is_sandbox", runContext.render(this.isSandbox).as(Boolean.class).orElseThrow())
+            .put("state_message_threshold", runContext.render(this.stateMessageThreshold).as(Integer.class).orElseThrow())
+            .put("max_workers", runContext.render(this.maxWorkers).as(Integer.class).orElseThrow())
             .put("start_date", runContext.render(this.startDate.toString()));
 
         if (this.username != null) {
-            builder.put("username", runContext.render(this.username));
+            builder.put("username", runContext.render(this.username).as(String.class).orElseThrow());
         }
 
         if (this.password != null) {
-            builder.put("password", runContext.render(this.password));
+            builder.put("password", runContext.render(this.password).as(String.class).orElseThrow());
         }
 
         if (this.securityToken != null) {
-            builder.put("security_token", runContext.render(this.securityToken));
+            builder.put("security_token", runContext.render(this.securityToken).as(String.class).orElseThrow());
         }
 
         if (this.clientId != null) {
-            builder.put("client_id", runContext.render(this.clientId));
+            builder.put("client_id", runContext.render(this.clientId).as(String.class).orElseThrow());
         }
 
         if (this.clientSecret != null) {
-            builder.put("client_secret", runContext.render(this.clientSecret));
+            builder.put("client_secret", runContext.render(this.clientSecret).as(String.class).orElseThrow());
         }
 
         if (this.refreshToken != null) {
-            builder.put("refresh_token", runContext.render(this.refreshToken));
+            builder.put("refresh_token", runContext.render(this.refreshToken).as(String.class).orElseThrow());
         }
 
         if (this.username != null) {
-            builder.put("username", runContext.render(this.username));
-        }
-
-        if (this.username != null) {
-            builder.put("username", runContext.render(this.username));
+            builder.put("username", runContext.render(this.username).as(String.class).orElseThrow());
         }
 
         return builder.build();

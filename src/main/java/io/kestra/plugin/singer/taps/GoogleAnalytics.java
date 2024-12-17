@@ -36,38 +36,32 @@ public class GoogleAnalytics extends AbstractPythonTap implements RunnableTask<A
     @Schema(
         title = "Service account as json."
     )
-    @PluginProperty(dynamic = true)
-    private String serviceAccount;
+    private Property<String> serviceAccount;
 
     @Schema(
         title = "OAuth Client ID"
     )
-    @PluginProperty(dynamic = true)
-    private String oauthClientId;
+    private Property<String> oauthClientId;
 
     @Schema(
         title = "OAuth Client Secret."
     )
-    @PluginProperty(dynamic = true)
-    private String oauthClientSecret;
+    private Property<String> oauthClientSecret;
 
     @Schema(
         title = "OAuth Access Token."
     )
-    @PluginProperty(dynamic = true)
-    private String oauthAccessToken;
+    private Property<String> oauthAccessToken;
 
     @Schema(
         title = "OAuth Refresh Token."
     )
-    @PluginProperty(dynamic = true)
-    private String oauthRefreshToken;
+    private Property<String> oauthRefreshToken;
 
     @Schema(
         title = "OAuth Refresh Token."
     )
-    @PluginProperty(dynamic = true)
-    private String view_id;
+    private Property<String> view_id;
 
     @Schema(
         title = "Reports."
@@ -102,28 +96,28 @@ public class GoogleAnalytics extends AbstractPythonTap implements RunnableTask<A
             .put("start_date", runContext.render(this.startDate.toString()));
 
         if (this.serviceAccount != null) {
-            this.writeSingerFiles("google-credentials.json", runContext.render(this.serviceAccount));
+            this.writeSingerFiles("google-credentials.json", runContext.render(this.serviceAccount).as(String.class).orElseThrow());
             builder.put("key_file_location", workingDirectory.toAbsolutePath() + "/google-credentials.json");
         }
 
         if (this.oauthClientId != null) {
-            builder.put("oauth_credentials.client_id", runContext.render(this.oauthClientId));
+            builder.put("oauth_credentials.client_id", runContext.render(this.oauthClientId).as(String.class).orElseThrow());
         }
 
         if (this.oauthClientSecret != null) {
-            builder.put("oauth_credentials.client_secret", runContext.render(this.oauthClientSecret));
+            builder.put("oauth_credentials.client_secret", runContext.render(this.oauthClientSecret).as(String.class).orElseThrow());
         }
 
         if (this.oauthAccessToken != null) {
-            builder.put("oauth_credentials.access_token", runContext.render(this.oauthAccessToken));
+            builder.put("oauth_credentials.access_token", runContext.render(this.oauthAccessToken).as(String.class).orElseThrow());
         }
 
         if (this.oauthRefreshToken != null) {
-            builder.put("oauth_credentials.refresh_token", runContext.render(this.oauthRefreshToken));
+            builder.put("oauth_credentials.refresh_token", runContext.render(this.oauthRefreshToken).as(String.class).orElseThrow());
         }
 
         if (this.view_id != null) {
-            builder.put("view_id", runContext.render(this.view_id));
+            builder.put("view_id", runContext.render(this.view_id).as(String.class).orElseThrow());
         }
 
         if (this.reports != null) {

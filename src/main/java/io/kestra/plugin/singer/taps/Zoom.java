@@ -32,26 +32,22 @@ public class Zoom extends AbstractPythonTap implements RunnableTask<AbstractPyth
     @Schema(
         title = "Zoom JSON Web Token."
     )
-    @PluginProperty(dynamic = true)
-    private String jwt;
+    private Property<String> jwt;
 
     @Schema(
         title = "Zoom client id."
     )
-    @PluginProperty(dynamic = true)
-    private String clientId;
+    private Property<String> clientId;
 
     @Schema(
         title = "Zoom Client secret."
     )
-    @PluginProperty(dynamic = true)
-    private String clientSecret;
+    private Property<String> clientSecret;
 
     @Schema(
         title = "Zoom refresh token."
     )
-    @PluginProperty(dynamic = true)
-    private String refreshToken;
+    private Property<String> refreshToken;
 
     public List<Feature> features() {
         return Arrays.asList(
@@ -65,19 +61,19 @@ public class Zoom extends AbstractPythonTap implements RunnableTask<AbstractPyth
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.builder();
 
         if (this.jwt != null) {
-            builder.put("jwt", runContext.render(this.jwt));
+            builder.put("jwt", runContext.render(this.jwt).as(String.class).orElseThrow());
         }
 
         if (this.clientId != null) {
-            builder.put("client_id", runContext.render(this.clientId));
+            builder.put("client_id", runContext.render(this.clientId).as(String.class).orElseThrow());
         }
 
         if (this.clientSecret != null) {
-            builder.put("client_secret", runContext.render(this.clientSecret));
+            builder.put("client_secret", runContext.render(this.clientSecret).as(String.class).orElseThrow());
         }
 
         if (this.refreshToken != null) {
-            builder.put("refresh_token", runContext.render(this.refreshToken));
+            builder.put("refresh_token", runContext.render(this.refreshToken).as(String.class).orElseThrow());
         }
 
         return builder.build();

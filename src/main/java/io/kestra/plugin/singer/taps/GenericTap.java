@@ -12,6 +12,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,8 +53,7 @@ public class GenericTap extends AbstractPythonTap implements RunnableTask<Abstra
         title = "The configuration to use",
         description = "Will be save on config.json and used as arguments"
     )
-    @PluginProperty(dynamic = true)
-    private Map<String, Object> configs;
+    private Property<Map<String, Object>> configs;
 
     public List<Feature> features() {
         return this.features;
@@ -61,7 +61,8 @@ public class GenericTap extends AbstractPythonTap implements RunnableTask<Abstra
 
     @Override
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
-        return runContext.render(configs);
+        var config = runContext.render(configs).asMap(String.class, Object.class);
+        return config.isEmpty() ? new HashMap<>() : config;
     }
 
     @Override

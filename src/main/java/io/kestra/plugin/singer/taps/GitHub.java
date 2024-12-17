@@ -64,9 +64,8 @@ public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPy
     @Schema(
         title = "Timeout for each request on github API."
     )
-    @PluginProperty
     @Builder.Default
-    private Integer requestTimeout = 300;
+    private Property<Integer> requestTimeout = Property.of(300);
 
     public List<Feature> features() {
         return Arrays.asList(
@@ -102,7 +101,7 @@ public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPy
             .put("access_token", runContext.render(this.accessToken))
             .put("repository", String.join(" ", repositories))
             .put("start_date", runContext.render(this.startDate.toString()))
-            .put("request_timeout", this.requestTimeout);
+            .put("request_timeout", runContext.render(this.requestTimeout).as(Integer.class).orElseThrow());
 
         return builder.build();
     }

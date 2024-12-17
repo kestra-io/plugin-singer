@@ -53,38 +53,33 @@ public class Gitlab extends AbstractPythonTap implements RunnableTask<AbstractPy
         title = "Names of groups to extract data from.",
         description = "Leave empty and provide a project name if you'd like to pull data from a project in a personal user namespace."
     )
-    @PluginProperty(dynamic = true)
-    private List<String> groups;
+    private Property<List<String>> groups;
 
     @Schema(
         title = "`namespace/project` paths of projects to extract data from.",
         description = "Leave empty and provide a group name to extract data from all group projects."
     )
-    @PluginProperty(dynamic = true)
-    private List<String> projects;
+    private Property<List<String>> projects;
 
     @NotNull
     @Schema(
         title = "Enable to pull in extra data (like Epics, Epic Issues and other entities) only available to GitLab Ultimate and GitLab.com Gold accounts."
     )
-    @PluginProperty(dynamic = true)
-    private final Boolean ultimateLicense = false;
+    private final Property<Boolean> ultimateLicense = Property.of(false);
 
     @NotNull
     @Schema(
         title = "For each Merge Request, also fetch the MR's commits and create the join table `merge_request_commits` with the Merge Request and related Commit IDs.",
         description = "This can slow down extraction considerably because of the many API calls required."
     )
-    @PluginProperty(dynamic = true)
-    private final Boolean fetchMergeRequestCommits = false;
+    private final Property<Boolean> fetchMergeRequestCommits = Property.of(false);
 
     @NotNull
     @Schema(
         title = "For every Pipeline, also fetch extended details of each of these pipelines.",
         description = "This can slow down extraction considerably because of the many API calls required."
     )
-    @PluginProperty(dynamic = true)
-    private final Boolean fetchPipelinesExtended = false;
+    private final Property<Boolean> fetchPipelinesExtended = Property.of(false);
 
     @NotNull
     @Schema(
@@ -107,17 +102,19 @@ public class Gitlab extends AbstractPythonTap implements RunnableTask<AbstractPy
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
             .put("api_url", runContext.render(this.apiUrl))
             .put("private_token", runContext.render(this.private_token))
-            .put("ultimate_license", this.ultimateLicense)
-            .put("fetch_merge_request_commits", this.fetchMergeRequestCommits)
-            .put("fetch_pipelines_extended", this.fetchPipelinesExtended)
+            .put("ultimate_license", runContext.render(this.ultimateLicense).as(Boolean.class).orElseThrow())
+            .put("fetch_merge_request_commits", runContext.render(this.fetchMergeRequestCommits).as(Boolean.class).orElseThrow())
+            .put("fetch_pipelines_extended", runContext.render(this.fetchPipelinesExtended).as(Boolean.class).orElseThrow())
             .put("start_date", runContext.render(this.startDate.toString()));
 
-        if (groups != null) {
-            builder.put("groups", String.join(" ", runContext.render(this.groups)));
+        var renderedGroups = runContext.render(this.groups).asList(String.class);
+        if (!renderedGroups.isEmpty()) {
+            builder.put("groups", String.join(" ", renderedGroups));
         }
 
-        if (projects != null) {
-            builder.put("projects", String.join(" ", runContext.render(this.projects)));
+        var renderedProjects = runContext.render(projects).asList(String.class);
+        if (!renderedProjects.isEmpty()) {
+            builder.put("projects", String.join(" ", renderedProjects));
         }
 
         return builder.build();

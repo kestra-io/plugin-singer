@@ -1,6 +1,7 @@
 package io.kestra.plugin.singer.taps;
 
 import com.google.common.collect.ImmutableMap;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.utils.IdUtils;
@@ -29,10 +30,10 @@ class PipelinewiseMongoDbTest extends TapsTest {
             .type(PipelinewiseMongoDb.class.getName())
             .host("172.17.0.1")
             .username("root")
-            .password("example")
-            .port(57017)
-            .database("samples")
-            .authDatabase("admin")
+            .password(Property.of("example"))
+            .port(Property.of(57017))
+            .database(Property.of("samples"))
+            .authDatabase(Property.of("admin"))
             .streamsConfigurations(Collections.singletonList(
                 StreamsConfiguration.builder()
                     .stream("books")

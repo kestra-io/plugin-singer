@@ -35,8 +35,8 @@ class JsonTest {
             .type(PipelinewiseMysql.class.getName())
             .host("172.17.0.1")
             .username("root")
-            .password("mysql_passwd")
-            .port(63306)
+            .password(Property.of("mysql_passwd"))
+            .port(Property.of(63306))
             .stateName(Property.of(stateName))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()

@@ -43,27 +43,23 @@ public class HubSpot extends AbstractPythonTap implements RunnableTask<AbstractP
         title = "List Config object for stream maps capability.",
         description = "For more information check out [Stream Maps](https://sdk.meltano.com/en/latest/stream_maps.html)."
     )
-    @PluginProperty(dynamic = true)
-    private Map<String, Object> streamMaps;
+    private Property<Map<String, Object>> streamMaps;
 
     @Schema(
         title = "User-defined config values to be used within map expressions."
     )
-    @PluginProperty(dynamic = true)
-    private Map<String, Object> streamMapConfig;
+    private Property<Map<String, Object>> streamMapConfig;
 
     @Schema(
         title = "To enable schema flattening and automatically expand nested properties."
     )
-    @PluginProperty(dynamic = true)
     @Builder.Default
-    private Boolean flatteningEnabled = false;
+    private Property<Boolean> flatteningEnabled = Property.of(false);
 
     @Schema(
         title = "The max depth to flatten schemas."
     )
-    @PluginProperty(dynamic = true)
-    private Integer flatteningMaxDepth;
+    private Property<Integer> flatteningMaxDepth;
 
     @NotNull
     @Schema(
@@ -88,23 +84,25 @@ public class HubSpot extends AbstractPythonTap implements RunnableTask<AbstractP
             .put("start_date", runContext.render(this.startDate.toString()));
 
         try {
-            if (this.streamMaps != null) {
-                builder.put("stream_maps", JacksonMapper.ofJson().writeValueAsString(runContext.render(this.streamMaps)));
+            var map = runContext.render(this.streamMaps).asMap(String.class, Object.class);
+            if (!map.isEmpty()) {
+                builder.put("stream_maps", JacksonMapper.ofJson().writeValueAsString(map));
             }
 
-            if (this.streamMapConfig != null) {
-                builder.put("stream_map_config", JacksonMapper.ofJson().writeValueAsString(runContext.render(this.streamMapConfig)));
+            var mapConfig = runContext.render(this.streamMapConfig).asMap(String.class, Object.class);
+            if (!mapConfig.isEmpty()) {
+                builder.put("stream_map_config", JacksonMapper.ofJson().writeValueAsString(mapConfig));
             }
         } catch (JsonProcessingException e) {
             throw new IllegalVariableEvaluationException(e);
         }
 
         if (this.flatteningEnabled != null) {
-            builder.put("flattening_enabled", this.flatteningEnabled);
+            builder.put("flattening_enabled", runContext.render(this.flatteningEnabled).as(Boolean.class).orElseThrow());
         }
 
         if (this.flatteningMaxDepth != null) {
-            builder.put("flattening_max_depth", this.flatteningMaxDepth);
+            builder.put("flattening_max_depth", runContext.render(this.flatteningMaxDepth).as(Integer.class).orElseThrow());
         }
 
         return builder.build();

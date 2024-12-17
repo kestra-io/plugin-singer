@@ -44,21 +44,18 @@ public class Zendesk extends AbstractPythonTap implements RunnableTask<AbstractP
     @Schema(
         title = "Zendesk email."
     )
-    @PluginProperty(dynamic = true)
-    private String email;
+    private Property<String> email;
 
     @Schema(
         title = "Zendesk API token."
     )
-    @PluginProperty(dynamic = true)
-    private String apiToken;
+    private Property<String> apiToken;
 
     @Schema(
         title = "Zendesk access token.",
         description = "See [Zendesk Documentation](https://support.zendesk.com/hc/en-us/articles/203663836)"
     )
-    @PluginProperty(dynamic = true)
-    private String accessToken;
+    private Property<String> accessToken;
 
     @NotNull
     @Schema(
@@ -83,15 +80,15 @@ public class Zendesk extends AbstractPythonTap implements RunnableTask<AbstractP
             .put("start_date", runContext.render(this.startDate.toString()));
 
         if (this.email != null) {
-            builder.put("email", runContext.render(this.email));
+            builder.put("email", runContext.render(this.email).as(String.class).orElseThrow());
         }
 
         if (this.apiToken != null) {
-            builder.put("api_token", runContext.render(this.apiToken));
+            builder.put("api_token", runContext.render(this.apiToken).as(String.class).orElseThrow());
         }
 
         if (this.accessToken != null) {
-            builder.put("access_token", runContext.render(this.accessToken));
+            builder.put("access_token", runContext.render(this.accessToken).as(String.class).orElseThrow());
         }
 
         return builder.build();

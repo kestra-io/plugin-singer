@@ -35,8 +35,8 @@ class OracleTest {
             .database("msdb")
             .username("SA")
             .password("SQLServer_Passwd")
-            .port(57037)
-            .filterDbs(Collections.singletonList("dbo"))
+            .port(Property.of(57037))
+            .filterDbs(Property.of(Collections.singletonList("dbo")))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
                     .stream("Categories")

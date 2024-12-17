@@ -37,8 +37,8 @@ class SqlServerTest {
             .database("msdb")
             .username("SA")
             .password("SQLServer_Passwd")
-            .port(57037)
-            .filterDbs(Collections.singletonList("dbo"))
+            .port(Property.of(57037))
+            .filterDbs(Property.of(Collections.singletonList("dbo")))
             .stateName(Property.of("before-target-test"))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
@@ -84,7 +84,7 @@ class SqlServerTest {
         assertThat(output.getStateKey(), not((nullValue())));
 
         tap = tapBuilder
-            .filterDbs(Collections.singletonList("target"))
+            .filterDbs(Property.of(Collections.singletonList("target")))
             .stateName(Property.of("after-target-test"))
             .streamsConfigurations(Collections.singletonList(
                 StreamsConfiguration.builder()
