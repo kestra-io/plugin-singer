@@ -3,6 +3,7 @@ package io.kestra.plugin.singer.targets;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -66,13 +67,13 @@ public class Csv extends AbstractPythonTarget implements RunnableTask<Csv.Output
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("git+https://github.com/hotgluexyz/target-csv.git@0.3.6");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("git+https://github.com/hotgluexyz/target-csv.git@0.3.6"));
     }
 
     @Override
-    protected String command() {
-        return "target-csv";
+    protected Property<String> command() {
+        return Property.of("target-csv");
     }
 
     @Override

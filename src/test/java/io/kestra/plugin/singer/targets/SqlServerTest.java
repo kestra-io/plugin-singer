@@ -2,6 +2,7 @@ package io.kestra.plugin.singer.targets;
 
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.models.executions.AbstractMetricEntry;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.utils.IdUtils;
@@ -36,9 +37,9 @@ class SqlServerTest {
             .database("msdb")
             .username("SA")
             .password("SQLServer_Passwd")
-            .port(57037)
-            .filterDbs(Collections.singletonList("dbo"))
-            .stateName("before-target-test")
+            .port(Property.of(57037))
+            .filterDbs(Property.of(Collections.singletonList("dbo")))
+            .stateName(Property.of("before-target-test"))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
                     .stream("Categories")
@@ -68,13 +69,13 @@ class SqlServerTest {
         SqlServer target = SqlServer.builder()
             .id(IdUtils.create())
             .type(PipelinewiseSqlServer.class.getName())
-            .from(tapOutput.getRaw().toString())
+            .from(Property.of(tapOutput.getRaw().toString()))
             .host("172.17.0.1")
             .database("msdb")
             .username("SA")
             .password("SQLServer_Passwd")
-            .port(57037)
-            .defaultTargetSchema("target")
+            .port(Property.of(57037))
+            .defaultTargetSchema(Property.of("target"))
             .build();
 
         runContext = TestsUtils.mockRunContext(runContextFactory, target, ImmutableMap.of());
@@ -83,8 +84,8 @@ class SqlServerTest {
         assertThat(output.getStateKey(), not((nullValue())));
 
         tap = tapBuilder
-            .filterDbs(Collections.singletonList("target"))
-            .stateName("after-target-test")
+            .filterDbs(Property.of(Collections.singletonList("target")))
+            .stateName(Property.of("after-target-test"))
             .streamsConfigurations(Collections.singletonList(
                 StreamsConfiguration.builder()
                     // SQL Server target transforms table & columns names to snake_case

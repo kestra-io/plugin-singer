@@ -2,6 +2,7 @@ package io.kestra.plugin.singer.targets;
 
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -29,15 +30,13 @@ public class GenericTarget extends AbstractPythonTarget implements RunnableTask<
     @Schema(
         title = "The list of pip package to install."
     )
-    @PluginProperty
-    private List<String> pipPackages;
+    private Property<List<String>> pipPackages;
 
     @NotNull
     @Schema(
         title = "The command to start."
     )
-    @PluginProperty
-    private String command;
+    private Property<String> command;
 
     @NotNull
     @Schema(
@@ -45,20 +44,20 @@ public class GenericTarget extends AbstractPythonTarget implements RunnableTask<
         description = "Will be save on config.json and used as arguments"
     )
     @PluginProperty(dynamic = true)
-    private Map<String, Object> configs;
+    private Property<Map<String, Object>> configs;
 
     @Override
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException, IOException {
-        return runContext.render(this.configs);
+        return runContext.render(this.configs).asMap(String.class, Object.class);
     }
 
     @Override
-    public List<String> pipPackages() {
+    public Property<List<String>> pipPackages() {
         return this.pipPackages;
     }
 
     @Override
-    protected String command() {
+    protected Property<String> command() {
         return this.command;
     }
 

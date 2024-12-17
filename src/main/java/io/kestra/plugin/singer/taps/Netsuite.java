@@ -3,6 +3,7 @@ package io.kestra.plugin.singer.taps;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
@@ -81,16 +82,14 @@ public class Netsuite extends AbstractPythonTap implements RunnableTask<Abstract
         title = "Behaviour when new fields are discovered.",
         description = "When new fields are discovered in NetSuite objects, the select_fields_by_default key describes whether or not the tap will select those fields by default."
     )
-    @PluginProperty(dynamic = true)
-    private Boolean selectFieldsByDefault;
+    private Property<Boolean> selectFieldsByDefault;
 
     @NotNull
     @Schema(
         title = "Is this sandbox account.",
         description = "This should always be set to `true` if you are connecting Production account of NetSuite. Set it to `false` if you want to connect to SandBox account."
     )
-    @PluginProperty(dynamic = true)
-    private Boolean isSandbox;
+    private Property<Boolean> isSandbox;
 
     @NotNull
     @Schema(
@@ -116,20 +115,20 @@ public class Netsuite extends AbstractPythonTap implements RunnableTask<Abstract
             .put("ns_consumer_secret", runContext.render(this.consumerSecret))
             .put("ns_token_key", runContext.render(this.tokenKey))
             .put("ns_token_secret", runContext.render(this.tokenSecret))
-            .put("select_fields_by_default", this.selectFieldsByDefault)
-            .put("is_sandbox", this.isSandbox)
+            .put("select_fields_by_default", runContext.render(this.selectFieldsByDefault).as(Boolean.class).orElseThrow())
+            .put("is_sandbox", runContext.render(this.isSandbox).as(Boolean.class).orElseThrow())
             .put("start_date", runContext.render(this.startDate.toString()));
 
         return builder.build();
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("git+https://github.com/hotgluexyz/tap-netsuite");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("git+https://github.com/hotgluexyz/tap-netsuite"));
     }
 
     @Override
-    protected String command() {
-        return "tap-netsuite";
+    protected Property<String> command() {
+        return Property.of("tap-netsuite");
     }
 }

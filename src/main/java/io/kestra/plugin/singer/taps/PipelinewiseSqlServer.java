@@ -5,6 +5,7 @@ import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
@@ -69,7 +70,7 @@ public class PipelinewiseSqlServer extends AbstractPythonTap implements Runnable
         title = "The database port."
     )
     @PluginProperty
-    private Integer port;
+    private Property<Integer> port;
 
     @NotEmpty
     @Schema(
@@ -88,42 +89,36 @@ public class PipelinewiseSqlServer extends AbstractPythonTap implements Runnable
     @Schema(
         title = "The list of schemas to extract tables only from particular schemas and to improve data extraction performance."
     )
-    @PluginProperty(dynamic = true)
-    private List<String> filterDbs;
+    private Property<List<String>> filterDbs;
 
     @NotNull
     @Schema(
         title = "Emit Date datatypes as-is without converting them to datetime."
     )
-    @PluginProperty
     @Builder.Default
-    private Boolean useDateDatatype = true;
+    private Property<Boolean> useDateDatatype = Property.of(true);
 
     @Schema(
         title = "TDS version to use when communicating with SQL Server (default is 7.3)."
     )
-    @PluginProperty(dynamic = true)
-    private String tdsVersion;
+    private Property<String> tdsVersion;
 
     @Schema(
         title = "The characterset for the database / source system. The default is utf8, however older databases might use a charactersets like cp1252 for the encoding."
     )
-    @PluginProperty(dynamic = true)
-    private String characterSet;
+    private Property<String> characterSet;
 
     @Schema(
         title = "Emit all numeric values as strings and treat floats as string data types for the target (default false).",
         description = "When true, the resulting SCHEMA message will contain an attribute in additionalProperties containing the scale and precision of the discovered property."
     )
-    @PluginProperty
-    private Boolean useSingerDecimal;
+    private Property<Boolean> useSingerDecimal;
 
     @Schema(
         title = "A numeric setting adjusting the internal buffersize for the tap (default 10000).",
         description = "The common query tuning scenario is for SELECT statements that return a large number of rows over a slow network. Increasing arraysize can improve performance by reducing the number of round-trips to the database. However increasing this value increases the amount of memory required."
     )
-    @PluginProperty
-    private Integer cursorArraySize;
+    private Property<Integer> cursorArraySize;
 
     public List<Feature> features() {
         return Arrays.asList(
@@ -138,42 +133,43 @@ public class PipelinewiseSqlServer extends AbstractPythonTap implements Runnable
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
             .put("host", runContext.render(this.host))
-            .put("port", this.port)
+            .put("port", runContext.render(this.port).as(Integer.class).orElseThrow())
             .put("user", runContext.render(this.username))
             .put("password", runContext.render(this.password))
             .put("database", runContext.render(this.database))
-            .put("use_date_datatype", this.useDateDatatype);
+            .put("use_date_datatype", runContext.render(this.useDateDatatype).as(Boolean.class).orElseThrow());
 
-        if (this.filterDbs != null) {
-            builder.put("filter_dbs", String.join(",", runContext.render(this.filterDbs)));
+        var filters = runContext.render(this.filterDbs).asList(String.class);
+        if (!filters.isEmpty()) {
+            builder.put("filter_dbs", String.join(",", filters));
         }
 
         if (this.tdsVersion != null) {
-            builder.put("tds_version", this.tdsVersion);
+            builder.put("tds_version", runContext.render(this.tdsVersion).as(String.class).orElseThrow());
         }
 
         if (this.characterSet != null) {
-            builder.put("characterset", this.characterSet);
+            builder.put("characterset", runContext.render(this.characterSet).as(String.class).orElseThrow());
         }
 
         if (this.useSingerDecimal != null) {
-            builder.put("use_singer_decimal", this.useSingerDecimal);
+            builder.put("use_singer_decimal", runContext.render(this.useSingerDecimal).as(Boolean.class).orElseThrow());
         }
 
         if (this.cursorArraySize != null) {
-            builder.put("cursor_array_size", this.cursorArraySize);
+            builder.put("cursor_array_size", runContext.render(this.cursorArraySize).as(Integer.class).orElseThrow());
         }
 
         return builder.build();
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("tap-mssql==2.3.1");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("tap-mssql==2.3.1"));
     }
 
     @Override
-    protected String command() {
-        return "tap-mssql";
+    protected Property<String> command() {
+        return Property.of("tap-mssql");
     }
 }

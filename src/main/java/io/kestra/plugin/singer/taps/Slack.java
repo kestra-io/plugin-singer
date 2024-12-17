@@ -3,6 +3,7 @@ package io.kestra.plugin.singer.taps;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
@@ -49,17 +50,15 @@ public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPyt
         title = "Join Private Channels.",
         description = "Specifies whether to sync private channels or not."
     )
-    @PluginProperty
     @Builder.Default
-    private final Boolean privateChannels = true;
+    private final Property<Boolean> privateChannels = Property.of(true);
 
     @Schema(
         title = "Join Public Channels.",
         description = "Specifies whether to have the tap auto-join all public channels in your ogranziation."
     )
-    @PluginProperty
     @Builder.Default
-    private final Boolean publicChannels = false;
+    private final Property<Boolean> publicChannels = Property.of(false);
 
     @Schema(
         title = "Sync Archived Channels.",
@@ -67,9 +66,8 @@ public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPyt
             "an archived channel, so unless the bot was added to the channel prior to it being archived it will not " +
             "be able to sync the data from that channel."
     )
-    @PluginProperty
     @Builder.Default
-    private final Boolean archivedChannels = false;
+    private final Property<Boolean> archivedChannels = Property.of(false);
 
     @Schema(
         title = "Channels to Sync.",
@@ -77,8 +75,7 @@ public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPyt
             "to limit it to specific channels. Note this needs to be channel ID, not the name, as recommended " +
             "by the Slack API. To get the ID for a channel, either use the Slack API or find it in the URL."
     )
-    @PluginProperty(dynamic = true)
-    private List<String> channels;
+    private Property<List<String>> channels;
 
     @Schema(
         title = "Channels to Sync.",
@@ -86,9 +83,8 @@ public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPyt
             "(messages, files, threads) this tap implements date windowing based on a configuration parameter." +
             "5 means the tap to sync 5 days of data per request, for applicable streams."
     )
-    @PluginProperty
     @Builder.Default
-    private final Integer dateWindowSize = 7;
+    private final Property<Integer> dateWindowSize = Property.of(7);
 
     public List<Feature> features() {
         return Arrays.asList(
@@ -103,28 +99,29 @@ public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPyt
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
             .put("token", runContext.render(this.apiToken))
             .put("start_date", runContext.render(this.startDate.toString()))
-            .put("private_channels", this.privateChannels)
-            .put("join_public_channels", this.publicChannels)
-            .put("archived_channels", this.archivedChannels);
+            .put("private_channels", runContext.render(this.privateChannels).as(Boolean.class).orElseThrow())
+            .put("join_public_channels", runContext.render(this.publicChannels).as(Boolean.class).orElseThrow())
+            .put("archived_channels", runContext.render(this.archivedChannels).as(Boolean.class).orElseThrow());
 
-        if (channels != null) {
-            builder.put("channels", runContext.render(this.channels));
+        var renderedChannels = runContext.render(this.channels).asList(String.class);
+        if (!renderedChannels.isEmpty()) {
+            builder.put("channels", renderedChannels);
         }
 
         if (dateWindowSize != null) {
-            builder.put("date_window_size", this.dateWindowSize);
+            builder.put("date_window_size", runContext.render(this.dateWindowSize).as(Integer.class).orElseThrow());
         }
 
         return builder.build();
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("git+https://github.com/Mashey/tap-slack.git");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("git+https://github.com/Mashey/tap-slack.git"));
     }
 
     @Override
-    protected String command() {
-        return "tap-slack";
+    protected Property<String> command() {
+        return Property.of("tap-slack");
     }
 }

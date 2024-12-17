@@ -3,6 +3,7 @@ package io.kestra.plugin.singer.taps;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
@@ -44,8 +45,7 @@ public class Recharge extends AbstractPythonTap implements RunnableTask<Abstract
         description = "User agent to send to ReCharge along with API requests. " +
             "Typically includes name of integration and an email address you can be reached at."
     )
-    @PluginProperty(dynamic = true)
-    private String userAgent;
+    private Property<String> userAgent;
 
     @NotNull
     @Schema(
@@ -67,19 +67,19 @@ public class Recharge extends AbstractPythonTap implements RunnableTask<Abstract
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
             .put("access_token", runContext.render(this.accessToken))
-            .put("user_agent", runContext.render(this.userAgent))
+            .put("user_agent", runContext.render(this.userAgent).as(String.class).orElseThrow())
             .put("start_date", runContext.render(this.startDate.toString()));
 
         return builder.build();
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("tap-recharge");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("tap-recharge"));
     }
 
     @Override
-    protected String command() {
-        return "tap-recharge";
+    protected Property<String> command() {
+        return Property.of("tap-recharge");
     }
 }

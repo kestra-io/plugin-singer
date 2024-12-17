@@ -3,6 +3,7 @@ package io.kestra.plugin.singer.taps;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
@@ -46,72 +47,62 @@ public class PipelinewiseMongoDb extends AbstractPythonTap implements RunnableTa
     @Schema(
         title = "The database user's password."
     )
-    @PluginProperty(dynamic = true)
-    private String password;
+    private Property<String> password;
 
     @NotNull
     @Schema(
         title = "The database port."
     )
-    @PluginProperty
-    private Integer port;
+    private Property<Integer> port;
 
     @NotNull
     @Schema(
         title = "The database name."
     )
-    @PluginProperty(dynamic = true)
-    private String database;
+    private Property<String> database;
 
     @NotNull
     @Schema(
         title = "The database name to authenticate on."
     )
-    @PluginProperty(dynamic = true)
-    private String authDatabase;
+    private Property<String> authDatabase;
 
     @Schema(
         title = "If ssl is enabled."
     )
-    @PluginProperty
     @Builder.Default
-    private final Boolean ssl = false;
+    private final Property<Boolean> ssl = Property.of(false);
 
     @Schema(
         title = "Default SSL verify mode."
     )
-    @PluginProperty
     @Builder.Default
-    private final Boolean sslVerify = true;
+    private final Property<Boolean> sslVerify = Property.of(true);
 
     @Schema(
         title = "The name of replica set."
     )
-    @PluginProperty(dynamic = true)
-    private String replicaSet;
+    private Property<String> replicaSet;
 
     @Schema(
         title = "Forces the stream names to take the form `<database_name>_<collection_name>` instead of `<collection_name>`."
     )
-    @PluginProperty
     @Builder.Default
-    private final Boolean includeSchemaInStream = false;
+    private final Property<Boolean> includeSchemaInStream = Property.of(false);
 
     @Schema(
         title = "The size of the buffer that holds detected update operations in memory.",
         description = "For LOG_BASED only, the buffer is flushed once the size is reached."
     )
-    @PluginProperty
     @Builder.Default
-    private final Integer updateBufferSize = 1;
+    private final Property<Integer> updateBufferSize = Property.of(1);
 
     @Schema(
         title = "The maximum amount of time in milliseconds waits for new data changes before exiting.",
         description = "For LOG_BASED only."
     )
-    @PluginProperty
     @Builder.Default
-    private final Integer awaitTimeMs = 1000;
+    private final Property<Integer> awaitTimeMs = Property.of(1000);
 
     public List<Feature> features() {
         return Arrays.asList(
@@ -122,33 +113,33 @@ public class PipelinewiseMongoDb extends AbstractPythonTap implements RunnableTa
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("pipelinewise-tap-mongodb");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("pipelinewise-tap-mongodb"));
     }
 
     @Override
-    protected String command() {
-        return "tap-mongodb";
+    protected Property<String> command() {
+        return Property.of("tap-mongodb");
     }
 
     @Override
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
             .put("user", runContext.render(this.username))
-            .put("password", runContext.render(this.password))
+            .put("password", runContext.render(this.password).as(String.class).orElse(null))
             .put("host", runContext.render(this.host))
-            .put("port", this.port)
-            .put("ssl", this.ssl.toString())
-            .put("verify_mode", this.sslVerify.toString())
-            .put("database", runContext.render(this.database))
-            .put("auth_database", runContext.render(this.authDatabase))
+            .put("port", runContext.render(this.port).as(Integer.class).orElseThrow())
+            .put("ssl", runContext.render(this.ssl).as(Boolean.class).orElseThrow().toString())
+            .put("verify_mode", runContext.render(this.sslVerify).as(Boolean.class).orElseThrow().toString())
+            .put("database", runContext.render(this.database).as(String.class).orElseThrow())
+            .put("auth_database", runContext.render(this.authDatabase).as(String.class).orElseThrow())
 
-            .put("include_schema_in_destination_stream_name", this.includeSchemaInStream)
-            .put("update_buffer_size", this.updateBufferSize)
-            .put("await_time_ms", this.awaitTimeMs);
+            .put("include_schema_in_destination_stream_name", runContext.render(this.includeSchemaInStream).as(Boolean.class).orElseThrow())
+            .put("update_buffer_size", runContext.render(this.updateBufferSize).as(Integer.class).orElseThrow())
+            .put("await_time_ms", runContext.render(this.awaitTimeMs).as(Integer.class).orElseThrow());
 
         if (this.replicaSet != null) {
-            builder.put("replica_set", runContext.render(this.replicaSet));
+            builder.put("replica_set", runContext.render(this.replicaSet).as(String.class).orElseThrow());
         }
 
         return builder.build();

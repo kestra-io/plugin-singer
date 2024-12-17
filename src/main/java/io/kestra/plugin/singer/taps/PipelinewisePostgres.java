@@ -3,6 +3,7 @@ package io.kestra.plugin.singer.taps;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
@@ -45,62 +46,53 @@ public class PipelinewisePostgres extends AbstractPythonTap implements RunnableT
     @Schema(
         title = "The database user's password."
     )
-    @PluginProperty(dynamic = true)
-    private String password;
+    private Property<String> password;
 
     @Schema(
         title = "The database name."
     )
-    @PluginProperty(dynamic = true)
-    private String dbName;
+    private Property<String> dbName;
 
     @NotNull
     @Schema(
         title = "The database port."
     )
-    @PluginProperty
-    private Integer port;
+    private Property<Integer> port;
 
     @Schema(
         title = "If ssl is enabled."
     )
-    @PluginProperty
     @Builder.Default
-    private final Boolean ssl = false;
+    private final Property<Boolean> ssl = Property.of(false);
 
     @Schema(
         title = "Stop running the tap when no data received from wal after certain number of seconds."
     )
-    @PluginProperty
     @Builder.Default
-    private final Integer logicalPollSeconds = 10800;
+    private final Property<Integer> logicalPollSeconds = Property.of(10800);
 
     @Schema(
         title = "Stop running the tap if the newly received lsn is after the max lsn that was detected when the tap started."
     )
-    @PluginProperty
     @Builder.Default
-    private final Boolean breakAtEndLsn = true;
+    private final Property<Boolean> breakAtEndLsn = Property.of(true);
 
     @Schema(
         title = "Stop running the tap after certain number of seconds."
     )
-    @PluginProperty
     @Builder.Default
-    private final Integer maxRunSeconds = 43200;
+    private final Property<Integer> maxRunSeconds = Property.of(43200);
 
     @Schema(
         title = "If set to \"true\" then add _sdc_lsn property to the singer messages to debug postgres LSN position in the WAL stream."
     )
-    @PluginProperty
     @Builder.Default
-    private final Boolean debugLsn = false;
+    private final Property<Boolean> debugLsn = Property.of(false);
 
     @Schema(
         title = "The list of schemas to extract tables only from particular schemas and to improve data extraction performance"
     )
-    @PluginProperty(dynamic = true)
-    private List<String> filterSchemas;
+    private Property<List<String>> filterSchemas;
 
     public List<Feature> features() {
         return Arrays.asList(
@@ -114,30 +106,31 @@ public class PipelinewisePostgres extends AbstractPythonTap implements RunnableT
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
             .put("user", runContext.render(this.username))
-            .put("password", runContext.render(this.password))
+            .put("password", runContext.render(this.password).as(String.class).orElse(null))
             .put("host", runContext.render(this.host))
-            .put("port", this.port)
-            .put("dbname", runContext.render(this.dbName))
-            .put("ssl", this.ssl)
-            .put("logical_poll_seconds", this.logicalPollSeconds)
-            .put("break_at_end_lsn", this.breakAtEndLsn)
-            .put("max_run_seconds", this.maxRunSeconds)
-            .put("debug_lsn", this.debugLsn);
+            .put("port", runContext.render(this.port).as(Integer.class).orElseThrow())
+            .put("dbname", runContext.render(this.dbName).as(String.class).orElseThrow())
+            .put("ssl", runContext.render(this.ssl).as(Boolean.class).orElseThrow())
+            .put("logical_poll_seconds", runContext.render(this.logicalPollSeconds).as(Integer.class).orElseThrow())
+            .put("break_at_end_lsn", runContext.render(this.breakAtEndLsn).as(Boolean.class).orElseThrow())
+            .put("max_run_seconds", runContext.render(this.maxRunSeconds).as(Integer.class).orElseThrow())
+            .put("debug_lsn", runContext.render(this.debugLsn).as(Boolean.class).orElseThrow());
 
-        if (this.filterSchemas != null) {
-            builder.put("filter_dbs", String.join(",", runContext.render(this.filterSchemas)));
+        var filters = runContext.render(this.filterSchemas).asList(String.class);
+        if (!filters.isEmpty()) {
+            builder.put("filter_dbs", String.join(",", filters));
         }
 
         return builder.build();
     }
 
     @Override
-    public List<String> pipPackages() {
-        return List.of("pipelinewise-tap-postgres");
+    public Property<List<String>> pipPackages() {
+        return Property.of(List.of("pipelinewise-tap-postgres"));
     }
 
     @Override
-    protected String command() {
-        return "tap-postgres";
+    protected Property<String> command() {
+        return Property.of("tap-postgres");
     }
 }

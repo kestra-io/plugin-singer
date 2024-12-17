@@ -1,6 +1,7 @@
 package io.kestra.plugin.singer.targets;
 
 import com.google.common.collect.ImmutableMap;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.utils.IdUtils;
@@ -34,9 +35,9 @@ class CsvTest {
             .type(PipelinewiseMysql.class.getName())
             .host("172.17.0.1")
             .username("root")
-            .password("mysql_passwd")
-            .port(63306)
-            .stateName(stateName)
+            .password(Property.of("mysql_passwd"))
+            .port(Property.of(63306))
+            .stateName(Property.of(stateName))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
                     .stream("Category")
@@ -62,8 +63,8 @@ class CsvTest {
             .builder()
             .id(IdUtils.create())
             .type(DatamillCoPostgres.class.getName())
-            .from(tapOutput.getRaw().toString())
-            .stateName(stateName)
+            .from(Property.of(tapOutput.getRaw().toString()))
+            .stateName(Property.of(stateName))
             .delimiter(";");
         Csv target = builder.build();
 

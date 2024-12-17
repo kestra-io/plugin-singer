@@ -3,6 +3,7 @@ package io.kestra.plugin.singer.targets;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -53,8 +54,7 @@ public class MeltanoSnowflake extends AbstractPythonTarget implements RunnableTa
     @Schema(
         title = "The database user's password."
     )
-    @PluginProperty(dynamic = true)
-    private String password;
+    private Property<String> password;
 
     @NotNull
     @NotEmpty
@@ -75,33 +75,28 @@ public class MeltanoSnowflake extends AbstractPythonTarget implements RunnableTa
     @Schema(
         title = "The initial role for the session."
     )
-    @PluginProperty(dynamic = true)
-    private String role;
+    private Property<String> role;
 
     @Schema(
         title = "Whether to add metadata columns."
     )
-    @PluginProperty
     @Builder.Default
-    private Boolean addRecordMetadata = true;
+    private Property<Boolean> addRecordMetadata = Property.of(true);
 
     @Schema(
         title = "The default target database schema name to use for all streams."
     )
-    @PluginProperty(dynamic = true)
-    private String defaultTargetSchema;
+    private Property<String> defaultTargetSchema;
 
     @Schema(
         title = "'True' to enable schema flattening and automatically expand nested properties."
     )
-    @PluginProperty
-    private Boolean flatteningEnabled;
+    private Property<Boolean> flatteningEnabled;
 
     @Schema(
         title = "The max depth to flatten schemas."
     )
-    @PluginProperty
-    private Integer flatteningMaxDepth;
+    private Property<Integer> flatteningMaxDepth;
 
     @Override
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
@@ -109,38 +104,38 @@ public class MeltanoSnowflake extends AbstractPythonTarget implements RunnableTa
             .put("account", runContext.render(this.account))
             .put("database", runContext.render(this.database))
             .put("username", runContext.render(this.username))
-            .put("password", runContext.render(this.password))
+            .put("password", runContext.render(this.password).as(String.class).orElseThrow())
             .put("warehouse", runContext.render(this.warehouse))
             .put("schema", runContext.render(this.schema))
-            .put("add_record_metadata", this.addRecordMetadata.toString());
+            .put("add_record_metadata", runContext.render(this.addRecordMetadata).as(Boolean.class).orElseThrow().toString());
 
         if (this.role != null) {
-            builder.put("role", runContext.render(this.role));
+            builder.put("role", runContext.render(this.role).as(String.class).orElseThrow());
         }
 
         if (this.defaultTargetSchema != null) {
-            builder.put("default_target_schema", runContext.render(this.defaultTargetSchema));
+            builder.put("default_target_schema", runContext.render(this.defaultTargetSchema).as(String.class).orElseThrow());
         }
 
         if (this.flatteningEnabled != null) {
-            builder.put("flattening_enabled", this.flatteningEnabled.toString());
+            builder.put("flattening_enabled", runContext.render(this.flatteningEnabled).as(Boolean.class).orElseThrow().toString());
         }
 
         if (this.flatteningMaxDepth != null) {
-            builder.put("flattening_max_depth", this.flatteningMaxDepth);
+            builder.put("flattening_max_depth", runContext.render(this.flatteningMaxDepth).as(Integer.class).orElseThrow());
         }
 
         return builder.build();
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("meltanolabs-target-snowflake");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("meltanolabs-target-snowflake"));
     }
 
     @Override
-    protected String command() {
-        return "target-snowflake";
+    protected Property<String> command() {
+        return Property.of("target-snowflake");
     }
 
     @Override

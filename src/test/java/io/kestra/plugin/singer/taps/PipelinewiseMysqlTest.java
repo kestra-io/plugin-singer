@@ -1,6 +1,7 @@
 package io.kestra.plugin.singer.taps;
 
 import com.google.common.collect.ImmutableMap;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.utils.IdUtils;
@@ -30,8 +31,8 @@ class PipelinewiseMysqlTest extends TapsTest {
             .type(PipelinewiseMysql.class.getName())
             .host("172.17.0.1")
             .username("root")
-            .password("mysql_passwd")
-            .port(63306)
+            .password(Property.of("mysql_passwd"))
+            .port(Property.of(63306))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
                     .stream("Category")

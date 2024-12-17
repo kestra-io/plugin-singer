@@ -2,6 +2,7 @@ package io.kestra.plugin.singer.taps;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.CharStreams;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.utils.IdUtils;
@@ -35,10 +36,10 @@ class BigQueryTest extends TapsTest {
             .id(IdUtils.create())
             .taskRunner(Docker.instance())
             .type(BigQuery.class.getName())
-            .serviceAccount(serviceAccount)
-            .startAlwaysInclusive(false)
+            .serviceAccount(Property.of(serviceAccount))
+            .startAlwaysInclusive(Property.of(false))
             .startDateTime(Instant.parse("2013-09-08T16:19:12Z"))
-            .limit(1)
+            .limit(Property.of(1))
             .streams(Collections.singletonList(
                 BigQuery.Stream.builder()
                     .name("covid19_nyt_us_states")

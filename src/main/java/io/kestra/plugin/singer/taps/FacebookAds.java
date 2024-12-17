@@ -3,6 +3,7 @@ package io.kestra.plugin.singer.taps;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
@@ -48,9 +49,8 @@ public class FacebookAds extends AbstractPythonTap implements RunnableTask<Abstr
     @Schema(
         title = "How many Days before the Start Date to fetch Ads Insights for."
     )
-    @PluginProperty(dynamic = true)
     @Builder.Default
-    private final Integer insightsBufferDays = 0;
+    private final Property<Integer> insightsBufferDays = Property.of(0);
 
     @NotNull
     @Schema(
@@ -79,7 +79,7 @@ public class FacebookAds extends AbstractPythonTap implements RunnableTask<Abstr
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
             .put("account_id", runContext.render(this.accountId))
             .put("access_token", runContext.render(this.accessToken))
-            .put("insights_buffer_days", this.insightsBufferDays)
+            .put("insights_buffer_days", runContext.render(this.insightsBufferDays).as(Integer.class).orElseThrow())
             .put("start_date", runContext.render(this.startDate.toString()));
 
         if (this.endDate != null) {
@@ -90,12 +90,12 @@ public class FacebookAds extends AbstractPythonTap implements RunnableTask<Abstr
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("tap-facebook");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("tap-facebook"));
     }
 
     @Override
-    protected String command() {
-        return "tap-facebook";
+    protected Property<String> command() {
+        return Property.of("tap-facebook");
     }
 }

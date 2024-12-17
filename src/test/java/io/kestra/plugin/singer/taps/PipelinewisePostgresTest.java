@@ -1,6 +1,7 @@
 package io.kestra.plugin.singer.taps;
 
 import com.google.common.collect.ImmutableMap;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.utils.IdUtils;
@@ -30,9 +31,9 @@ class PipelinewisePostgresTest extends TapsTest {
             .type(PipelinewisePostgres.class.getName())
             .host("172.17.0.1")
             .username("postgres")
-            .password("pg_passwd")
-            .port(65432)
-            .dbName("postgres")
+            .password(Property.of("pg_passwd"))
+            .port(Property.of(65432))
+            .dbName(Property.of("postgres"))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
                     .stream("category")

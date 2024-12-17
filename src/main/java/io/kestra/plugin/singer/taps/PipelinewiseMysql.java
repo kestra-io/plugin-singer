@@ -5,6 +5,7 @@ import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
@@ -68,47 +69,41 @@ public class PipelinewiseMysql extends AbstractPythonTap implements RunnableTask
     @Schema(
         title = "The database user's password."
     )
-    @PluginProperty(dynamic = true)
-    private String password;
+    private Property<String> password;
 
     @NotNull
     @Schema(
         title = "The database port."
     )
-    @PluginProperty
-    private Integer port;
+    private Property<Integer> port;
 
     @Schema(
         title = "If ssl is enabled."
     )
-    @PluginProperty
     @Builder.Default
-    private final Boolean ssl = false;
+    private final Property<Boolean> ssl = Property.of(false);
 
     @Schema(
         title = "The list of schemas to extract tables only from particular schemas and to improve data extraction performance."
     )
-    @PluginProperty(dynamic = true)
-    private List<String> filterDbs;
+    private Property<List<String>> filterDbs;
 
     @Schema(
         title = "Number of rows to export from MySQL in one batch."
     )
-    @PluginProperty
     @Builder.Default
-    private final Integer exportBatchRows = 50000;
+    private final Property<Integer> exportBatchRows = Property.of(50000);
 
     @Schema(
         title = "List of SQL commands to run when a connection made. This allows to set session variables dynamically, like timeouts or charsets."
     )
-    @PluginProperty(dynamic = true)
     @Builder.Default
-    private final List<String> sessionSqls = Arrays.asList(
+    private final Property<List<String>> sessionSqls = Property.of(Arrays.asList(
         "SET @@session.time_zone=\"+0:00\"",
         "SET @@session.wait_timeout=28800",
         "SET @@session.net_read_timeout=3600",
         "SET @@session.innodb_lock_wait_timeout=3600"
-    );
+    ));
 
     private static final String pipPackage = "pipelinewise-tap-mysql";
     private static final String comand = "tap-mysql";
@@ -125,27 +120,28 @@ public class PipelinewiseMysql extends AbstractPythonTap implements RunnableTask
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
             .put("user", runContext.render(this.username))
-            .put("password", runContext.render(this.password))
+            .put("password", runContext.render(this.password).as(String.class).orElse(null))
             .put("host", runContext.render(this.host))
-            .put("port", this.port)
-            .put("ssl", this.ssl)
-            .put("session_sqls", runContext.render(this.sessionSqls))
-            .put("export_batch_rows", this.exportBatchRows);
+            .put("port", runContext.render(this.port).as(Integer.class).orElseThrow())
+            .put("ssl", runContext.render(this.ssl).as(Boolean.class).orElseThrow())
+            .put("session_sqls", runContext.render(this.sessionSqls).asList(String.class))
+            .put("export_batch_rows", runContext.render(this.exportBatchRows).as(Integer.class).orElseThrow());
 
-        if (this.filterDbs != null) {
-            builder.put("filter_dbs", String.join(",", runContext.render(this.filterDbs)));
+        var filters = runContext.render(this.filterDbs).asList(String.class);
+        if (!filters.isEmpty()) {
+            builder.put("filter_dbs", String.join(",", filters));
         }
 
         return builder.build();
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("pipelinewise-tap-mysql");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("pipelinewise-tap-mysql"));
     }
 
     @Override
-    protected String command() {
-        return "tap-mysql";
+    protected Property<String> command() {
+        return Property.of("tap-mysql");
     }
 }

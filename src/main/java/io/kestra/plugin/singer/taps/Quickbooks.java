@@ -3,6 +3,7 @@ package io.kestra.plugin.singer.taps;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
@@ -34,7 +35,7 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
     )
     @PluginProperty
     @Builder.Default
-    private final Boolean selectFieldsByDefault = true;
+    private final Property<Boolean> selectFieldsByDefault = Property.of(true);
 
     @NotNull
     @Schema(
@@ -42,23 +43,21 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
     )
     @PluginProperty
     @Builder.Default
-    private final Boolean isSandbox = false;
+    private final Property<Boolean> isSandbox = Property.of(false);
 
     @NotNull
     @Schema(
         title = "Generate a STATE message every N records."
     )
-    @PluginProperty
     @Builder.Default
-    private final Integer stateMessageThreshold = 1000;
+    private final Property<Integer> stateMessageThreshold = Property.of(1000);
 
     @NotNull
     @Schema(
         title = "Maximum number of threads to use."
     )
-    @PluginProperty
     @Builder.Default
-    private final Integer maxWorkers = 8;
+    private final Property<Integer> maxWorkers = Property.of(8);
 
     @NotNull
     @NotEmpty
@@ -111,10 +110,10 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
     @Override
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
-            .put("select_fields_by_default", this.selectFieldsByDefault)
-            .put("is_sandbox", this.isSandbox)
-            .put("state_message_threshold", this.stateMessageThreshold)
-            .put("max_workers", this.maxWorkers)
+            .put("select_fields_by_default", runContext.render(this.selectFieldsByDefault).as(Boolean.class).orElseThrow())
+            .put("is_sandbox", runContext.render(this.isSandbox).as(Boolean.class).orElseThrow())
+            .put("state_message_threshold", runContext.render(this.stateMessageThreshold).as(Integer.class).orElseThrow())
+            .put("max_workers", runContext.render(this.maxWorkers).as(Integer.class).orElseThrow())
             .put("start_date", runContext.render(this.startDate.toString()))
             .put("realmId", runContext.render(this.realmId))
             .put("client_id", runContext.render(this.clientId))
@@ -125,12 +124,12 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("tap-quickbooks");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("tap-quickbooks"));
     }
 
     @Override
-    protected String command() {
-        return "tap-quickbooks";
+    protected Property<String> command() {
+        return Property.of("tap-quickbooks");
     }
 }

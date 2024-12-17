@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.JacksonMapper;
@@ -63,9 +64,8 @@ public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPy
     @Schema(
         title = "Timeout for each request on github API."
     )
-    @PluginProperty
     @Builder.Default
-    private Integer requestTimeout = 300;
+    private Property<Integer> requestTimeout = Property.of(300);
 
     public List<Feature> features() {
         return Arrays.asList(
@@ -101,18 +101,18 @@ public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPy
             .put("access_token", runContext.render(this.accessToken))
             .put("repository", String.join(" ", repositories))
             .put("start_date", runContext.render(this.startDate.toString()))
-            .put("request_timeout", this.requestTimeout);
+            .put("request_timeout", runContext.render(this.requestTimeout).as(Integer.class).orElseThrow());
 
         return builder.build();
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("tap-github");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("tap-github"));
     }
 
     @Override
-    protected String command() {
-        return "tap-github";
+    protected Property<String> command() {
+        return Property.of("tap-github");
     }
 }

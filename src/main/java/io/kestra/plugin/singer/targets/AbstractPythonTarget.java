@@ -1,6 +1,7 @@
 package io.kestra.plugin.singer.targets;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.AbstractPythonSinger;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -37,11 +38,11 @@ public abstract class AbstractPythonTarget extends AbstractPythonSinger {
     )
     @NotNull
     @Valid
-    private String from;
+    private Property<String> from;
 
     protected AbstractPythonTarget.Output runTarget(RunContext runContext) throws Exception {
         // from
-        URI from = new URI(runContext.render(this.from));
+        URI from = new URI(runContext.render(this.from).as(String.class).orElseThrow());
         Path tempFile = runContext.workingDir().createTempFile();
         Files.copy(runContext.storage().getFile(from), tempFile, StandardCopyOption.REPLACE_EXISTING);
 
@@ -53,7 +54,7 @@ public abstract class AbstractPythonTarget extends AbstractPythonSinger {
         AbstractPythonTarget.Output.OutputBuilder builder = AbstractPythonTarget.Output.builder();
 
         if (!this.stateRecords.isEmpty()) {
-            builder.stateKey(this.saveState(runContext, runContext.render(this.stateName), this.stateRecords));
+            builder.stateKey(this.saveState(runContext, runContext.render(this.stateName).as(String.class).orElseThrow(), this.stateRecords));
         }
 
         return builder.build();
@@ -68,7 +69,7 @@ public abstract class AbstractPythonTarget extends AbstractPythonSinger {
         this.runSinger(commands, runContext);
     }
 
-    protected void runSinger(List<String> commands, RunContext runContext) throws Exception {
+    protected void  runSinger(List<String> commands, RunContext runContext) throws Exception {
         Flux
             .<String>create(
                 throwConsumer(emitter -> {
