@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.JacksonMapper;
@@ -110,12 +111,12 @@ public class HubSpot extends AbstractPythonTap implements RunnableTask<AbstractP
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("git+https://github.com/potloc/tap-hubspot.git");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("git+https://github.com/potloc/tap-hubspot.git"));
     }
 
     @Override
-    protected String command() {
-        return "tap-hubspot";
+    protected Property<String> command() {
+        return Property.of("tap-hubspot");
     }
 }

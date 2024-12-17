@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
@@ -30,8 +31,7 @@ public class BigQuery extends AbstractPythonTap implements RunnableTask<Abstract
     @Schema(
         title = "The JSON service account key as string."
     )
-    @PluginProperty(dynamic = true)
-    protected String serviceAccount;
+    protected Property<String> serviceAccount;
 
     @NotNull
     @NotEmpty
@@ -45,17 +45,15 @@ public class BigQuery extends AbstractPythonTap implements RunnableTask<Abstract
     @Schema(
         title = "Limits the number of records returned in each stream, applied as a limit in the query."
     )
-    @PluginProperty
-    private Integer limit;
+    private Property<Integer> limit;
 
     @NotNull
     @Schema(
         title = "When replicating incrementally, disable to only select records whose `datetime_key` is greater than the maximum value replicated in the last run, by excluding records whose timestamps match exactly.",
         description = "This could cause records to be missed that were created after the last run finished, but during the same second and with the same timestamp."
     )
-    @PluginProperty
     @Builder.Default
-    private Boolean startAlwaysInclusive = true;
+    private Property<Boolean> startAlwaysInclusive = Property.of(true);
 
     @NotNull
     @Schema(
@@ -83,7 +81,7 @@ public class BigQuery extends AbstractPythonTap implements RunnableTask<Abstract
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
             .put("streams", this.streams)
-            .put("start_always_inclusive", this.startAlwaysInclusive);
+            .put("start_always_inclusive", runContext.render(this.startAlwaysInclusive).as(Boolean.class).orElseThrow());
 
         if (this.startDateTime != null) {
             builder.put("start_datetime", runContext.render(this.startDateTime.toString()));
@@ -97,13 +95,13 @@ public class BigQuery extends AbstractPythonTap implements RunnableTask<Abstract
     }
 
     @Override
-    public List<String> pipPackages() {
-        return List.of("git+https://github.com/kestra-io/tap-bigquery.git@fix");
+    public Property<List<String>> pipPackages() {
+        return Property.of(List.of("git+https://github.com/kestra-io/tap-bigquery.git@fix"));
     }
 
     @Override
-    protected String command() {
-        return "tap-bigquery";
+    protected Property<String> command() {
+        return Property.of("tap-bigquery");
     }
 
     @SuppressWarnings("DuplicatedCode")
@@ -112,7 +110,7 @@ public class BigQuery extends AbstractPythonTap implements RunnableTask<Abstract
         HashMap<String, String> env = new HashMap<>(super.environmentVariables(runContext));
 
         if (this.serviceAccount != null) {
-            this.writeSingerFiles("google-credentials.json", runContext.render(this.serviceAccount));
+            this.writeSingerFiles("google-credentials.json", runContext.render(this.serviceAccount).as(String.class).orElseThrow());
             env.put("GOOGLE_APPLICATION_CREDENTIALS", workingDirectory.toAbsolutePath() + "/google-credentials.json");
         }
 

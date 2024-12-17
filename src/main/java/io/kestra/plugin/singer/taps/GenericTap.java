@@ -2,6 +2,7 @@ package io.kestra.plugin.singer.taps;
 
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
@@ -27,15 +28,13 @@ public class GenericTap extends AbstractPythonTap implements RunnableTask<Abstra
     @Schema(
         title = "The list of pip package to install."
     )
-    @PluginProperty
-    private List<String> pipPackages;
+    private Property<List<String>> pipPackages;
 
     @NotNull
     @Schema(
         title = "The command to start."
     )
-    @PluginProperty
-    private String command;
+    private Property<String> command;
 
     @NotNull
     @Schema(
@@ -66,12 +65,12 @@ public class GenericTap extends AbstractPythonTap implements RunnableTask<Abstra
     }
 
     @Override
-    public List<String> pipPackages() {
+    public Property<List<String>> pipPackages() {
         return this.pipPackages;
     }
 
     @Override
-    protected String command() {
+    protected Property<String> command() {
         return this.command;
     }
 }

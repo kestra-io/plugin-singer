@@ -8,6 +8,7 @@ import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.executions.metrics.Counter;
 import io.kestra.core.models.executions.metrics.Timer;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.Task;
 import io.kestra.core.models.tasks.runners.AbstractLogConsumer;
 import io.kestra.core.models.tasks.runners.ScriptService;
@@ -65,22 +66,19 @@ public abstract class AbstractPythonSinger extends Task {
     @Schema(
         title = "The name of Singer state file stored in KV Store."
     )
-    @PluginProperty(dynamic = true)
     @NotNull
     @Builder.Default
-    protected String stateName = "singer-state";
+    protected Property<String> stateName = Property.of("singer-state");
 
     @Schema(
         title = "Override default pip packages to use a specific version."
     )
-    @PluginProperty(dynamic = true)
-    protected List<String> pipPackages;
+    protected Property<List<String>> pipPackages;
 
     @Schema(
         title = "Override default singer command."
     )
-    @PluginProperty(dynamic = true)
-    protected String command;
+    protected Property<String> command;
 
     @Schema(
         title = "Deprecated, use 'taskRunner' instead"
@@ -98,9 +96,8 @@ public abstract class AbstractPythonSinger extends Task {
     private TaskRunner taskRunner = Docker.instance();
 
     @Schema(title = "The task runner container image, only used if the task runner is container-based.")
-    @PluginProperty(dynamic = true)
     @Builder.Default
-    private String containerImage = DEFAULT_IMAGE;
+    private Property<String> containerImage = Property.of(DEFAULT_IMAGE);
 
     protected DockerOptions injectDefaults(DockerOptions original) {
         if (original == null) {
@@ -115,14 +112,16 @@ public abstract class AbstractPythonSinger extends Task {
         return builder.build();
     }
 
-    abstract public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException, IOException;
+    public abstract Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException, IOException;
 
-    abstract public List<String> pipPackages();
+    public abstract Property<List<String>> pipPackages();
 
-    abstract protected String command();
+    protected abstract Property<String> command();
 
     protected String finalCommand(RunContext runContext) throws IllegalVariableEvaluationException {
-        return this.command != null ? runContext.render(this.command) : this.command();
+        return this.command != null ?
+            runContext.render(this.command).as(String.class).orElseThrow() :
+            runContext.render(this.command()).as(String.class).orElse(null);
     }
 
     protected void run(RunContext runContext, String command, AbstractLogConsumer logConsumer) throws Exception {
@@ -141,7 +140,7 @@ public abstract class AbstractPythonSinger extends Task {
             .withWarningOnStdErr(true)
             .withDockerOptions(this.injectDefaults(getDocker()))
             .withTaskRunner(taskRunner)
-            .withContainerImage(this.containerImage)
+            .withContainerImage(runContext.render(this.containerImage).as(String.class).orElseThrow())
             .withLogConsumer(logConsumer)
             .withCommands(ScriptService.scriptCommands(
                 List.of("/bin/sh", "-c"),
@@ -156,7 +155,11 @@ public abstract class AbstractPythonSinger extends Task {
     }
 
     protected Stream<String> pipInstallCommands(RunContext runContext) throws Exception {
-        ArrayList<String> finalRequirements = new ArrayList<>(this.pipPackages != null ? runContext.render(this.pipPackages) : this.pipPackages());
+        ArrayList<String> finalRequirements = new ArrayList<>(
+            this.pipPackages != null ?
+                runContext.render(this.pipPackages).asList(String.class) :
+                runContext.render(this.pipPackages()).asList(String.class)
+        );
         finalRequirements.add("python-json-logger");
 
         return Stream.of(

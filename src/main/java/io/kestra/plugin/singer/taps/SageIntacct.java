@@ -3,6 +3,7 @@ package io.kestra.plugin.singer.taps;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
@@ -98,12 +99,12 @@ public class SageIntacct extends AbstractPythonTap implements RunnableTask<Abstr
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("git+https://github.com/hotgluexyz/tap-intacct.git");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("git+https://github.com/hotgluexyz/tap-intacct.git"));
     }
 
     @Override
-    protected String command() {
-        return "tap-intacct";
+    protected Property<String> command() {
+        return Property.of("tap-intacct");
     }
 }

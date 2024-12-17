@@ -3,6 +3,7 @@ package io.kestra.plugin.singer.taps;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
@@ -122,13 +123,13 @@ public class PipelinewiseMongoDb extends AbstractPythonTap implements RunnableTa
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("pipelinewise-tap-mongodb");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("pipelinewise-tap-mongodb"));
     }
 
     @Override
-    protected String command() {
-        return "tap-mongodb";
+    protected Property<String> command() {
+        return Property.of("tap-mongodb");
     }
 
     @Override

@@ -2,6 +2,7 @@ package io.kestra.plugin.singer.targets;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.CharStreams;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.utils.IdUtils;
@@ -52,7 +53,7 @@ class AdswerveBigQueryTest {
             .username("root")
             .password("mysql_passwd")
             .port(63306)
-            .stateName(stateName)
+            .stateName(Property.of(stateName))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
                     .stream("Category")
@@ -81,7 +82,7 @@ class AdswerveBigQueryTest {
             .id(IdUtils.create() + "_bq")
             .type(io.kestra.plugin.singer.targets.AdswerveBigQuery.class.getName())
             .from(tapOutput.getRaw().toString())
-            .stateName(stateName)
+            .stateName(Property.of(stateName))
             .serviceAccount(serviceAccount)
             .projectId(project)
             .datasetId(dataset)

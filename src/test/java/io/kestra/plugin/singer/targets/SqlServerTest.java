@@ -2,6 +2,7 @@ package io.kestra.plugin.singer.targets;
 
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.models.executions.AbstractMetricEntry;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.utils.IdUtils;
@@ -38,7 +39,7 @@ class SqlServerTest {
             .password("SQLServer_Passwd")
             .port(57037)
             .filterDbs(Collections.singletonList("dbo"))
-            .stateName("before-target-test")
+            .stateName(Property.of("before-target-test"))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
                     .stream("Categories")
@@ -84,7 +85,7 @@ class SqlServerTest {
 
         tap = tapBuilder
             .filterDbs(Collections.singletonList("target"))
-            .stateName("after-target-test")
+            .stateName(Property.of("after-target-test"))
             .streamsConfigurations(Collections.singletonList(
                 StreamsConfiguration.builder()
                     // SQL Server target transforms table & columns names to snake_case

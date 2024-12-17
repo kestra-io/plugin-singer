@@ -3,6 +3,7 @@ package io.kestra.plugin.singer.targets;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -328,13 +329,13 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("pipelinewise-target-redshift");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("pipelinewise-target-redshift"));
     }
 
     @Override
-    protected String command() {
-        return "target-redshift";
+    protected Property<String> command() {
+        return Property.of("target-redshift");
     }
 
     @Override

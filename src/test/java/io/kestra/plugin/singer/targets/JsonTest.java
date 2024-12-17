@@ -1,6 +1,7 @@
 package io.kestra.plugin.singer.targets;
 
 import com.google.common.collect.ImmutableMap;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.utils.IdUtils;
@@ -36,7 +37,7 @@ class JsonTest {
             .username("root")
             .password("mysql_passwd")
             .port(63306)
-            .stateName(stateName)
+            .stateName(Property.of(stateName))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
                     .stream("Category")
@@ -65,7 +66,7 @@ class JsonTest {
             .id(IdUtils.create())
             .type(DatamillCoPostgres.class.getName())
             .from(tapOutput.getRaw().toString())
-            .stateName(stateName)
+            .stateName(Property.of(stateName))
             .build();
 
         runContext = TestsUtils.mockRunContext(runContextFactory, task, ImmutableMap.of());

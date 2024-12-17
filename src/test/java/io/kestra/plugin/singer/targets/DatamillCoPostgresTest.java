@@ -1,6 +1,7 @@
 package io.kestra.plugin.singer.targets;
 
 import com.google.common.collect.ImmutableMap;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.utils.IdUtils;
@@ -37,7 +38,7 @@ class DatamillCoPostgresTest {
             .username("root")
             .password("mysql_passwd")
             .port(63306)
-            .stateName(stateName)
+            .stateName(Property.of(stateName))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
                     .stream("Category")
@@ -66,7 +67,7 @@ class DatamillCoPostgresTest {
             .id(IdUtils.create())
             .type(io.kestra.plugin.singer.targets.DatamillCoPostgres.class.getName())
             .from(tapOutput.getRaw().toString())
-            .stateName(stateName)
+            .stateName(Property.of(stateName))
             .host("172.17.0.1")
             .username("postgres")
             .password("pg_passwd")

@@ -53,7 +53,7 @@ public abstract class AbstractPythonTarget extends AbstractPythonSinger {
         AbstractPythonTarget.Output.OutputBuilder builder = AbstractPythonTarget.Output.builder();
 
         if (!this.stateRecords.isEmpty()) {
-            builder.stateKey(this.saveState(runContext, runContext.render(this.stateName), this.stateRecords));
+            builder.stateKey(this.saveState(runContext, runContext.render(this.stateName).as(String.class).orElseThrow(), this.stateRecords));
         }
 
         return builder.build();

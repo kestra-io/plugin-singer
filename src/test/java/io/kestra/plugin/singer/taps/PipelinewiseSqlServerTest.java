@@ -1,6 +1,7 @@
 package io.kestra.plugin.singer.taps;
 
 import com.google.common.collect.ImmutableMap;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.utils.IdUtils;
@@ -34,7 +35,7 @@ class PipelinewiseSqlServerTest extends TapsTest {
             .password("SQLServer_Passwd")
             .port(57037)
             .filterDbs(Collections.singletonList("dbo"))
-            .stateName("tap-test")
+            .stateName(Property.of("tap-test"))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
                     .stream("Categories")

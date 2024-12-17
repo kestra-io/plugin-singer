@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.JacksonMapper;
@@ -107,12 +108,12 @@ public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPy
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("tap-github");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("tap-github"));
     }
 
     @Override
-    protected String command() {
-        return "tap-github";
+    protected Property<String> command() {
+        return Property.of("tap-github");
     }
 }

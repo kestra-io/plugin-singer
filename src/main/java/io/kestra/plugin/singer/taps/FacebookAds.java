@@ -3,6 +3,7 @@ package io.kestra.plugin.singer.taps;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
@@ -90,12 +91,12 @@ public class FacebookAds extends AbstractPythonTap implements RunnableTask<Abstr
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("tap-facebook");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("tap-facebook"));
     }
 
     @Override
-    protected String command() {
-        return "tap-facebook";
+    protected Property<String> command() {
+        return Property.of("tap-facebook");
     }
 }

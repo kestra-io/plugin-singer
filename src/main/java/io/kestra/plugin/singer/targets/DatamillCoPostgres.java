@@ -3,6 +3,7 @@ package io.kestra.plugin.singer.targets;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -184,13 +185,13 @@ public class DatamillCoPostgres extends AbstractPythonTarget implements Runnable
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("singer-target-postgres");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("singer-target-postgres"));
     }
 
     @Override
-    protected String command() {
-        return "target-postgres";
+    protected Property<String> command() {
+        return Property.of("target-postgres");
     }
 
     @Override

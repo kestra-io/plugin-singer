@@ -5,6 +5,7 @@ import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
@@ -117,12 +118,12 @@ public class PipelinewiseOracle extends AbstractPythonTap implements RunnableTas
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("pipelinewise-tap-oracle");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("pipelinewise-tap-oracle"));
     }
 
     @Override
-    protected String command() {
-        return "tap-oracle";
+    protected Property<String> command() {
+        return Property.of("tap-oracle");
     }
 }

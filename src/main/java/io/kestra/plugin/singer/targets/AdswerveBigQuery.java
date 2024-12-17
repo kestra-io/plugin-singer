@@ -3,6 +3,7 @@ package io.kestra.plugin.singer.targets;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -161,13 +162,13 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("git+https://github.com/kestra-io/target-bigquery.git@fix");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("git+https://github.com/kestra-io/target-bigquery.git@fix"));
     }
 
     @Override
-    protected String command() {
-        return "target-bigquery";
+    protected Property<String> command() {
+        return Property.of("target-bigquery");
     }
 
     @Override

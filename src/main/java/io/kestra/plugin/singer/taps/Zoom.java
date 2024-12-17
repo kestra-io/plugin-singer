@@ -3,6 +3,7 @@ package io.kestra.plugin.singer.taps;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.singer.models.Feature;
@@ -83,12 +84,12 @@ public class Zoom extends AbstractPythonTap implements RunnableTask<AbstractPyth
     }
 
     @Override
-    public List<String> pipPackages() {
-        return Collections.singletonList("git+https://github.com/mashey/tap-zoom.git");
+    public Property<List<String>> pipPackages() {
+        return Property.of(Collections.singletonList("git+https://github.com/mashey/tap-zoom.git"));
     }
 
     @Override
-    protected String command() {
-        return "tap-zoom";
+    protected Property<String> command() {
+        return Property.of("tap-zoom");
     }
 }

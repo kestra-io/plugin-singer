@@ -69,7 +69,7 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger implements 
         if (this.features().contains(Feature.STATE)) {
             try {
                 InputStream taskStateFile = runContext.stateStore().getState(
-                    runContext.render(this.stateName),
+                    runContext.render(this.stateName).as(String.class).orElseThrow(),
                     "state.json",
                     runContext.storage().getTaskStorageContext().map(StorageContext.Task::getTaskRunValue).orElse(null)
                 );
@@ -102,7 +102,7 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger implements 
             .raw(runContext.storage().putFile(this.rawSingerStream.getLeft()));
 
         if (this.features().contains(Feature.STATE)) {
-            this.saveState(runContext, runContext.render(this.stateName), this.stateRecords);
+            this.saveState(runContext, runContext.render(this.stateName).as(String.class).orElseThrow(), this.stateRecords);
         }
 
         return outputBuilder

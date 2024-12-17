@@ -3,6 +3,7 @@ package io.kestra.plugin.singer.targets;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -135,13 +136,13 @@ public class Oracle extends AbstractPythonTarget implements RunnableTask<Abstrac
     }
 
     @Override
-    public List<String> pipPackages() {
-        return List.of("oracledb", "git+https://github.com/kestra-io/target-oracle.git");
+    public Property<List<String>> pipPackages() {
+        return Property.of(List.of("oracledb", "git+https://github.com/kestra-io/target-oracle.git"));
     }
 
     @Override
-    protected String command() {
-        return "target-oracle";
+    protected Property<String> command() {
+        return Property.of("target-oracle");
     }
 
     @Override
