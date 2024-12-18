@@ -28,38 +28,53 @@ import java.util.Map;
 @NoArgsConstructor
 @Schema(
     title = "A Singer tap to fetch data from a HubSpot API.",
-    description = "Full documentation can be found [here](https://github.com/potloc/tap-hubspot)"
+    description = "Full documentation can be found [here](https://github.com/singer-io/tap-hubspot)"
 )
 public class HubSpot extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
-    @NotEmpty
     @Schema(
-        title = "API Access Token"
+        title = "Hubspot redirect Uri"
     )
     @PluginProperty(dynamic = true)
-    private String accessToken;
+    private Property<String> redirectUri = Property.of("https://api.hubspot.com/");
 
+    @NotNull
     @Schema(
-        title = "List Config object for stream maps capability.",
-        description = "For more information check out [Stream Maps](https://sdk.meltano.com/en/latest/stream_maps.html)."
+        title = "Hubspot client Id"
     )
-    private Property<Map<String, Object>> streamMaps;
+    @PluginProperty(dynamic = true)
+    private Property<String> clientId;
 
+    @NotNull
     @Schema(
-        title = "User-defined config values to be used within map expressions."
+        title = "Hubspot client Secret"
     )
-    private Property<Map<String, Object>> streamMapConfig;
+    @PluginProperty(dynamic = true)
+    private Property<String> clientSecret;
 
+    @NotNull
     @Schema(
-        title = "To enable schema flattening and automatically expand nested properties."
+        title = "Hubspot refresh Token"
     )
-    @Builder.Default
-    private Property<Boolean> flatteningEnabled = Property.of(false);
+    @PluginProperty(dynamic = true)
+    private Property<String> refreshToken;
 
+    @NotNull
     @Schema(
-        title = "The max depth to flatten schemas."
+        title = "Hubspot api Key (for development)",
+        description = "As an alternative to OAuth 2.0 authentication during development, you may specify an API key to authenticate with the HubSpot API." +
+            "This should be used only for low-volume development work, as the HubSpot API Usage Guidelines specify that integrations should use OAuth for authentication."
     )
-    private Property<Integer> flatteningMaxDepth;
+    @PluginProperty(dynamic = true)
+    private Property<String> apiKey;
+
+    @NotNull
+    @Schema(
+        title = "Request timeout",
+        description = "In seconds"
+    )
+    @PluginProperty(dynamic = true)
+    private Property<Integer> requestTimeout;
 
     @NotNull
     @Schema(
@@ -80,29 +95,27 @@ public class HubSpot extends AbstractPythonTap implements RunnableTask<AbstractP
     @Override
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
-            .put("access_token", runContext.render(this.accessToken))
+            .put("redirect_uri", runContext.render(this.clientId).as(String.class))
             .put("start_date", runContext.render(this.startDate.toString()));
 
-        try {
-            var map = runContext.render(this.streamMaps).asMap(String.class, Object.class);
-            if (!map.isEmpty()) {
-                builder.put("stream_maps", JacksonMapper.ofJson().writeValueAsString(map));
-            }
-
-            var mapConfig = runContext.render(this.streamMapConfig).asMap(String.class, Object.class);
-            if (!mapConfig.isEmpty()) {
-                builder.put("stream_map_config", JacksonMapper.ofJson().writeValueAsString(mapConfig));
-            }
-        } catch (JsonProcessingException e) {
-            throw new IllegalVariableEvaluationException(e);
+        if (this.clientId != null) {
+            builder.put("client_id", runContext.render(this.clientId).as(String.class));
         }
 
-        if (this.flatteningEnabled != null) {
-            builder.put("flattening_enabled", runContext.render(this.flatteningEnabled).as(Boolean.class).orElseThrow());
+        if (this.clientSecret != null) {
+            builder.put("client_secret", runContext.render(this.clientSecret).as(String.class));
         }
 
-        if (this.flatteningMaxDepth != null) {
-            builder.put("flattening_max_depth", runContext.render(this.flatteningMaxDepth).as(Integer.class).orElseThrow());
+        if (this.refreshToken != null) {
+            builder.put("refresh_token", runContext.render(this.refreshToken).as(String.class));
+        }
+
+        if (this.apiKey != null) {
+            builder.put("hapikey", runContext.render(this.apiKey).as(String.class).orElseThrow());
+        }
+
+        if (this.requestTimeout != null) {
+            builder.put("request_timeout", runContext.render(this.requestTimeout).as(Integer.class).orElseThrow());
         }
 
         return builder.build();
@@ -110,7 +123,7 @@ public class HubSpot extends AbstractPythonTap implements RunnableTask<AbstractP
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("git+https://github.com/potloc/tap-hubspot.git"));
+        return Property.of(Collections.singletonList("tap-hubspot"));
     }
 
     @Override
