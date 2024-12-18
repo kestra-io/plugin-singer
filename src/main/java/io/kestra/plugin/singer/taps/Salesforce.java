@@ -26,7 +26,7 @@ import jakarta.validation.constraints.NotNull;
 @NoArgsConstructor
 @Schema(
     title = "A Singer tap to fetch data from a Salesforce account.",
-    description = "Full documentation can be found [here](https://gitlab.com/meltano/tap-salesforce.git)"
+    description = "Full documentation can be found [here](https://github.com/singer-io/tap-salesforce)"
 )
 public class Salesforce extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
@@ -50,35 +50,6 @@ public class Salesforce extends AbstractPythonTap implements RunnableTask<Abstra
     @Builder.Default
     private final Property<Boolean> isSandbox = Property.of(false);
 
-    @NotNull
-    @Schema(
-        title = "Generate a STATE message every N records."
-    )
-    @Builder.Default
-    private final Property<Integer> stateMessageThreshold = Property.of(1000);
-
-    @NotNull
-    @Schema(
-        title = "Maximum number of threads to use."
-    )
-    @Builder.Default
-    private final Property<Integer> maxWorkers = Property.of(8);
-
-    @Schema(
-        title = "Salesforce username."
-    )
-    private Property<String> username;
-
-    @Schema(
-        title = "Salesforce password."
-    )
-    private Property<String> password;
-
-    @Schema(
-        title = "Your Salesforce Account access token."
-    )
-    private Property<String> securityToken;
-
     @Schema(
         title = "Salesforce client ID."
     )
@@ -93,6 +64,14 @@ public class Salesforce extends AbstractPythonTap implements RunnableTask<Abstra
         title = "Salesforce refresh token."
     )
     private Property<String> refreshToken;
+
+    @Schema(
+        title = "The lookback_window.",
+        description = "(in seconds) subtracts the desired amount of seconds from the bookmark to sync past data. Recommended value: 10 seconds."
+    )
+    @PluginProperty(dynamic = true)
+    @Builder.Default
+    private Property<Integer> lookbackWindow = Property.of(10);
 
     @NotNull
     @Schema(
@@ -116,21 +95,7 @@ public class Salesforce extends AbstractPythonTap implements RunnableTask<Abstra
             .put("api_type", runContext.render(this.apiType).as(ApiType.class).orElseThrow())
             .put("select_fields_by_default", runContext.render(this.selectFieldsByDefault).as(Boolean.class).orElseThrow())
             .put("is_sandbox", runContext.render(this.isSandbox).as(Boolean.class).orElseThrow())
-            .put("state_message_threshold", runContext.render(this.stateMessageThreshold).as(Integer.class).orElseThrow())
-            .put("max_workers", runContext.render(this.maxWorkers).as(Integer.class).orElseThrow())
             .put("start_date", runContext.render(this.startDate.toString()));
-
-        if (this.username != null) {
-            builder.put("username", runContext.render(this.username).as(String.class).orElseThrow());
-        }
-
-        if (this.password != null) {
-            builder.put("password", runContext.render(this.password).as(String.class).orElseThrow());
-        }
-
-        if (this.securityToken != null) {
-            builder.put("security_token", runContext.render(this.securityToken).as(String.class).orElseThrow());
-        }
 
         if (this.clientId != null) {
             builder.put("client_id", runContext.render(this.clientId).as(String.class).orElseThrow());
@@ -144,8 +109,8 @@ public class Salesforce extends AbstractPythonTap implements RunnableTask<Abstra
             builder.put("refresh_token", runContext.render(this.refreshToken).as(String.class).orElseThrow());
         }
 
-        if (this.username != null) {
-            builder.put("username", runContext.render(this.username).as(String.class).orElseThrow());
+        if (this.lookbackWindow != null) {
+            builder.put("lookback_window", runContext.render(this.lookbackWindow).as(Integer.class).orElseThrow());
         }
 
         return builder.build();
@@ -153,7 +118,7 @@ public class Salesforce extends AbstractPythonTap implements RunnableTask<Abstra
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("git+https://gitlab.com/meltano/tap-salesforce.git"));
+        return Property.of(Collections.singletonList("tap-salesforce"));
     }
 
     @Override
