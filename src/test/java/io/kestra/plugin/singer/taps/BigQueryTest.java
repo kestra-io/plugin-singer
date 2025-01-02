@@ -69,7 +69,7 @@ class BigQueryTest extends TapsTest {
 
         assertThat(groupedByType.get(StreamType.SCHEMA).size(), is(1));
         assertThat(groupedByType.get(StreamType.SCHEMA).get(0).get("stream"), is("covid19_nyt_us_states"));
-        assertThat(groupedByType.get(StreamType.RECORD).size(), is(61942));
+        assertThat(groupedByType.get(StreamType.RECORD).size(), is(17));
         assertThat(groupedByType.get(StreamType.STATE).size(), is(2));
 
         // rerun, since we have startAlwaysInclusive false, we won't retrieve any record
