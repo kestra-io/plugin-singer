@@ -93,7 +93,7 @@ public abstract class AbstractPythonSinger extends Task {
     @PluginProperty
     @Builder.Default
     @Valid
-    private TaskRunner taskRunner = Docker.instance();
+    private TaskRunner<?> taskRunner = Docker.instance();
 
     @Schema(title = "The task runner container image, only used if the task runner is container-based.")
     @Builder.Default
