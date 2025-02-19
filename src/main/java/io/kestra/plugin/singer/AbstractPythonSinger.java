@@ -142,14 +142,12 @@ public abstract class AbstractPythonSinger extends Task {
             .withTaskRunner(taskRunner)
             .withContainerImage(runContext.render(this.containerImage).as(String.class).orElseThrow())
             .withLogConsumer(logConsumer)
-            .withCommands(ScriptService.scriptCommands(
-                List.of("/bin/sh", "-c"),
-                Stream.of(
+            .withInterpreter(Property.of(List.of("/bin/sh", "-c")))
+            .withBeforeCommands(Property.of(Stream.of(
                     pipInstallCommands(runContext),
                     logSetupCommands()
-                ).flatMap(Function.identity()).toList(),
-                List.of(command)
-            ))
+                ).flatMap(Function.identity()).toList()))
+            .withCommands(Property.of(List.of(command)))
             .withEnv(this.environmentVariables(runContext))
             .run();
     }
