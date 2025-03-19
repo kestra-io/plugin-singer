@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -261,6 +262,18 @@ public abstract class AbstractPythonSinger extends Task {
         }
 
         @Override
+        public void accept(String line, Boolean isStdErr, Instant instant) {
+            if (isStdErr) {
+                singerLogParser.accept(line, isStdErr);
+                return;
+            }
+
+            if (singerLogSync != null) {
+                singerLogSync.accept(line, isStdErr);
+            }
+        }
+
+        @Override
         public void accept(String line, Boolean isStdErr) {
             if (isStdErr) {
                 singerLogParser.accept(line, isStdErr);
@@ -281,6 +294,11 @@ public abstract class AbstractPythonSinger extends Task {
         }
 
         @Override
+        public void accept(String log, Boolean isStdErr, Instant instant) {
+            this.consumer.accept(log);
+        }
+
+        @Override
         public void accept(String log, Boolean isStdErr) {
             this.consumer.accept(log);
         }
@@ -293,6 +311,11 @@ public abstract class AbstractPythonSinger extends Task {
         public SingerLogParser(Logger logger, List<Metric> metrics) {
             this.logger = logger;
             this.metrics = metrics;
+        }
+
+        @Override
+        public void accept(String line, Boolean isStdErr, Instant instant) {
+            this.accept(line, isStdErr);
         }
 
         @Override
