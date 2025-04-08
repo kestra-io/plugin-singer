@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Value;
 
 import java.util.List;
-import javax.annotation.RegEx;
 
 @Value
 @Builder
@@ -18,7 +17,6 @@ public class StreamsConfiguration {
 
     String replicationKeys;
 
-    @RegEx
     List<String> propertiesPattern;
 
     @Builder.Default
