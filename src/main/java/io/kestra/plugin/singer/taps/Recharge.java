@@ -28,8 +28,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a Recharge account.",
-    description = "Full documentation can be found [here](https://github.com/singer-io/tap-recharge)"
+    title = "Fetch data from a Recharge account with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/singer-io/tap-recharge)."
 )
 public class Recharge extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull

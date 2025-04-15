@@ -27,8 +27,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a Marketo account.",
-    description = "Full documentation can be found [here](https://gitlab.com/meltano/tap-marketo.git)"
+    title = "Fetch data from a Marketo account with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://gitlab.com/meltano/tap-marketo.git)."
 )
 public class Marketo extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull

@@ -24,8 +24,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a MongoDB database.",
-    description = "Full documentation can be found [here](https://transferwise.github.io/pipelinewise/connectors/taps/mongodb.html)"
+    title = "Fetch data from a MongoDB database with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://transferwise.github.io/pipelinewise/connectors/taps/mongodb.html)."
 )
 public class PipelinewiseMongoDb extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull

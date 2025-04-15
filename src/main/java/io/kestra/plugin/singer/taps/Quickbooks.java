@@ -25,8 +25,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a Quickbooks account.",
-    description = "Full documentation can be found [here](https://github.com/hotgluexyz/tap-quickbooks.git)"
+    title = "Fetch data from a Quickbooks account with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/hotgluexyz/tap-quickbooks.git)."
 )
 public class Quickbooks extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull

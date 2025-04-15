@@ -24,8 +24,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a exchangerate.host API.",
-    description = "Full documentation can be found [here](https://github.com/anelendata/tap-exchangeratehost)"
+    title = "Fetch data from an exchangerate.host API with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/anelendata/tap-exchangeratehost)."
 )
 public class ExchangeRateHost extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotEmpty

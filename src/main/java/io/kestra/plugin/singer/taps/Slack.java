@@ -25,8 +25,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from Slack.",
-    description = "Full documentation can be found [here](https://github.com/Mashey/tap-slack)"
+    title = "Fetch data from Slack with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/Mashey/tap-slack)."
 )
 public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull

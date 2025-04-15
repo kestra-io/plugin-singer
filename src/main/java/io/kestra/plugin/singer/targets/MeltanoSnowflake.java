@@ -22,8 +22,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer target loads data into a Snowflake database.",
-    description = "Full documentation can be found [here](https://github.com/MeltanoLabs/target-snowflake)"
+    title = "Load data into a Snowflake database with a Singer target.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/MeltanoLabs/target-snowflake)."
 )
 public class MeltanoSnowflake extends AbstractPythonTarget implements RunnableTask<AbstractPythonTarget.Output> {
     @NotNull

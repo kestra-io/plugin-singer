@@ -26,8 +26,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer target that loads data into a Microsoft SQL Server database.",
-    description = "Full documentation can be found [here](https://github.com/storebrand/target-mssql/blob/main/README.md)"
+    title = "Load data into a Microsoft SQL Server database with a Singer target.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/storebrand/target-mssql/blob/main/README.md)."
 )
 public class SqlServer extends AbstractPythonTarget implements RunnableTask<AbstractPythonTarget.Output> {
     @NotEmpty

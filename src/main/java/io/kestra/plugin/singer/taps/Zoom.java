@@ -25,8 +25,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a Zoom account.",
-    description = "Full documentation can be found [here](https://github.com/mashey/tap-zoom)"
+    title = "Fetch data from a Zoom account with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/mashey/tap-zoom)."
 )
 public class Zoom extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @Schema(

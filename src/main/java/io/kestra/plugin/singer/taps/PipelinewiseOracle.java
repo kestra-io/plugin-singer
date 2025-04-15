@@ -26,8 +26,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a Oracle database.",
-    description = "Full documentation can be found [here](https://github.com/transferwise/pipelinewise-tap-oracle)"
+    title = "Fetch data from an Oracle database with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/transferwise/pipelinewise-tap-oracle)."
 )
 @Plugin(
     examples = {

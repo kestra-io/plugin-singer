@@ -22,7 +22,7 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Generic Singer tap."
+    title = "Fetch data using a generic Singer tap."
 )
 public class GenericTap extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull

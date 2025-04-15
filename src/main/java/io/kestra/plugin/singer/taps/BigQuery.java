@@ -24,8 +24,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a BigQuery.",
-    description = "Full documentation can be found [here](https://github.com/anelendata/tap-bigquery)"
+    title = "Fetch data from BigQuery with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/anelendata/tap-bigquery)."
 )
 public class BigQuery extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @Schema(

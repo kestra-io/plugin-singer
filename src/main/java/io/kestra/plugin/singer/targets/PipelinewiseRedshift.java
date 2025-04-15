@@ -22,8 +22,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer target loads data into a Redshift database.",
-    description = "Full documentation can be found [here](https://github.com/transferwise/pipelinewise-target-redshift)"
+    title = "Load data into a Redshift database with a Singer target.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/transferwise/pipelinewise-target-redshift)."
 )
 public class PipelinewiseRedshift extends AbstractPythonTarget implements RunnableTask<AbstractPythonTarget.Output> {
     @NotNull

@@ -25,8 +25,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a Facebook Ads.",
-    description = "Full documentation can be found [here](https://github.com/singer-io/tap-facebook)"
+    title = "Fetch data from Facebook Ads with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/singer-io/tap-facebook)."
 )
 public class FacebookAds extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull

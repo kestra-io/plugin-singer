@@ -24,8 +24,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer target loads data into a BigQuery.",
-    description = "Full documentation can be found [here](https://github.com/adswerve/target-bigquery)"
+    title = "Load data into a BigQuery with a Singer target.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/adswerve/target-bigquery)."
 )
 public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTask<AbstractPythonTarget.Output> {
     @NotNull
