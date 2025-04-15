@@ -25,8 +25,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a Shopify account.",
-    description = "Full documentation can be found [here](https://github.com/singer-io/tap-shopify)"
+    title = "Fetch data from a Shopify account with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/singer-io/tap-shopify)."
 )
 public class Shopify extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull

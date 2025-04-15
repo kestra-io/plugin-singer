@@ -25,8 +25,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer target that loads data into an Oracle database.",
-    description = "Full documentation can be found [here](https://hub.meltano.com/loaders/target-oracle/)"
+    title = "Load data into an Oracle database with a Singer target.",
+    description = "Full documentation can be found on the [GitHub Repo](https://hub.meltano.com/loaders/target-oracle/)."
 )
 public class Oracle extends AbstractPythonTarget implements RunnableTask<AbstractPythonTarget.Output> {
     @NotEmpty

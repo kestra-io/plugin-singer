@@ -26,8 +26,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a Microsoft SQL Server database.",
-    description = "Full documentation can be found [here](https://github.com/BuzzCutNorman/tap-mssql/blob/main/README.md)"
+    title = "Fetch data from a Microsoft SQL Server database with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/BuzzCutNorman/tap-mssql/blob/main/README.md)."
 )
 @Plugin(
     examples = {

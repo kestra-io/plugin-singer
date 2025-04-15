@@ -28,8 +28,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a Fastly account.",
-    description = "Full documentation can be found [here](https://gitlab.com/meltano/tap-fastly)"
+    title = "Fetch data from a Fastly account with a Singer tap.",
+    description = "Full documentation can be found [GitHub Repo](https://gitlab.com/meltano/tap-fastly)."
 )
 public class Fastly extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull

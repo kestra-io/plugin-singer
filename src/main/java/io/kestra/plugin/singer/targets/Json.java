@@ -24,8 +24,8 @@ import static io.kestra.core.utils.Rethrow.throwFunction;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer target loads data into JSON files.",
-    description = "Full documentation can be found [here](https://github.com/andyh1203/target-jsonl)"
+    title = "Load data into JSON files with a Singer target.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/andyh1203/target-jsonl)."
 )
 public class Json extends AbstractPythonTarget implements RunnableTask<Json.Output> {
     private File destinationDirectory() {

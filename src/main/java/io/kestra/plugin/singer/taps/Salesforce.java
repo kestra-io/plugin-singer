@@ -25,8 +25,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a Salesforce account.",
-    description = "Full documentation can be found [here](https://github.com/singer-io/tap-salesforce)"
+    title = "Fetch data from a Salesforce account with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/singer-io/tap-salesforce)."
 )
 public class Salesforce extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull

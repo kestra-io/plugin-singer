@@ -29,8 +29,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from from the Google Analytics Reporting API.",
-    description = "Full documentation can be found [here](https://gitlab.com/meltano/tap-google-analytics)"
+    title = "Fetch data from Google Adwords with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://gitlab.com/meltano/tap-google-analytics)."
 )
 public class GoogleAnalytics extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @Schema(

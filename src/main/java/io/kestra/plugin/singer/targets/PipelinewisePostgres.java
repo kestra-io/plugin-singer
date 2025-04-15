@@ -22,8 +22,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer target loads data into a Postgres database.",
-    description = "Full documentation can be found [here](https://github.com/transferwise/pipelinewise-target-postgres)"
+    title = "Load data into a PostgreSQL database with a Singer target.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/transferwise/pipelinewise-target-postgres)."
 )
 public class PipelinewisePostgres extends AbstractPythonTarget implements RunnableTask<AbstractPythonTarget.Output> {
     @NotNull

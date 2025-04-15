@@ -28,8 +28,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a Stripe account.",
-    description = "Full documentation can be found [here](https://github.com/meltano/tap-stripe.git)"
+    title = "Fetch data from a Stripe account with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/meltano/tap-stripe.git)."
 )
 public class Stripe extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull

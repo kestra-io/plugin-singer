@@ -23,7 +23,7 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Generic Singer target."
+    title = "Load data using a generic Singer target."
 )
 public class GenericTarget extends AbstractPythonTarget implements RunnableTask<AbstractPythonTarget.Output> {
     @NotNull

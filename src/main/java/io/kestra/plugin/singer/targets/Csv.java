@@ -26,8 +26,8 @@ import static io.kestra.core.utils.Rethrow.throwFunction;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer target loads data into a CSV Files.",
-    description = "Full documentation can be found [here](https://github.com/adswerve/target-bigquery)"
+    title = "Load data into a CSV file with a Singer target.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/adswerve/target-bigquery)."
 )
 public class Csv extends AbstractPythonTarget implements RunnableTask<Csv.Output> {
     @NotNull

@@ -25,8 +25,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from the Google Search console.",
-    description = "Full documentation can be found [here](https://github.com/singer-io/tap-google-search-console)"
+    title = "Fetch data from the Google Search console with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/singer-io/tap-google-search-console)."
 )
 public class GoogleSearchConsole extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull

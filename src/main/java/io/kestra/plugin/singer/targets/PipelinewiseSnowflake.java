@@ -23,8 +23,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer target loads data into a Snowflake database.",
-    description = "Full documentation can be found [here](https://github.com/transferwise/pipelinewise-target-snowflake)"
+    title = "Load data into a Snowflake database with a Singer target.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/transferwise/pipelinewise-target-snowflake)."
 )
 public class PipelinewiseSnowflake extends AbstractPythonTarget implements RunnableTask<AbstractPythonTarget.Output> {
     @NotNull

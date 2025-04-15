@@ -28,8 +28,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a ChargeBee account.",
-    description = "Full documentation can be found [here](https://github.com/hotgluexyz/tap-chargebee)"
+    title = "Fetch data from a ChargeBee account with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/hotgluexyz/tap-chargebee)."
 )
 public class ChargeBee extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull

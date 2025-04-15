@@ -23,8 +23,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a Postgres database.",
-    description = "Full documentation can be found [here](https://github.com/transferwise/pipelinewise-tap-postgres)"
+    title = "Fetch data from a PostgreSQL database with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/transferwise/pipelinewise-tap-postgres)."
 )
 public class PipelinewisePostgres extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull

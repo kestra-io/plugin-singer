@@ -28,8 +28,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a Zendesk account.",
-    description = "Full documentation can be found [here](https://github.com/singer-io/tap-zendesk)"
+    title = "Fetch data from a Zendesk account with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/singer-io/tap-zendesk)."
 )
 public class Zendesk extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull

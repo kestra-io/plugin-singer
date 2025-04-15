@@ -25,8 +25,8 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "A Singer tap to fetch data from a Sage Intacct account.",
-    description = "Full documentation can be found [here](https://github.com/hotgluexyz/tap-intacct)"
+    title = "Fetch data from a Sage Intacct account with a Singer tap.",
+    description = "Full documentation can be found on the [GitHub Repo](https://github.com/hotgluexyz/tap-intacct)."
 )
 public class SageIntacct extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
