@@ -68,12 +68,12 @@ public class Csv extends AbstractPythonTarget implements RunnableTask<Csv.Output
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("git+https://github.com/hotgluexyz/target-csv.git@0.3.6"));
+        return Property.ofValue(Collections.singletonList("git+https://github.com/hotgluexyz/target-csv.git@0.3.6"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("target-csv");
+        return Property.ofValue("target-csv");
     }
 
     @Override

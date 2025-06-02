@@ -35,8 +35,8 @@ class OracleTest {
             .database("msdb")
             .username("SA")
             .password("SQLServer_Passwd")
-            .port(Property.of(57037))
-            .filterDbs(Property.of(Collections.singletonList("dbo")))
+            .port(Property.ofValue(57037))
+            .filterDbs(Property.ofValue(Collections.singletonList("dbo")))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
                     .stream("Categories")
@@ -57,12 +57,12 @@ class OracleTest {
         Oracle target = Oracle.builder()
             .id(IdUtils.create())
             .type(Oracle.class.getName())
-            .from(Property.of(tapOutput.getRaw().toString()))
+            .from(Property.ofValue(tapOutput.getRaw().toString()))
             .host("172.17.0.1")
-            .database(Property.of("FREE"))
+            .database(Property.ofValue("FREE"))
             .username("system")
             .password("oracle_passwd")
-            .port(Property.of(57057))
+            .port(Property.ofValue(57057))
             .build();
 
         runContext = TestsUtils.mockRunContext(runContextFactory, target, ImmutableMap.of());

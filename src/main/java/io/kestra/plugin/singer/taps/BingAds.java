@@ -109,11 +109,11 @@ public class BingAds extends AbstractPythonTap implements RunnableTask<AbstractP
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("tap-bing-ads"));
+        return Property.ofValue(Collections.singletonList("tap-bing-ads"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-bing-ads");
+        return Property.ofValue("tap-bing-ads");
     }
 }

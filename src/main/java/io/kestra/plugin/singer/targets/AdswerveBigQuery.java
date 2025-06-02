@@ -55,20 +55,20 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
         description = "This option is disabled by default and invalid RECORD messages will fail only at load time by " +
             "Postgres. Enabling this option will detect invalid records earlier but could cause performance degradation.."
     )
-    private final Property<Boolean> validateRecords = Property.of(false);
+    private final Property<Boolean> validateRecords = Property.ofValue(false);
 
     @Schema(
         title = "Add singer Metadata columns.",
         description = "Add `_time_extracted` and `_time_loaded` metadata columns."
     )
     @Builder.Default
-    private final Property<Boolean> addMetadataColumns = Property.of(false);
+    private final Property<Boolean> addMetadataColumns = Property.ofValue(false);
 
     @Schema(
         title = "The replication method, `append` or `truncate`."
     )
     @Builder.Default
-    private final Property<ReplicationMethod> replicationMethod = Property.of(ReplicationMethod.append);
+    private final Property<ReplicationMethod> replicationMethod = Property.ofValue(ReplicationMethod.append);
 
     @Schema(
         title = "Add prefix to table name."
@@ -85,7 +85,7 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
     )
     @PluginProperty
     @Builder.Default
-    private final Property<Integer> maxCache = Property.of(50);
+    private final Property<Integer> maxCache = Property.ofValue(50);
 
     @Schema(
         title = "The JSON service account key as string."
@@ -97,7 +97,7 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
         description = "default: merges multiple state messages from the tap into the state file, if true : uses the last state message as the state file."
     )
     @Builder.Default
-    protected Property<Boolean> mergeStateMessages = Property.of(false);
+    protected Property<Boolean> mergeStateMessages = Property.ofValue(false);
 
     @Schema(
         title = "Table configs."
@@ -155,12 +155,12 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("git+https://github.com/kestra-io/target-bigquery.git@fix"));
+        return Property.ofValue(Collections.singletonList("git+https://github.com/kestra-io/target-bigquery.git@fix"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("target-bigquery");
+        return Property.ofValue("target-bigquery");
     }
 
     @Override

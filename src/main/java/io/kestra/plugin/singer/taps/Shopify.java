@@ -74,11 +74,11 @@ public class Shopify extends AbstractPythonTap implements RunnableTask<AbstractP
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("tap-shopify"));
+        return Property.ofValue(Collections.singletonList("tap-shopify"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-shopify");
+        return Property.ofValue("tap-shopify");
     }
 }

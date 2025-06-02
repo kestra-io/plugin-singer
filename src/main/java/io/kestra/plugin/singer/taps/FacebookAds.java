@@ -50,7 +50,7 @@ public class FacebookAds extends AbstractPythonTap implements RunnableTask<Abstr
         title = "How many Days before the Start Date to fetch Ads Insights for."
     )
     @Builder.Default
-    private final Property<Integer> insightsBufferDays = Property.of(0);
+    private final Property<Integer> insightsBufferDays = Property.ofValue(0);
 
     @NotNull
     @Schema(
@@ -91,11 +91,11 @@ public class FacebookAds extends AbstractPythonTap implements RunnableTask<Abstr
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("tap-facebook"));
+        return Property.ofValue(Collections.singletonList("tap-facebook"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-facebook");
+        return Property.ofValue("tap-facebook");
     }
 }

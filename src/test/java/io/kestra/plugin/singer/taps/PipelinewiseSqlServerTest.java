@@ -33,9 +33,9 @@ class PipelinewiseSqlServerTest extends TapsTest {
             .database("msdb")
             .username("SA")
             .password("SQLServer_Passwd")
-            .port(Property.of(57037))
-            .filterDbs(Property.of(Collections.singletonList("dbo")))
-            .stateName(Property.of("tap-test"))
+            .port(Property.ofValue(57037))
+            .filterDbs(Property.ofValue(Collections.singletonList("dbo")))
+            .stateName(Property.ofValue("tap-test"))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
                     .stream("Categories")

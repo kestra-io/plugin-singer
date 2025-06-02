@@ -81,11 +81,11 @@ public class Zoom extends AbstractPythonTap implements RunnableTask<AbstractPyth
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("git+https://github.com/mashey/tap-zoom.git"));
+        return Property.ofValue(Collections.singletonList("git+https://github.com/mashey/tap-zoom.git"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-zoom");
+        return Property.ofValue("tap-zoom");
     }
 }

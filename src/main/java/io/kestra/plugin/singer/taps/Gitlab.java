@@ -65,21 +65,21 @@ public class Gitlab extends AbstractPythonTap implements RunnableTask<AbstractPy
     @Schema(
         title = "Enable to pull in extra data (like Epics, Epic Issues and other entities) only available to GitLab Ultimate and GitLab.com Gold accounts."
     )
-    private final Property<Boolean> ultimateLicense = Property.of(false);
+    private final Property<Boolean> ultimateLicense = Property.ofValue(false);
 
     @NotNull
     @Schema(
         title = "For each Merge Request, also fetch the MR's commits and create the join table `merge_request_commits` with the Merge Request and related Commit IDs.",
         description = "This can slow down extraction considerably because of the many API calls required."
     )
-    private final Property<Boolean> fetchMergeRequestCommits = Property.of(false);
+    private final Property<Boolean> fetchMergeRequestCommits = Property.ofValue(false);
 
     @NotNull
     @Schema(
         title = "For every Pipeline, also fetch extended details of each of these pipelines.",
         description = "This can slow down extraction considerably because of the many API calls required."
     )
-    private final Property<Boolean> fetchPipelinesExtended = Property.of(false);
+    private final Property<Boolean> fetchPipelinesExtended = Property.ofValue(false);
 
     @NotNull
     @Schema(
@@ -122,11 +122,11 @@ public class Gitlab extends AbstractPythonTap implements RunnableTask<AbstractPy
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("git+https://gitlab.com/meltano/tap-gitlab.git"));
+        return Property.ofValue(Collections.singletonList("git+https://gitlab.com/meltano/tap-gitlab.git"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-gitlab");
+        return Property.ofValue("tap-gitlab");
     }
 }

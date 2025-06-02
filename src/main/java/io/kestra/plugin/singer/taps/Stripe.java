@@ -77,11 +77,11 @@ public class Stripe extends AbstractPythonTap implements RunnableTask<AbstractPy
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("git+https://github.com/meltano/tap-stripe.git"));
+        return Property.ofValue(Collections.singletonList("git+https://github.com/meltano/tap-stripe.git"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-stripe");
+        return Property.ofValue("tap-stripe");
     }
 }

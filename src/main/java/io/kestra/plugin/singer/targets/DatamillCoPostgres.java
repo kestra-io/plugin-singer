@@ -62,50 +62,50 @@ public class DatamillCoPostgres extends AbstractPythonTarget implements Runnable
         title = "The database schema."
     )
     @Builder.Default
-    private final Property<String> schema = Property.of("public");
+    private final Property<String> schema = Property.ofValue("public");
 
     @Schema(
         title = "Refer to the [libpq](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS) docs for more information about SSL."
     )
     @Builder.Default
-    private final Property<String> sslMode = Property.of("prefer");
+    private final Property<String> sslMode = Property.ofValue("prefer");
 
     @Schema(
         title = "Crash on invalid records."
     )
     @Builder.Default
-    private final Property<Boolean> invalidRecordsDetect = Property.of(true);
+    private final Property<Boolean> invalidRecordsDetect = Property.ofValue(true);
 
     @Schema(
         title = "Include a positive value n in your config to allow to encounter at most n invalid records per stream before giving up."
     )
     @Builder.Default
-    private final Property<Integer> invalidRecordsThreshold = Property.of(0);
+    private final Property<Integer> invalidRecordsThreshold = Property.ofValue(0);
 
     @Schema(
         title = "The level for logging.",
         description = "Set to DEBUG to get things like queries executed, timing of those queries, etc. See Python's Logger Levels for information about valid values."
     )
     @Builder.Default
-    private final Property<String> loggingLevel = Property.of("INFO");
+    private final Property<String> loggingLevel = Property.ofValue("INFO");
 
     @Schema(
         title = "Whether the Target should create tables which have no records present in Remote."
     )
     @Builder.Default
-    private final Property<Boolean> persistEmptyTables = Property.of(false);
+    private final Property<Boolean> persistEmptyTables = Property.ofValue(false);
 
     @Schema(
         title = "The maximum number of rows to buffer in memory before writing to the destination table in Postgres."
     )
     @Builder.Default
-    private final Property<Integer> maxBatchRows = Property.of(200000);
+    private final Property<Integer> maxBatchRows = Property.ofValue(200000);
 
     @Schema(
         title = "The maximum number of bytes to buffer in memory before writing to the destination table in Postgres."
     )
     @Builder.Default
-    private final Property<Integer> maxBufferSize = Property.of(104857600);
+    private final Property<Integer> maxBufferSize = Property.ofValue(104857600);
 
     @Schema(
         title = "How often, in rows received, to count the buffered rows and bytes to check if a flush is necessary.",
@@ -121,7 +121,7 @@ public class DatamillCoPostgres extends AbstractPythonTarget implements Runnable
         description = "These indexes will make data loading slightly slower but the deduplication phase much faster. Defaults to on for better baseline performance."
     )
     @Builder.Default
-    private final Property<Boolean> addUpsertIndexes = Property.of(true);
+    private final Property<Boolean> addUpsertIndexes = Property.ofValue(true);
 
     @Schema(
         title = "Raw SQL statement(s) to execute as soon as the connection to Postgres is opened by the target.",
@@ -171,12 +171,12 @@ public class DatamillCoPostgres extends AbstractPythonTarget implements Runnable
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("singer-target-postgres"));
+        return Property.ofValue(Collections.singletonList("singer-target-postgres"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("target-postgres");
+        return Property.ofValue("target-postgres");
     }
 
     @Override

@@ -74,7 +74,7 @@ public class GoogleSearchConsole extends AbstractPythonTap implements RunnableTa
         title = "User Agent for your OAuth Client."
     )
     @Builder.Default
-    private final Property<String> userAgent = Property.of("tap-google-search-console via Kestra");
+    private final Property<String> userAgent = Property.ofValue("tap-google-search-console via Kestra");
 
     public List<Feature> features() {
         return Arrays.asList(
@@ -102,11 +102,11 @@ public class GoogleSearchConsole extends AbstractPythonTap implements RunnableTa
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("tap-google-search-console"));
+        return Property.ofValue(Collections.singletonList("tap-google-search-console"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-google-search-console");
+        return Property.ofValue("tap-google-search-console");
     }
 }
