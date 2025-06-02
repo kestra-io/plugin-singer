@@ -96,7 +96,7 @@ public class PipelinewiseSqlServer extends AbstractPythonTap implements Runnable
         title = "Emit Date datatypes as-is without converting them to datetime."
     )
     @Builder.Default
-    private Property<Boolean> useDateDatatype = Property.of(true);
+    private Property<Boolean> useDateDatatype = Property.ofValue(true);
 
     @Schema(
         title = "TDS version to use when communicating with SQL Server (default is 7.3)."
@@ -165,11 +165,11 @@ public class PipelinewiseSqlServer extends AbstractPythonTap implements Runnable
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("tap-mssql==2.3.1"));
+        return Property.ofValue(Collections.singletonList("tap-mssql==2.3.1"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-mssql");
+        return Property.ofValue("tap-mssql");
     }
 }

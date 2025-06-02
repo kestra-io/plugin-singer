@@ -86,11 +86,11 @@ public class ChargeBee extends AbstractPythonTap implements RunnableTask<Abstrac
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("git+https://github.com/hotgluexyz/tap-chargebee.git"));
+        return Property.ofValue(Collections.singletonList("git+https://github.com/hotgluexyz/tap-chargebee.git"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-chargebee");
+        return Property.ofValue("tap-chargebee");
     }
 }

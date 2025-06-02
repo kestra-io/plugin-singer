@@ -134,12 +134,12 @@ public class GoogleAnalytics extends AbstractPythonTap implements RunnableTask<A
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("git+https://gitlab.com/meltano/tap-google-analytics.git"));
+        return Property.ofValue(Collections.singletonList("git+https://gitlab.com/meltano/tap-google-analytics.git"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-google-analytics");
+        return Property.ofValue("tap-google-analytics");
     }
 
     @Getter

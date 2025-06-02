@@ -75,11 +75,11 @@ public class Recharge extends AbstractPythonTap implements RunnableTask<Abstract
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("tap-recharge"));
+        return Property.ofValue(Collections.singletonList("tap-recharge"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-recharge");
+        return Property.ofValue("tap-recharge");
     }
 }

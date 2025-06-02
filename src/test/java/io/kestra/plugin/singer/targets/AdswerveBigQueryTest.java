@@ -51,9 +51,9 @@ class AdswerveBigQueryTest {
             .type(PipelinewiseMysql.class.getName())
             .host("172.17.0.1")
             .username("root")
-            .password(Property.of("mysql_passwd"))
-            .port(Property.of(63306))
-            .stateName(Property.of(stateName))
+            .password(Property.ofValue("mysql_passwd"))
+            .port(Property.ofValue(63306))
+            .stateName(Property.ofValue(stateName))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
                     .stream("Category")
@@ -81,12 +81,12 @@ class AdswerveBigQueryTest {
             .builder()
             .id(IdUtils.create() + "_bq")
             .type(io.kestra.plugin.singer.targets.AdswerveBigQuery.class.getName())
-            .from(Property.of(tapOutput.getRaw().toString()))
-            .stateName(Property.of(stateName))
-            .serviceAccount(Property.of(serviceAccount))
+            .from(Property.ofValue(tapOutput.getRaw().toString()))
+            .stateName(Property.ofValue(stateName))
+            .serviceAccount(Property.ofValue(serviceAccount))
             .projectId(project)
             .datasetId(dataset)
-            .location(Property.of("EU"));
+            .location(Property.ofValue("EU"));
 
         AdswerveBigQuery task = builder.build();
 

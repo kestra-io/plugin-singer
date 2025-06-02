@@ -35,9 +35,9 @@ class JsonTest {
             .type(PipelinewiseMysql.class.getName())
             .host("172.17.0.1")
             .username("root")
-            .password(Property.of("mysql_passwd"))
-            .port(Property.of(63306))
-            .stateName(Property.of(stateName))
+            .password(Property.ofValue("mysql_passwd"))
+            .port(Property.ofValue(63306))
+            .stateName(Property.ofValue(stateName))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
                     .stream("Category")
@@ -65,8 +65,8 @@ class JsonTest {
             .builder()
             .id(IdUtils.create())
             .type(DatamillCoPostgres.class.getName())
-            .from(Property.of(tapOutput.getRaw().toString()))
-            .stateName(Property.of(stateName))
+            .from(Property.ofValue(tapOutput.getRaw().toString()))
+            .stateName(Property.ofValue(stateName))
             .build();
 
         runContext = TestsUtils.mockRunContext(runContextFactory, task, ImmutableMap.of());

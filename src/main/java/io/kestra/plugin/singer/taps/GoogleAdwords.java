@@ -87,7 +87,7 @@ public class GoogleAdwords extends AbstractPythonTap implements RunnableTask<Abs
         title = "How many Days before the Start Date to fetch data for Performance Reports."
     )
     @Builder.Default
-    private final Property<Integer> conversionWindowDays = Property.of(0);
+    private final Property<Integer> conversionWindowDays = Property.ofValue(0);
 
     @Schema(
         title = "Primary Keys for the selected Entities (Streams)."
@@ -99,7 +99,7 @@ public class GoogleAdwords extends AbstractPythonTap implements RunnableTask<Abs
         title = "User Agent for your OAuth Client."
     )
     @Builder.Default
-    private final Property<String> userAgent = Property.of("tap-adwords via Kestra");
+    private final Property<String> userAgent = Property.ofValue("tap-adwords via Kestra");
 
     public List<Feature> features() {
         return Arrays.asList(
@@ -137,11 +137,11 @@ public class GoogleAdwords extends AbstractPythonTap implements RunnableTask<Abs
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("git+https://gitlab.com/meltano/tap-adwords.git"));
+        return Property.ofValue(Collections.singletonList("git+https://gitlab.com/meltano/tap-adwords.git"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-adwords");
+        return Property.ofValue("tap-adwords");
     }
 }

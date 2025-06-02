@@ -67,11 +67,11 @@ public class Fastly extends AbstractPythonTap implements RunnableTask<AbstractPy
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("git+https://gitlab.com/meltano/tap-fastly.git"));
+        return Property.ofValue(Collections.singletonList("git+https://gitlab.com/meltano/tap-fastly.git"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-fastly");
+        return Property.ofValue("tap-fastly");
     }
 }

@@ -51,14 +51,14 @@ public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPyt
         description = "Specifies whether to sync private channels or not."
     )
     @Builder.Default
-    private final Property<Boolean> privateChannels = Property.of(true);
+    private final Property<Boolean> privateChannels = Property.ofValue(true);
 
     @Schema(
         title = "Join Public Channels.",
         description = "Specifies whether to have the tap auto-join all public channels in your ogranziation."
     )
     @Builder.Default
-    private final Property<Boolean> publicChannels = Property.of(false);
+    private final Property<Boolean> publicChannels = Property.ofValue(false);
 
     @Schema(
         title = "Sync Archived Channels.",
@@ -67,7 +67,7 @@ public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPyt
             "be able to sync the data from that channel."
     )
     @Builder.Default
-    private final Property<Boolean> archivedChannels = Property.of(false);
+    private final Property<Boolean> archivedChannels = Property.ofValue(false);
 
     @Schema(
         title = "Channels to Sync.",
@@ -84,7 +84,7 @@ public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPyt
             "5 means the tap to sync 5 days of data per request, for applicable streams."
     )
     @Builder.Default
-    private final Property<Integer> dateWindowSize = Property.of(7);
+    private final Property<Integer> dateWindowSize = Property.ofValue(7);
 
     public List<Feature> features() {
         return Arrays.asList(
@@ -117,11 +117,11 @@ public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPyt
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("git+https://github.com/Mashey/tap-slack.git"));
+        return Property.ofValue(Collections.singletonList("git+https://github.com/Mashey/tap-slack.git"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-slack");
+        return Property.ofValue("tap-slack");
     }
 }

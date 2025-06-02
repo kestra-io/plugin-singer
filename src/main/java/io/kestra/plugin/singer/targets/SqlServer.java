@@ -141,12 +141,12 @@ public class SqlServer extends AbstractPythonTarget implements RunnableTask<Abst
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("target-mssql"));
+        return Property.ofValue(Collections.singletonList("target-mssql"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("target-mssql");
+        return Property.ofValue("target-mssql");
     }
 
     @Override
