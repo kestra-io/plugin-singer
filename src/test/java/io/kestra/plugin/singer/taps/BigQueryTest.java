@@ -36,10 +36,10 @@ class BigQueryTest extends TapsTest {
             .id(IdUtils.create())
             .taskRunner(Docker.instance())
             .type(BigQuery.class.getName())
-            .serviceAccount(Property.of(serviceAccount))
-            .startAlwaysInclusive(Property.of(false))
+            .serviceAccount(Property.ofValue(serviceAccount))
+            .startAlwaysInclusive(Property.ofValue(false))
             .startDateTime(Instant.parse("2013-09-08T16:19:12Z"))
-            .limit(Property.of(1))
+            .limit(Property.ofValue(1))
             .streams(Collections.singletonList(
                 BigQuery.Stream.builder()
                     .name("covid19_nyt_us_states")

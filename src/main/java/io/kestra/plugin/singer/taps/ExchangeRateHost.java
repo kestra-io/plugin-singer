@@ -71,11 +71,11 @@ public class ExchangeRateHost extends AbstractPythonTap implements RunnableTask<
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("tap-exchangeratehost"));
+        return Property.ofValue(Collections.singletonList("tap-exchangeratehost"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-exchangeratehost");
+        return Property.ofValue("tap-exchangeratehost");
     }
 }

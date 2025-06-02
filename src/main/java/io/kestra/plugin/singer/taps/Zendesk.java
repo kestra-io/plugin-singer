@@ -96,11 +96,11 @@ public class Zendesk extends AbstractPythonTap implements RunnableTask<AbstractP
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("tap-zendesk"));
+        return Property.ofValue(Collections.singletonList("tap-zendesk"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-zendesk");
+        return Property.ofValue("tap-zendesk");
     }
 }

@@ -81,7 +81,7 @@ public class MeltanoSnowflake extends AbstractPythonTarget implements RunnableTa
         title = "Whether to add metadata columns."
     )
     @Builder.Default
-    private Property<Boolean> addRecordMetadata = Property.of(true);
+    private Property<Boolean> addRecordMetadata = Property.ofValue(true);
 
     @Schema(
         title = "The default target database schema name to use for all streams."
@@ -130,12 +130,12 @@ public class MeltanoSnowflake extends AbstractPythonTarget implements RunnableTa
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("meltanolabs-target-snowflake"));
+        return Property.ofValue(Collections.singletonList("meltanolabs-target-snowflake"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("target-snowflake");
+        return Property.ofValue("target-snowflake");
     }
 
     @Override

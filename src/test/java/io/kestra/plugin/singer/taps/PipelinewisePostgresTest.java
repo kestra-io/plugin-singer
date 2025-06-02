@@ -31,9 +31,9 @@ class PipelinewisePostgresTest extends TapsTest {
             .type(PipelinewisePostgres.class.getName())
             .host("172.17.0.1")
             .username("postgres")
-            .password(Property.of("pg_passwd"))
-            .port(Property.of(65432))
-            .dbName(Property.of("postgres"))
+            .password(Property.ofValue("pg_passwd"))
+            .port(Property.ofValue(65432))
+            .dbName(Property.ofValue("postgres"))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
                     .stream("category")

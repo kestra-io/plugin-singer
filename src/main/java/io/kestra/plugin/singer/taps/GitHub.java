@@ -65,7 +65,7 @@ public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPy
         title = "Timeout for each request on github API."
     )
     @Builder.Default
-    private Property<Integer> requestTimeout = Property.of(300);
+    private Property<Integer> requestTimeout = Property.ofValue(300);
 
     public List<Feature> features() {
         return Arrays.asList(
@@ -108,11 +108,11 @@ public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPy
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("tap-github"));
+        return Property.ofValue(Collections.singletonList("tap-github"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-github");
+        return Property.ofValue("tap-github");
     }
 }

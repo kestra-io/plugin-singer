@@ -53,7 +53,7 @@ public class BigQuery extends AbstractPythonTap implements RunnableTask<Abstract
         description = "This could cause records to be missed that were created after the last run finished, but during the same second and with the same timestamp."
     )
     @Builder.Default
-    private Property<Boolean> startAlwaysInclusive = Property.of(true);
+    private Property<Boolean> startAlwaysInclusive = Property.ofValue(true);
 
     @NotNull
     @Schema(
@@ -96,12 +96,12 @@ public class BigQuery extends AbstractPythonTap implements RunnableTask<Abstract
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(List.of("git+https://github.com/kestra-io/tap-bigquery.git@fix"));
+        return Property.ofValue(List.of("git+https://github.com/kestra-io/tap-bigquery.git@fix"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-bigquery");
+        return Property.ofValue("tap-bigquery");
     }
 
     @SuppressWarnings("DuplicatedCode")

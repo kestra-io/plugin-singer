@@ -36,7 +36,7 @@ public class HubSpot extends AbstractPythonTap implements RunnableTask<AbstractP
         title = "Hubspot redirect Uri"
     )
     @PluginProperty(dynamic = true)
-    private Property<String> redirectUri = Property.of("https://api.hubspot.com/");
+    private Property<String> redirectUri = Property.ofValue("https://api.hubspot.com/");
 
     @NotNull
     @Schema(
@@ -123,11 +123,11 @@ public class HubSpot extends AbstractPythonTap implements RunnableTask<AbstractP
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("tap-hubspot"));
+        return Property.ofValue(Collections.singletonList("tap-hubspot"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-hubspot");
+        return Property.ofValue("tap-hubspot");
     }
 }

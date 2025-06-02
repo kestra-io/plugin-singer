@@ -37,9 +37,9 @@ class SqlServerTest {
             .database("msdb")
             .username("SA")
             .password("SQLServer_Passwd")
-            .port(Property.of(57037))
-            .filterDbs(Property.of(Collections.singletonList("dbo")))
-            .stateName(Property.of("before-target-test"))
+            .port(Property.ofValue(57037))
+            .filterDbs(Property.ofValue(Collections.singletonList("dbo")))
+            .stateName(Property.ofValue("before-target-test"))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
                     .stream("Categories")
@@ -69,13 +69,13 @@ class SqlServerTest {
         SqlServer target = SqlServer.builder()
             .id(IdUtils.create())
             .type(PipelinewiseSqlServer.class.getName())
-            .from(Property.of(tapOutput.getRaw().toString()))
+            .from(Property.ofValue(tapOutput.getRaw().toString()))
             .host("172.17.0.1")
             .database("msdb")
             .username("SA")
             .password("SQLServer_Passwd")
-            .port(Property.of(57037))
-            .defaultTargetSchema(Property.of("target"))
+            .port(Property.ofValue(57037))
+            .defaultTargetSchema(Property.ofValue("target"))
             .build();
 
         runContext = TestsUtils.mockRunContext(runContextFactory, target, ImmutableMap.of());
@@ -84,8 +84,8 @@ class SqlServerTest {
         assertThat(output.getStateKey(), not((nullValue())));
 
         tap = tapBuilder
-            .filterDbs(Property.of(Collections.singletonList("target")))
-            .stateName(Property.of("after-target-test"))
+            .filterDbs(Property.ofValue(Collections.singletonList("target")))
+            .stateName(Property.ofValue("after-target-test"))
             .streamsConfigurations(Collections.singletonList(
                 StreamsConfiguration.builder()
                     // SQL Server target transforms table & columns names to snake_case

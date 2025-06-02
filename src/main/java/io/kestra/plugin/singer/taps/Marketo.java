@@ -95,11 +95,11 @@ public class Marketo extends AbstractPythonTap implements RunnableTask<AbstractP
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("git+https://gitlab.com/meltano/tap-marketo.git"));
+        return Property.ofValue(Collections.singletonList("git+https://gitlab.com/meltano/tap-marketo.git"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-marketo");
+        return Property.ofValue("tap-marketo");
     }
 }

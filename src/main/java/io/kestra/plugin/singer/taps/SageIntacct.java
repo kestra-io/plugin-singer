@@ -100,11 +100,11 @@ public class SageIntacct extends AbstractPythonTap implements RunnableTask<Abstr
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("git+https://github.com/hotgluexyz/tap-intacct.git"));
+        return Property.ofValue(Collections.singletonList("git+https://github.com/hotgluexyz/tap-intacct.git"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-intacct");
+        return Property.ofValue("tap-intacct");
     }
 }

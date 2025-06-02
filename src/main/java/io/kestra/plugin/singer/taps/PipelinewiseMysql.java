@@ -81,7 +81,7 @@ public class PipelinewiseMysql extends AbstractPythonTap implements RunnableTask
         title = "If ssl is enabled."
     )
     @Builder.Default
-    private final Property<Boolean> ssl = Property.of(false);
+    private final Property<Boolean> ssl = Property.ofValue(false);
 
     @Schema(
         title = "The list of schemas to extract tables only from particular schemas and to improve data extraction performance."
@@ -92,13 +92,13 @@ public class PipelinewiseMysql extends AbstractPythonTap implements RunnableTask
         title = "Number of rows to export from MySQL in one batch."
     )
     @Builder.Default
-    private final Property<Integer> exportBatchRows = Property.of(50000);
+    private final Property<Integer> exportBatchRows = Property.ofValue(50000);
 
     @Schema(
         title = "List of SQL commands to run when a connection made. This allows to set session variables dynamically, like timeouts or charsets."
     )
     @Builder.Default
-    private final Property<List<String>> sessionSqls = Property.of(Arrays.asList(
+    private final Property<List<String>> sessionSqls = Property.ofValue(Arrays.asList(
         "SET @@session.time_zone=\"+0:00\"",
         "SET @@session.wait_timeout=28800",
         "SET @@session.net_read_timeout=3600",
@@ -137,11 +137,11 @@ public class PipelinewiseMysql extends AbstractPythonTap implements RunnableTask
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("pipelinewise-tap-mysql"));
+        return Property.ofValue(Collections.singletonList("pipelinewise-tap-mysql"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-mysql");
+        return Property.ofValue("tap-mysql");
     }
 }

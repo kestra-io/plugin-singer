@@ -34,21 +34,21 @@ public class Salesforce extends AbstractPythonTap implements RunnableTask<Abstra
         title = "This is used to switch the behavior of the tap between using Salesforce's `REST` and `BULK` APIs."
     )
     @Builder.Default
-    private final Property<ApiType> apiType = Property.of(ApiType.BULK);
+    private final Property<ApiType> apiType = Property.ofValue(ApiType.BULK);
 
     @NotNull
     @Schema(
         title = "Select by default any new fields discovered in Salesforce objects."
     )
     @Builder.Default
-    private final Property<Boolean> selectFieldsByDefault = Property.of(true);
+    private final Property<Boolean> selectFieldsByDefault = Property.ofValue(true);
 
     @NotNull
     @Schema(
         title = "Select by default any new fields discovered in Salesforce objects."
     )
     @Builder.Default
-    private final Property<Boolean> isSandbox = Property.of(false);
+    private final Property<Boolean> isSandbox = Property.ofValue(false);
 
     @Schema(
         title = "Salesforce client ID."
@@ -71,7 +71,7 @@ public class Salesforce extends AbstractPythonTap implements RunnableTask<Abstra
     )
     @PluginProperty(dynamic = true)
     @Builder.Default
-    private Property<Integer> lookbackWindow = Property.of(10);
+    private Property<Integer> lookbackWindow = Property.ofValue(10);
 
     @NotNull
     @Schema(
@@ -118,12 +118,12 @@ public class Salesforce extends AbstractPythonTap implements RunnableTask<Abstra
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("tap-salesforce"));
+        return Property.ofValue(Collections.singletonList("tap-salesforce"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-salesforce");
+        return Property.ofValue("tap-salesforce");
     }
 
     public enum ApiType {

@@ -35,7 +35,7 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
     )
     @PluginProperty
     @Builder.Default
-    private final Property<Boolean> selectFieldsByDefault = Property.of(true);
+    private final Property<Boolean> selectFieldsByDefault = Property.ofValue(true);
 
     @NotNull
     @Schema(
@@ -43,21 +43,21 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
     )
     @PluginProperty
     @Builder.Default
-    private final Property<Boolean> isSandbox = Property.of(false);
+    private final Property<Boolean> isSandbox = Property.ofValue(false);
 
     @NotNull
     @Schema(
         title = "Generate a STATE message every N records."
     )
     @Builder.Default
-    private final Property<Integer> stateMessageThreshold = Property.of(1000);
+    private final Property<Integer> stateMessageThreshold = Property.ofValue(1000);
 
     @NotNull
     @Schema(
         title = "Maximum number of threads to use."
     )
     @Builder.Default
-    private final Property<Integer> maxWorkers = Property.of(8);
+    private final Property<Integer> maxWorkers = Property.ofValue(8);
 
     @NotNull
     @NotEmpty
@@ -125,11 +125,11 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("tap-quickbooks"));
+        return Property.ofValue(Collections.singletonList("tap-quickbooks"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-quickbooks");
+        return Property.ofValue("tap-quickbooks");
     }
 }
