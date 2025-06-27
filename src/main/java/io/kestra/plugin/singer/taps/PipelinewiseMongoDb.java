@@ -71,13 +71,13 @@ public class PipelinewiseMongoDb extends AbstractPythonTap implements RunnableTa
         title = "If ssl is enabled."
     )
     @Builder.Default
-    private final Property<Boolean> ssl = Property.of(false);
+    private final Property<Boolean> ssl = Property.ofValue(false);
 
     @Schema(
         title = "Default SSL verify mode."
     )
     @Builder.Default
-    private final Property<Boolean> sslVerify = Property.of(true);
+    private final Property<Boolean> sslVerify = Property.ofValue(true);
 
     @Schema(
         title = "The name of replica set."
@@ -88,21 +88,21 @@ public class PipelinewiseMongoDb extends AbstractPythonTap implements RunnableTa
         title = "Forces the stream names to take the form `<database_name>_<collection_name>` instead of `<collection_name>`."
     )
     @Builder.Default
-    private final Property<Boolean> includeSchemaInStream = Property.of(false);
+    private final Property<Boolean> includeSchemaInStream = Property.ofValue(false);
 
     @Schema(
         title = "The size of the buffer that holds detected update operations in memory.",
         description = "For LOG_BASED only, the buffer is flushed once the size is reached."
     )
     @Builder.Default
-    private final Property<Integer> updateBufferSize = Property.of(1);
+    private final Property<Integer> updateBufferSize = Property.ofValue(1);
 
     @Schema(
         title = "The maximum amount of time in milliseconds waits for new data changes before exiting.",
         description = "For LOG_BASED only."
     )
     @Builder.Default
-    private final Property<Integer> awaitTimeMs = Property.of(1000);
+    private final Property<Integer> awaitTimeMs = Property.ofValue(1000);
 
     public List<Feature> features() {
         return Arrays.asList(
@@ -114,12 +114,12 @@ public class PipelinewiseMongoDb extends AbstractPythonTap implements RunnableTa
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("pipelinewise-tap-mongodb"));
+        return Property.ofValue(Collections.singletonList("pipelinewise-tap-mongodb"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-mongodb");
+        return Property.ofValue("tap-mongodb");
     }
 
     @Override

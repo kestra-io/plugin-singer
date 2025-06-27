@@ -127,14 +127,14 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
         description = "At the end of each batch, the rows in the batch are loaded into Redshift."
     )
     @Builder.Default
-    private final Property<Integer> batchSizeRows = Property.of(100000);
+    private final Property<Integer> batchSizeRows = Property.ofValue(100000);
 
     @Schema(
         title = "Flush and load every stream into Redshift when one batch is full.",
         description = "Warning: This may trigger the COPY command to use files with low number of records.."
     )
     @Builder.Default
-    private final Property<Boolean> flushAllStreams = Property.of(false);
+    private final Property<Boolean> flushAllStreams = Property.ofValue(false);
 
     @Schema(
         title = "The number of threads used to flush tables.",
@@ -142,13 +142,13 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
             "each CPU core. Any other positive number will create that number of threads, up to parallelism_max."
     )
     @Builder.Default
-    private final Property<Integer> parallelism = Property.of(0);
+    private final Property<Integer> parallelism = Property.ofValue(0);
 
     @Schema(
         title = "Max number of parallel threads to use when flushing tables."
     )
     @Builder.Default
-    private final Property<Integer> maxParallelism = Property.of(16);
+    private final Property<Integer> maxParallelism = Property.ofValue(16);
 
     @Schema(
         title = "Grant USAGE privilege on newly created schemas and grant SELECT privilege on newly created tables to a specific list of users or groups.",
@@ -174,7 +174,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
             "see the most recent table structures but will cause an extra query runtime."
     )
     @Builder.Default
-    private final Property<Boolean> disableTableCache = Property.of(false);
+    private final Property<Boolean> disableTableCache = Property.ofValue(false);
 
     @Schema(
         title = "Add metadata columns.",
@@ -186,7 +186,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
             "Without the `addMetadataColumns` option the deleted rows from singer taps will not be recongisable in Redshift."
     )
     @Builder.Default
-    private final Property<Boolean> addMetadataColumns = Property.of(false);
+    private final Property<Boolean> addMetadataColumns = Property.ofValue(false);
 
     @Schema(
         title = "Delete rows on Redshift.",
@@ -196,7 +196,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
             "the `addMetadataColumns` option as well."
     )
     @Builder.Default
-    private final Property<Boolean> hardDelete = Property.of(false);
+    private final Property<Boolean> hardDelete = Property.ofValue(false);
 
     @Schema(
         title = "Object type RECORD items from taps can be transformed to flattened columns by creating columns automatically.",
@@ -206,14 +206,14 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
             "enables the `addMetadataColumns` option as well.."
     )
     @Builder.Default
-    private final Property<Integer> dataFlatteningMaxLevel = Property.of(0);
+    private final Property<Integer> dataFlatteningMaxLevel = Property.ofValue(0);
 
     @Schema(
         title = "Log based and Incremental replications on tables with no Primary Key cause duplicates when merging UPDATE events.",
         description = "When set to true, stop loading data if no Primary Key is defined.."
     )
     @Builder.Default
-    private final Property<Boolean> primaryKeyRequired = Property.of(true);
+    private final Property<Boolean> primaryKeyRequired = Property.ofValue(true);
 
     @Schema(
         title = "Validate every single record message to the corresponding JSON schema.",
@@ -221,20 +221,20 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
             "Redshift. Enabling this option will detect invalid records earlier but could cause performance degradation.."
     )
     @Builder.Default
-    private final Property<Boolean> validateRecords = Property.of(false);
+    private final Property<Boolean> validateRecords = Property.ofValue(false);
 
     @Schema(
         title = "Do not update existing records when Primary Key is defined. ",
         description = "Useful to improve performance when records are immutable, e.g. events."
     )
     @Builder.Default
-    private final Property<Boolean> skipUpdates = Property.of(false);
+    private final Property<Boolean> skipUpdates = Property.ofValue(false);
 
     @Schema(
         title = "The compression method to use when writing files to S3 and running Redshift COPY."
     )
     @Builder.Default
-    private final Property<Compression> compression = Property.of(Compression.bzip2);
+    private final Property<Compression> compression = Property.ofValue(Compression.bzip2);
 
     @Schema(
         title = "number of slices to split files into prior to running COPY on Redshift.",
@@ -242,7 +242,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
             "the node size of the cluster - run SELECT COUNT(DISTINCT slice) slices FROM stv_slices to calculate this."
     )
     @Builder.Default
-    private final Property<Integer> slices = Property.of(1);
+    private final Property<Integer> slices = Property.ofValue(1);
 
     @Override
     public Map<String, Object> configuration(RunContext runContext) throws IllegalVariableEvaluationException {
@@ -305,12 +305,12 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("pipelinewise-target-redshift"));
+        return Property.ofValue(Collections.singletonList("pipelinewise-target-redshift"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("target-redshift");
+        return Property.ofValue("target-redshift");
     }
 
     @Override

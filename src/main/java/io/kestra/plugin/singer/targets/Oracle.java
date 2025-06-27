@@ -129,12 +129,12 @@ public class Oracle extends AbstractPythonTarget implements RunnableTask<Abstrac
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(List.of("oracledb", "git+https://github.com/kestra-io/target-oracle.git"));
+        return Property.ofValue(List.of("oracledb", "git+https://github.com/kestra-io/target-oracle.git"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("target-oracle");
+        return Property.ofValue("target-oracle");
     }
 
     @Override

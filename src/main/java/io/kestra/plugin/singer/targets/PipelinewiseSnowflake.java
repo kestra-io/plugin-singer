@@ -129,7 +129,7 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
         title = "Maximum number of rows in each batch. At the end of each batch, the rows in the batch are loaded into Snowflake. "
     )
     @Builder.Default
-    private Property<Integer> batchSizeRows = Property.of(100000);
+    private Property<Integer> batchSizeRows = Property.ofValue(100000);
 
     @Schema(
         title = "Maximum time to wait for batch to reach `batch_size_rows`. "
@@ -140,19 +140,19 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
     @Schema(
         title = "Flush and load every stream into Snowflake when one batch is full. Warning: This may trigger the COPY command to use files with low number of records, and may cause performance problems. "
     )
-    private Property<Boolean> flushAllStreams = Property.of(false);
+    private Property<Boolean> flushAllStreams = Property.ofValue(false);
 
     @Schema(
         title = "The number of threads used to flush tables. 0 will create a thread for each stream, up to parallelism_max. -1 will create a thread for each CPU core. Any other positive number will create that number of threads, up to parallelism_max. "
     )
     @Builder.Default
-    private Property<Integer> parallelism = Property.of(0);
+    private Property<Integer> parallelism = Property.ofValue(0);
 
     @Schema(
         title = "Max number of parallel threads to use when flushing tables. "
     )
     @Builder.Default
-    private Property<Integer> parallelismMax = Property.of(16);
+    private Property<Integer> parallelismMax = Property.ofValue(16);
 
     @Schema(
         title = "Name of the schema where the tables will be created, **without** database prefix. If `schema_mapping` is not defined then every stream sent by the tap is loaded into this schema.    "
@@ -173,7 +173,7 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
         title = "By default the connector caches the available table structures in Snowflake at startup. In this way it doesn't need to run additional queries when ingesting data to check if altering the target tables is required. With `disable_table_cache` option you can turn off this caching. You will always see the most recent table structures but will cause an extra query runtime."
     )
     @Builder.Default
-    private Property<Boolean> disableTableCache = Property.of(false);
+    private Property<Boolean> disableTableCache = Property.ofValue(false);
 
     @Schema(
         title = "When this is defined, Client-Side Encryption is enabled. The data in S3 will be encrypted. No third parties, including Amazon AWS and any ISPs, can see data in the clear. Snowflake COPY command will decrypt the data once it is in Snowflake. The master key must be 256-bit length and must be encoded as base64 string."
@@ -185,37 +185,37 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
     )
 
     @Builder.Default
-    private Property<Boolean> addMetadataColumns = Property.of(false);
+    private Property<Boolean> addMetadataColumns = Property.ofValue(false);
 
     @Schema(
         title = "When `hardDelete` option is true, then DELETE SQL commands will be performed in Snowflake to delete rows in tables. It is achieved by continuously checking the  `_SDC_DELETED_AT` metadata column sent by the singer tap. Due to deleting rows requiring metadata columns, `hard_delete` option automatically enables the `add_metadata_columns` option as well."
     )
     @Builder.Default
-    private Property<Boolean> hardDelete = Property.of(false);
+    private Property<Boolean> hardDelete = Property.ofValue(false);
 
     @Schema(
         title = "(Default: 0) Object type RECORD items from taps can be loaded into VARIANT columns as JSON (default) or we can flatten the schema by creating columns automatically.<br><br>When value is 0 (default) then flattening functionality is turned off."
     )
     @Builder.Default
-    private Property<Integer> dataFlatteningMaxLevel = Property.of(0);
+    private Property<Integer> dataFlatteningMaxLevel = Property.ofValue(0);
 
     @Schema(
         title = "Log based and Incremental replications on tables with no Primary Key cause duplicates when merging UPDATE events. When set to true, stop loading data if no Primary Key is defined."
     )
     @Builder.Default
-    private Property<Boolean> primaryKeyRequired = Property.of(true);
+    private Property<Boolean> primaryKeyRequired = Property.ofValue(true);
 
     @Schema(
         title = "Validate every single record message to the corresponding JSON schema. This option is disabled by default and invalid RECORD messages will fail only at load time by Snowflake. Enabling this option will detect invalid records earlier but could cause performance degradation."
     )
     @Builder.Default
-    private Property<Boolean> validateRecords = Property.of(false);
+    private Property<Boolean> validateRecords = Property.ofValue(false);
 
     @Schema(
         title = "Generate uncompressed files when loading to Snowflake. Normally, by default GZIP compressed files are generated. "
     )
     @Builder.Default
-    private Property<Boolean> noCompression = Property.of(false);
+    private Property<Boolean> noCompression = Property.ofValue(false);
 
     @Schema(
         title = "Optional string to tag executed queries in Snowflake. Replaces tokens `{{database}}`, `{{schema}}` and `{{table}}` with the appropriate values. The tags are displayed in the output of the Snowflake `QUERY_HISTORY`, `QUERY_HISTORY_BY_*` functions. "
@@ -226,7 +226,7 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
         title = "When enabled, the files loaded to Snowflake will also be stored in `archive_load_files_s3_bucket` under the key `/{archive_load_files_s3_prefix}/{schema_name}/{table_name}/`. All archived files will have `tap`, `schema`, `table` and `archived-by` as S3 metadata keys. When incremental replication is used, the archived files will also have the following S3 metadata keys: `incremental-key`, `incremental-key-min` and `incremental-key-max`"
     )
     @Builder.Default
-    private Property<Boolean> archiveLoadFiles = Property.of(false);
+    private Property<Boolean> archiveLoadFiles = Property.ofValue(false);
 
     @Schema(
         title = "(Default: `archive`) When `archive_load_files` is enabled, the archived files will be placed in the archive S3 bucket under this prefix."
@@ -380,12 +380,12 @@ public class PipelinewiseSnowflake extends AbstractPythonTarget implements Runna
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("pipelinewise-target-snowflake\n"));
+        return Property.ofValue(Collections.singletonList("pipelinewise-target-snowflake\n"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("target-snowflake");
+        return Property.ofValue("target-snowflake");
     }
 
     @Override

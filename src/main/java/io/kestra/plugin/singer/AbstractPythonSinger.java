@@ -69,7 +69,7 @@ public abstract class AbstractPythonSinger extends Task {
     )
     @NotNull
     @Builder.Default
-    protected Property<String> stateName = Property.of("singer-state");
+    protected Property<String> stateName = Property.ofValue("singer-state");
 
     @Schema(
         title = "Override default pip packages to use a specific version."
@@ -98,7 +98,7 @@ public abstract class AbstractPythonSinger extends Task {
 
     @Schema(title = "The task runner container image, only used if the task runner is container-based.")
     @Builder.Default
-    private Property<String> containerImage = Property.of(DEFAULT_IMAGE);
+    private Property<String> containerImage = Property.ofValue(DEFAULT_IMAGE);
 
     protected DockerOptions injectDefaults(DockerOptions original) {
         if (original == null) {
@@ -143,12 +143,12 @@ public abstract class AbstractPythonSinger extends Task {
             .withTaskRunner(taskRunner)
             .withContainerImage(runContext.render(this.containerImage).as(String.class).orElseThrow())
             .withLogConsumer(logConsumer)
-            .withInterpreter(Property.of(List.of("/bin/sh", "-c")))
-            .withBeforeCommands(Property.of(Stream.of(
+            .withInterpreter(Property.ofValue(List.of("/bin/sh", "-c")))
+            .withBeforeCommands(Property.ofValue(Stream.of(
                     pipInstallCommands(runContext),
                     logSetupCommands()
                 ).flatMap(Function.identity()).toList()))
-            .withCommands(Property.of(List.of(command)))
+            .withCommands(Property.ofValue(List.of(command)))
             .withEnv(this.environmentVariables(runContext))
             .run();
     }

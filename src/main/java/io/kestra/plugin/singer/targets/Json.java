@@ -47,12 +47,12 @@ public class Json extends AbstractPythonTarget implements RunnableTask<Json.Outp
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("target-jsonl"));
+        return Property.ofValue(Collections.singletonList("target-jsonl"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("target-jsonl");
+        return Property.ofValue("target-jsonl");
     }
 
     @Override

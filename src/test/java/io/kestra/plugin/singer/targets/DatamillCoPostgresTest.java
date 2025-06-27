@@ -36,9 +36,9 @@ class DatamillCoPostgresTest {
             .type(PipelinewiseMysql.class.getName())
             .host("172.17.0.1")
             .username("root")
-            .password(Property.of("mysql_passwd"))
-            .port(Property.of(63306))
-            .stateName(Property.of(stateName))
+            .password(Property.ofValue("mysql_passwd"))
+            .port(Property.ofValue(63306))
+            .stateName(Property.ofValue(stateName))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
                     .stream("Category")
@@ -66,13 +66,13 @@ class DatamillCoPostgresTest {
             .builder()
             .id(IdUtils.create())
             .type(io.kestra.plugin.singer.targets.DatamillCoPostgres.class.getName())
-            .from(Property.of(tapOutput.getRaw().toString()))
-            .stateName(Property.of(stateName))
+            .from(Property.ofValue(tapOutput.getRaw().toString()))
+            .stateName(Property.ofValue(stateName))
             .host("172.17.0.1")
             .username("postgres")
-            .password(Property.of("pg_passwd"))
-            .port(Property.of(65432))
-            .dbName(Property.of("sync"));
+            .password(Property.ofValue("pg_passwd"))
+            .port(Property.ofValue(65432))
+            .dbName(Property.ofValue("sync"));
 
         DatamillCoPostgres task = builder.build();
 

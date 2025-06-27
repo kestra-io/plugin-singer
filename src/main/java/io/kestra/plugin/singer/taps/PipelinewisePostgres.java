@@ -63,31 +63,31 @@ public class PipelinewisePostgres extends AbstractPythonTap implements RunnableT
         title = "If ssl is enabled."
     )
     @Builder.Default
-    private final Property<Boolean> ssl = Property.of(false);
+    private final Property<Boolean> ssl = Property.ofValue(false);
 
     @Schema(
         title = "Stop running the tap when no data received from wal after certain number of seconds."
     )
     @Builder.Default
-    private final Property<Integer> logicalPollSeconds = Property.of(10800);
+    private final Property<Integer> logicalPollSeconds = Property.ofValue(10800);
 
     @Schema(
         title = "Stop running the tap if the newly received lsn is after the max lsn that was detected when the tap started."
     )
     @Builder.Default
-    private final Property<Boolean> breakAtEndLsn = Property.of(true);
+    private final Property<Boolean> breakAtEndLsn = Property.ofValue(true);
 
     @Schema(
         title = "Stop running the tap after certain number of seconds."
     )
     @Builder.Default
-    private final Property<Integer> maxRunSeconds = Property.of(43200);
+    private final Property<Integer> maxRunSeconds = Property.ofValue(43200);
 
     @Schema(
         title = "If set to \"true\" then add _sdc_lsn property to the singer messages to debug postgres LSN position in the WAL stream."
     )
     @Builder.Default
-    private final Property<Boolean> debugLsn = Property.of(false);
+    private final Property<Boolean> debugLsn = Property.ofValue(false);
 
     @Schema(
         title = "The list of schemas to extract tables only from particular schemas and to improve data extraction performance"
@@ -126,11 +126,11 @@ public class PipelinewisePostgres extends AbstractPythonTap implements RunnableT
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(List.of("pipelinewise-tap-postgres"));
+        return Property.ofValue(List.of("pipelinewise-tap-postgres"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-postgres");
+        return Property.ofValue("tap-postgres");
     }
 }

@@ -115,11 +115,11 @@ public class PipelinewiseOracle extends AbstractPythonTap implements RunnableTas
 
     @Override
     public Property<List<String>> pipPackages() {
-        return Property.of(Collections.singletonList("pipelinewise-tap-oracle"));
+        return Property.ofValue(Collections.singletonList("pipelinewise-tap-oracle"));
     }
 
     @Override
     protected Property<String> command() {
-        return Property.of("tap-oracle");
+        return Property.ofValue("tap-oracle");
     }
 }

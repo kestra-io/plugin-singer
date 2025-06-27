@@ -31,8 +31,8 @@ class PipelinewiseMysqlTest extends TapsTest {
             .type(PipelinewiseMysql.class.getName())
             .host("172.17.0.1")
             .username("root")
-            .password(Property.of("mysql_passwd"))
-            .port(Property.of(63306))
+            .password(Property.ofValue("mysql_passwd"))
+            .port(Property.ofValue(63306))
             .streamsConfigurations(Arrays.asList(
                 StreamsConfiguration.builder()
                     .stream("Category")
