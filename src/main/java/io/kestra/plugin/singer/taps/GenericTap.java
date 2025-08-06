@@ -21,24 +21,25 @@ import java.util.Map;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data using a generic Singer tap."
 )
+@Deprecated(forRemoval = true, since = "0.24")
 public class GenericTap extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "The list of pip package to install."
     )
     private Property<List<String>> pipPackages;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "The command to start."
     )
     private Property<String> command;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "The list of feature the connector supports."
     )
     @Builder.Default
@@ -49,7 +50,7 @@ public class GenericTap extends AbstractPythonTap implements RunnableTask<Abstra
     );
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "The configuration to use",
         description = "Will be save on config.json and used as arguments"
     )

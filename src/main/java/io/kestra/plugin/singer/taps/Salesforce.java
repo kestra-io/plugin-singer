@@ -24,48 +24,49 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from a Salesforce account with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/singer-io/tap-salesforce)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class Salesforce extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "This is used to switch the behavior of the tap between using Salesforce's `REST` and `BULK` APIs."
     )
     @Builder.Default
     private final Property<ApiType> apiType = Property.ofValue(ApiType.BULK);
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Select by default any new fields discovered in Salesforce objects."
     )
     @Builder.Default
     private final Property<Boolean> selectFieldsByDefault = Property.ofValue(true);
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Select by default any new fields discovered in Salesforce objects."
     )
     @Builder.Default
     private final Property<Boolean> isSandbox = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Salesforce client ID."
     )
     private Property<String> clientId;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Salesforce client secret."
     )
     private Property<String> clientSecret;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Salesforce refresh token."
     )
     private Property<String> refreshToken;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The lookback_window.",
         description = "(in seconds) subtracts the desired amount of seconds from the bookmark to sync past data. Recommended value: 10 seconds."
     )
@@ -74,7 +75,7 @@ public class Salesforce extends AbstractPythonTap implements RunnableTask<Abstra
     private Property<Integer> lookbackWindow = Property.ofValue(10);
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
     )

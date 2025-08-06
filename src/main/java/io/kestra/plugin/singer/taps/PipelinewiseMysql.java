@@ -25,7 +25,7 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from a MySQL database with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://transferwise.github.io/pipelinewise/connectors/taps/mysql.html)."
 )
@@ -49,10 +49,11 @@ import jakarta.validation.constraints.NotNull;
         )
     }
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class PipelinewiseMysql extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database hostname."
     )
     @PluginProperty(dynamic = true)
@@ -60,41 +61,41 @@ public class PipelinewiseMysql extends AbstractPythonTap implements RunnableTask
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user."
     )
     @PluginProperty(dynamic = true)
     private String username;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user's password."
     )
     private Property<String> password;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database port."
     )
     private Property<Integer> port;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "If ssl is enabled."
     )
     @Builder.Default
     private final Property<Boolean> ssl = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The list of schemas to extract tables only from particular schemas and to improve data extraction performance."
     )
     private Property<List<String>> filterDbs;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Number of rows to export from MySQL in one batch."
     )
     @Builder.Default
     private final Property<Integer> exportBatchRows = Property.ofValue(50000);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "List of SQL commands to run when a connection made. This allows to set session variables dynamically, like timeouts or charsets."
     )
     @Builder.Default

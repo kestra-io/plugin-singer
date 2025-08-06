@@ -25,14 +25,15 @@ import static io.kestra.core.utils.Rethrow.throwFunction;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Load data into a CSV file with a Singer target.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/adswerve/target-bigquery)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class Csv extends AbstractPythonTarget implements RunnableTask<Csv.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "A one-character string used to separate fields."
     )
     @PluginProperty(dynamic = true)
@@ -41,7 +42,7 @@ public class Csv extends AbstractPythonTarget implements RunnableTask<Csv.Output
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "A one-character string used to quote fields containing special characters, such as the delimiter or quotechar, or which contain new-line characters."
     )
     @PluginProperty(dynamic = true)
@@ -99,12 +100,12 @@ public class Csv extends AbstractPythonTarget implements RunnableTask<Csv.Output
     @Builder
     @Getter
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(
+        @Schema(deprecated = true,
             title = "Key of the state file stored in the KV Store"
         )
         private final String stateKey;
 
-        @Schema(
+        @Schema(deprecated = true,
             title = "URIs of the generated CSV files",
             description = "The key corresponds to the name of the stream"
         )

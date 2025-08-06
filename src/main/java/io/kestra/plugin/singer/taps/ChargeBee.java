@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -27,14 +28,15 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from a ChargeBee account with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/hotgluexyz/tap-chargebee)."
 )
+@Deprecated(forRemoval = true, since = "0.24")
 public class ChargeBee extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Your API Key."
     )
     @PluginProperty(dynamic = true)
@@ -42,7 +44,7 @@ public class ChargeBee extends AbstractPythonTap implements RunnableTask<Abstrac
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Your site URL.",
         description = "mostly in the form {site}.chargebee.com"
     )
@@ -51,14 +53,14 @@ public class ChargeBee extends AbstractPythonTap implements RunnableTask<Abstrac
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The version of product catalog wanted."
     )
     @PluginProperty(dynamic = true)
     private final String productCatalog = "1.0";
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
     )

@@ -28,56 +28,57 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from Google Adwords with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://gitlab.com/meltano/tap-google-analytics)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class GoogleAnalytics extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
-    @Schema(
+    @Schema(deprecated = true,
         title = "Service account as json."
     )
     private Property<String> serviceAccount;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "OAuth Client ID"
     )
     private Property<String> oauthClientId;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "OAuth Client Secret."
     )
     private Property<String> oauthClientSecret;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "OAuth Access Token."
     )
     private Property<String> oauthAccessToken;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "OAuth Refresh Token."
     )
     private Property<String> oauthRefreshToken;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "OAuth Refresh Token."
     )
     private Property<String> view_id;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Reports."
     )
     @PluginProperty(dynamic = true)
     private List<Report> reports;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
     )
     @PluginProperty(dynamic = true)
     private LocalDate startDate;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Date up to when historical data will be extracted."
     )
     @PluginProperty(dynamic = true)

@@ -43,7 +43,7 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger implements 
     @Getter(AccessLevel.NONE)
     protected transient Pair<File, OutputStream> rawSingerStream;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The list of stream configurations"
     )
     @PluginProperty
@@ -180,14 +180,14 @@ public abstract class AbstractPythonTap extends AbstractPythonSinger implements 
     @Builder
     @Getter
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(
+        @Schema(deprecated = true,
             title = "Raw singer streams",
             description = "Json multiline file with raw singer format that can be passed to a target"
         )
         @PluginProperty(additionalProperties = URI.class)
         private final URI raw;
 
-        @Schema(
+        @Schema(deprecated = true,
             title = "Counter of stream items"
         )
         private final Long count;

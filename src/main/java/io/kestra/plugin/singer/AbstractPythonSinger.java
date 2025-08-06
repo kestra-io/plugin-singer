@@ -64,30 +64,30 @@ public abstract class AbstractPythonSinger extends Task {
     @Getter(AccessLevel.NONE)
     protected transient Path workingDirectory;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The name of Singer state file stored in KV Store."
     )
     @NotNull
     @Builder.Default
     protected Property<String> stateName = Property.ofValue("singer-state");
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Override default pip packages to use a specific version."
     )
     protected Property<List<String>> pipPackages;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Override default singer command."
     )
     protected Property<String> command;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Deprecated, use 'taskRunner' instead"
     )
     @PluginProperty
     private DockerOptions docker;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The task runner to use.",
         description = "Task runners are provided by plugins, each have their own properties."
     )
@@ -96,7 +96,7 @@ public abstract class AbstractPythonSinger extends Task {
     @Valid
     private TaskRunner<?> taskRunner = Docker.instance();
 
-    @Schema(title = "The task runner container image, only used if the task runner is container-based.")
+    @Schema(deprecated = true,title = "The task runner container image, only used if the task runner is container-based.")
     @Builder.Default
     private Property<String> containerImage = Property.ofValue(DEFAULT_IMAGE);
 

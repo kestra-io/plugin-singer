@@ -24,69 +24,70 @@ import java.util.Map;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Load data into an Oracle database with a Singer target.",
     description = "Full documentation can be found on the [GitHub Repo](https://hub.meltano.com/loaders/target-oracle/)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class Oracle extends AbstractPythonTarget implements RunnableTask<AbstractPythonTarget.Output> {
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database hostname."
     )
     @PluginProperty(dynamic = true)
     private String host;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database name."
     )
     private Property<String> database;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database port."
     )
     private Property<Integer> port;
 
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user."
     )
     @PluginProperty(dynamic = true)
     private String username;
 
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user's password."
     )
     @PluginProperty(dynamic = true)
     private String password;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "SQLAlchemy driver name."
     )
     private Property<String> driverName;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Use float data type for numbers (otherwise number type is used)."
     )
     private Property<Boolean> preferFloatOverNumeric;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Config object for stream maps capability."
     )
     private Property<String> streamMaps;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "User-defined config values to be used within map expressions."
     )
     private Property<String> streamMapConfig;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Enable schema flattening and automatically expand nested properties."
     )
     private Property<Boolean> flatteningEnabled;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The max depth to flatten schemas."
     )
     private Property<Integer> flatteningMaxDepth;

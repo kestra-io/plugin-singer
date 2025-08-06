@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -24,14 +25,15 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from Bing Ads with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/singer-io/tap-bing-ads)."
 )
+@Deprecated(forRemoval = true, since = "0.24")
 public class BingAds extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Your developer token for Bing Ads application."
     )
     @PluginProperty(dynamic = true)
@@ -39,7 +41,7 @@ public class BingAds extends AbstractPythonTap implements RunnableTask<AbstractP
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Your OAuth Client ID."
     )
     @PluginProperty(dynamic = true)
@@ -47,7 +49,7 @@ public class BingAds extends AbstractPythonTap implements RunnableTask<AbstractP
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Your OAuth Client Secret."
     )
     @PluginProperty(dynamic = true)
@@ -55,7 +57,7 @@ public class BingAds extends AbstractPythonTap implements RunnableTask<AbstractP
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The Refresh Token generated through the OAuth flow run using your OAuth Client and your Developer Token."
     )
     @PluginProperty(dynamic = true)
@@ -63,7 +65,7 @@ public class BingAds extends AbstractPythonTap implements RunnableTask<AbstractP
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Your Customer ID."
     )
     @PluginProperty(dynamic = true)
@@ -71,14 +73,14 @@ public class BingAds extends AbstractPythonTap implements RunnableTask<AbstractP
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Your accounts IDs."
     )
     @PluginProperty(dynamic = true)
     private List<String> accountIds;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
     )

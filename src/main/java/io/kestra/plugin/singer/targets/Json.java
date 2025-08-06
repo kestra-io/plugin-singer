@@ -23,10 +23,11 @@ import static io.kestra.core.utils.Rethrow.throwFunction;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Load data into JSON files with a Singer target.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/andyh1203/target-jsonl)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class Json extends AbstractPythonTarget implements RunnableTask<Json.Output> {
     private File destinationDirectory() {
         return new File(workingDirectory.toFile(), "destination");
@@ -78,12 +79,12 @@ public class Json extends AbstractPythonTarget implements RunnableTask<Json.Outp
     @Builder
     @Getter
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(
+        @Schema(deprecated = true,
             title = "Key of the state in KV Store"
         )
         private final String stateKey;
 
-        @Schema(
+        @Schema(deprecated = true,
             title = "URI of the generated CSV.",
             description = "The key will be the name of the stream."
         )

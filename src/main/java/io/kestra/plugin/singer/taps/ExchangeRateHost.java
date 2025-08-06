@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -23,13 +24,14 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from an exchangerate.host API with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/anelendata/tap-exchangeratehost)."
 )
+@Deprecated(forRemoval = true, since = "0.24")
 public class ExchangeRateHost extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The exchange rates currency used for conversion."
     )
     @PluginProperty(dynamic = true)
@@ -37,14 +39,14 @@ public class ExchangeRateHost extends AbstractPythonTap implements RunnableTask<
     private final String base = "EUR";
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
     )
     @PluginProperty(dynamic = true)
     private LocalDate startDate;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Date up to when historical data will be extracted."
     )
     @PluginProperty(dynamic = true)

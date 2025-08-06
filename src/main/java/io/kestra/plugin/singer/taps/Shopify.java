@@ -24,14 +24,15 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from a Shopify account with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/singer-io/tap-shopify)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class Shopify extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Shopify shop.",
         description = "Ex. my-first-store"
     )
@@ -40,14 +41,14 @@ public class Shopify extends AbstractPythonTap implements RunnableTask<AbstractP
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Shopify password."
     )
     @PluginProperty(dynamic = true)
     private String apiKey;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
     )

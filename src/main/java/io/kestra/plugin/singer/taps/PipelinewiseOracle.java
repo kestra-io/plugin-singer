@@ -25,7 +25,7 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from an Oracle database with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/transferwise/pipelinewise-tap-oracle)."
 )
@@ -50,10 +50,11 @@ import jakarta.validation.constraints.NotNull;
         )
     }
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class PipelinewiseOracle extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database hostname."
     )
     @PluginProperty(dynamic = true)
@@ -61,30 +62,30 @@ public class PipelinewiseOracle extends AbstractPythonTap implements RunnableTas
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user."
     )
     @PluginProperty(dynamic = true)
     private String username;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user's password."
     )
     private Property<String> password;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database port."
     )
     private Property<Integer> port;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database SID."
     )
     private Property<String> sid;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The schemas to filter."
     )
     private Property<String> filterSchemas;
