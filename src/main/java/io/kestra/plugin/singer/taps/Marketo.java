@@ -26,14 +26,15 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from a Marketo account with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://gitlab.com/meltano/tap-marketo.git)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class Marketo extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Endpoint URL.",
         description = "The base URL contains the account id (a.k.a. Munchkin id) and is therefore unique for each " +
             "Marketo subscription. Your base URL is found by logging into Marketo and navigating to the " +
@@ -45,7 +46,7 @@ public class Marketo extends AbstractPythonTap implements RunnableTask<AbstractP
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Identity.",
         description = "Identity is found directly below the endpoint entry." +
             "https://developers.marketo.com/rest-api/base-url/"
@@ -55,7 +56,7 @@ public class Marketo extends AbstractPythonTap implements RunnableTask<AbstractP
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Marketo client ID."
     )
     @PluginProperty(dynamic = true)
@@ -63,14 +64,14 @@ public class Marketo extends AbstractPythonTap implements RunnableTask<AbstractP
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Marketo client secret."
     )
     @PluginProperty(dynamic = true)
     private String clientSecret;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
     )

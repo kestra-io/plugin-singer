@@ -27,14 +27,15 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from a Stripe account with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/meltano/tap-stripe.git)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class Stripe extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Stripe account ID.",
         description = "Ex. acct_1a2b3c4d5e"
     )
@@ -43,14 +44,14 @@ public class Stripe extends AbstractPythonTap implements RunnableTask<AbstractPy
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Stripe secret API key."
     )
     @PluginProperty(dynamic = true)
     private String clientSecret;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
     )

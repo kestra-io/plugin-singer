@@ -26,41 +26,42 @@ import java.util.Map;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from the HubSpot API with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/singer-io/tap-hubspot)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class HubSpot extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Hubspot redirect Uri"
     )
     @PluginProperty(dynamic = true)
     private Property<String> redirectUri = Property.ofValue("https://api.hubspot.com/");
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Hubspot client Id"
     )
     @PluginProperty(dynamic = true)
     private Property<String> clientId;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Hubspot client Secret"
     )
     @PluginProperty(dynamic = true)
     private Property<String> clientSecret;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Hubspot refresh Token"
     )
     @PluginProperty(dynamic = true)
     private Property<String> refreshToken;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Hubspot api Key (for development)",
         description = "As an alternative to OAuth 2.0 authentication during development, you may specify an API key to authenticate with the HubSpot API." +
             "This should be used only for low-volume development work, as the HubSpot API Usage Guidelines specify that integrations should use OAuth for authentication."
@@ -69,7 +70,7 @@ public class HubSpot extends AbstractPythonTap implements RunnableTask<AbstractP
     private Property<String> apiKey;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Request timeout",
         description = "In seconds"
     )
@@ -77,7 +78,7 @@ public class HubSpot extends AbstractPythonTap implements RunnableTask<AbstractP
     private Property<Integer> requestTimeout;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
     )

@@ -23,14 +23,15 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Load data into a BigQuery with a Singer target.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/adswerve/target-bigquery)."
 )
+@Deprecated(forRemoval = true, since = "0.24")
 public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTask<AbstractPythonTarget.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The BigQuery project."
     )
     @PluginProperty(dynamic = true)
@@ -38,68 +39,68 @@ public class AdswerveBigQuery extends AbstractPythonTarget implements RunnableTa
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The BigQuery dataset."
     )
     @PluginProperty(dynamic = true)
     private String datasetId;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The Dataset location."
     )
     private Property<String> location;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Validate every single record message to the corresponding JSON schema.",
         description = "This option is disabled by default and invalid RECORD messages will fail only at load time by " +
             "Postgres. Enabling this option will detect invalid records earlier but could cause performance degradation.."
     )
     private final Property<Boolean> validateRecords = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Add singer Metadata columns.",
         description = "Add `_time_extracted` and `_time_loaded` metadata columns."
     )
     @Builder.Default
     private final Property<Boolean> addMetadataColumns = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The replication method, `append` or `truncate`."
     )
     @Builder.Default
     private final Property<ReplicationMethod> replicationMethod = Property.ofValue(ReplicationMethod.append);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Add prefix to table name."
     )
     private Property<String> tablePrefix;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Add suffix to table name."
     )
     private Property<String> tableSuffix;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Maximum cache size in MB."
     )
     @PluginProperty
     @Builder.Default
     private final Property<Integer> maxCache = Property.ofValue(50);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The JSON service account key as string."
     )
     protected Property<String> serviceAccount;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Enable control state flush.",
         description = "default: merges multiple state messages from the tap into the state file, if true : uses the last state message as the state file."
     )
     @Builder.Default
     protected Property<Boolean> mergeStateMessages = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Table configs."
     )
     protected Property<Map<String, Object>> tableConfigs;

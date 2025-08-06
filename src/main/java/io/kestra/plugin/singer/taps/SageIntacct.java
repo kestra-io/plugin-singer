@@ -24,14 +24,15 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from a Sage Intacct account with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/hotgluexyz/tap-intacct)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class SageIntacct extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Company Id."
     )
     @PluginProperty(dynamic = true)
@@ -39,7 +40,7 @@ public class SageIntacct extends AbstractPythonTap implements RunnableTask<Abstr
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Intacct Sender ID."
     )
     @PluginProperty(dynamic = true)
@@ -47,7 +48,7 @@ public class SageIntacct extends AbstractPythonTap implements RunnableTask<Abstr
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Intacct Sender Password."
     )
     @PluginProperty(dynamic = true)
@@ -55,7 +56,7 @@ public class SageIntacct extends AbstractPythonTap implements RunnableTask<Abstr
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Intacct User ID."
     )
     @PluginProperty(dynamic = true)
@@ -63,14 +64,14 @@ public class SageIntacct extends AbstractPythonTap implements RunnableTask<Abstr
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Intacct User Password."
     )
     @PluginProperty(dynamic = true)
     private String userPassword;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
     )

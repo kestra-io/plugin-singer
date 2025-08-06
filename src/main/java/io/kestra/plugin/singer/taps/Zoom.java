@@ -24,27 +24,28 @@ import java.util.Map;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from a Zoom account with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/mashey/tap-zoom)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class Zoom extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
-    @Schema(
+    @Schema(deprecated = true,
         title = "Zoom JSON Web Token."
     )
     private Property<String> jwt;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Zoom client id."
     )
     private Property<String> clientId;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Zoom Client secret."
     )
     private Property<String> clientSecret;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Zoom refresh token."
     )
     private Property<String> refreshToken;

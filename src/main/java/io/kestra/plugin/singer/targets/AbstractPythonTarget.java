@@ -33,7 +33,7 @@ public abstract class AbstractPythonTarget extends AbstractPythonSinger {
     private static final TypeReference<Map<String, Object>> TYPE_REFERENCE = new TypeReference<>() {
     };
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The raw data from a tap."
     )
     @NotNull
@@ -92,7 +92,7 @@ public abstract class AbstractPythonTarget extends AbstractPythonSinger {
     @Builder
     @Getter
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(
+        @Schema(deprecated = true,
             title = "Key of the state in KV Store"
         )
         private final String stateKey;

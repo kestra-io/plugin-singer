@@ -24,14 +24,15 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "A Singer tap to fetch data from Google Adwords.",
     description = "Full documentation can be found [here](https://gitlab.com/meltano/tap-adwords)"
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class GoogleAdwords extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Your developer token for Google AdWord application."
     )
     @PluginProperty(dynamic = true)
@@ -39,7 +40,7 @@ public class GoogleAdwords extends AbstractPythonTap implements RunnableTask<Abs
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Your Google OAuth Client ID."
     )
     @PluginProperty(dynamic = true)
@@ -47,7 +48,7 @@ public class GoogleAdwords extends AbstractPythonTap implements RunnableTask<Abs
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Your Google OAuth Client Secret."
     )
     @PluginProperty(dynamic = true)
@@ -55,7 +56,7 @@ public class GoogleAdwords extends AbstractPythonTap implements RunnableTask<Abs
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The Refresh Token generated through the OAuth flow run using your OAuth Client and your developer token."
     )
     @PluginProperty(dynamic = true)
@@ -63,39 +64,39 @@ public class GoogleAdwords extends AbstractPythonTap implements RunnableTask<Abs
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "A list of Ad Account IDs to replicate data from."
     )
     @PluginProperty(dynamic = true)
     private List<String> customerIds;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
     )
     @PluginProperty(dynamic = true)
     private LocalDate startDate;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Date up to when historical data will be extracted."
     )
     @PluginProperty(dynamic = true)
     private LocalDate endDate;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "How many Days before the Start Date to fetch data for Performance Reports."
     )
     @Builder.Default
     private final Property<Integer> conversionWindowDays = Property.ofValue(0);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Primary Keys for the selected Entities (Streams)."
     )
     @PluginProperty
     private Map<String, List<String>> primaryKeys;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "User Agent for your OAuth Client."
     )
     @Builder.Default

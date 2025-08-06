@@ -27,14 +27,15 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from a Netsuite account with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/hotgluexyz/tap-netsuite)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class Netsuite extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Your account ID.",
         description = "This can be found under Setup -> Company -> Company Information. Look for Account Id. Note `_SB` is for Sandbox account."
     )
@@ -43,7 +44,7 @@ public class Netsuite extends AbstractPythonTap implements RunnableTask<Abstract
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Your consumer key for token based authentication consumer key for SOAP connection.",
         description = "Visit [this page](https://support.cazoomi.com/hc/en-us/articles/360010093392-How-to-Setup-NetSuite-Token-Based-Authentication-as-Authentication-Type) for details."
     )
@@ -52,7 +53,7 @@ public class Netsuite extends AbstractPythonTap implements RunnableTask<Abstract
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Your consumer secret for token based authentication consumer key for SOAP connection.",
         description = "Visit [this page](https://support.cazoomi.com/hc/en-us/articles/360010093392-How-to-Setup-NetSuite-Token-Based-Authentication-as-Authentication-Type) for details."
     )
@@ -61,7 +62,7 @@ public class Netsuite extends AbstractPythonTap implements RunnableTask<Abstract
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Your token key for token based authentication consumer key for SOAP connection.",
         description = "Visit [this page](https://support.cazoomi.com/hc/en-us/articles/360010093392-How-to-Setup-NetSuite-Token-Based-Authentication-as-Authentication-Type) for details."
     )
@@ -70,7 +71,7 @@ public class Netsuite extends AbstractPythonTap implements RunnableTask<Abstract
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "our token secret for token based authentication consumer key for SOAP connection.",
         description = "Visit [this page](https://support.cazoomi.com/hc/en-us/articles/360010093392-How-to-Setup-NetSuite-Token-Based-Authentication-as-Authentication-Type) for details."
     )
@@ -78,21 +79,21 @@ public class Netsuite extends AbstractPythonTap implements RunnableTask<Abstract
     private String tokenSecret;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Behaviour when new fields are discovered.",
         description = "When new fields are discovered in NetSuite objects, the select_fields_by_default key describes whether or not the tap will select those fields by default."
     )
     private Property<Boolean> selectFieldsByDefault;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Is this sandbox account.",
         description = "This should always be set to `true` if you are connecting Production account of NetSuite. Set it to `false` if you want to connect to SandBox account."
     )
     private Property<Boolean> isSandbox;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
     )

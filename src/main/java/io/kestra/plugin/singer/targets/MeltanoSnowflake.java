@@ -21,14 +21,15 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Load data into a Snowflake database with a Singer target.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/MeltanoLabs/target-snowflake)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class MeltanoSnowflake extends AbstractPythonTarget implements RunnableTask<AbstractPythonTarget.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Snowflake account name.",
         description = "(i.e. rtXXXXX.eu-central-1)"
     )
@@ -37,7 +38,7 @@ public class MeltanoSnowflake extends AbstractPythonTarget implements RunnableTa
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database name."
     )
     @PluginProperty(dynamic = true)
@@ -45,20 +46,20 @@ public class MeltanoSnowflake extends AbstractPythonTarget implements RunnableTa
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user."
     )
     @PluginProperty(dynamic = true)
     private String username;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user's password."
     )
     private Property<String> password;
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Snowflake virtual warehouse name."
     )
     @PluginProperty(dynamic = true)
@@ -66,34 +67,34 @@ public class MeltanoSnowflake extends AbstractPythonTarget implements RunnableTa
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database schema."
     )
     @PluginProperty(dynamic = true)
     private String schema;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The initial role for the session."
     )
     private Property<String> role;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Whether to add metadata columns."
     )
     @Builder.Default
     private Property<Boolean> addRecordMetadata = Property.ofValue(true);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The default target database schema name to use for all streams."
     )
     private Property<String> defaultTargetSchema;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "'True' to enable schema flattening and automatically expand nested properties."
     )
     private Property<Boolean> flatteningEnabled;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The max depth to flatten schemas."
     )
     private Property<Integer> flatteningMaxDepth;

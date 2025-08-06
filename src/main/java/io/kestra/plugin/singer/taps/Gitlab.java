@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -27,14 +28,15 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from a GitLab account with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://gitlab.com/meltano/tap-gitlab.git)."
 )
+@Deprecated(forRemoval = true, since = "0.24")
 public class Gitlab extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "GitLab API/instance URL.",
         description = "When an API path is omitted, `/api/v4/` is assumed."
     )
@@ -43,46 +45,46 @@ public class Gitlab extends AbstractPythonTap implements RunnableTask<AbstractPy
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "GitLab personal access token or other API token."
     )
     @PluginProperty(dynamic = true)
     private String private_token;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Names of groups to extract data from.",
         description = "Leave empty and provide a project name if you'd like to pull data from a project in a personal user namespace."
     )
     private Property<List<String>> groups;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "`namespace/project` paths of projects to extract data from.",
         description = "Leave empty and provide a group name to extract data from all group projects."
     )
     private Property<List<String>> projects;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Enable to pull in extra data (like Epics, Epic Issues and other entities) only available to GitLab Ultimate and GitLab.com Gold accounts."
     )
     private final Property<Boolean> ultimateLicense = Property.ofValue(false);
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "For each Merge Request, also fetch the MR's commits and create the join table `merge_request_commits` with the Merge Request and related Commit IDs.",
         description = "This can slow down extraction considerably because of the many API calls required."
     )
     private final Property<Boolean> fetchMergeRequestCommits = Property.ofValue(false);
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "For every Pipeline, also fetch extended details of each of these pipelines.",
         description = "This can slow down extraction considerably because of the many API calls required."
     )
     private final Property<Boolean> fetchPipelinesExtended = Property.ofValue(false);
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
     )

@@ -24,13 +24,14 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from a Quickbooks account with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/hotgluexyz/tap-quickbooks.git)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class Quickbooks extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Select by default any new fields discovered in Quickbooks objects."
     )
     @PluginProperty
@@ -38,7 +39,7 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
     private final Property<Boolean> selectFieldsByDefault = Property.ofValue(true);
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Select by default any new fields discovered in Quickbooks objects."
     )
     @PluginProperty
@@ -46,14 +47,14 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
     private final Property<Boolean> isSandbox = Property.ofValue(false);
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Generate a STATE message every N records."
     )
     @Builder.Default
     private final Property<Integer> stateMessageThreshold = Property.ofValue(1000);
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Maximum number of threads to use."
     )
     @Builder.Default
@@ -61,7 +62,7 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Quickbooks' username."
     )
     @PluginProperty(dynamic = true)
@@ -69,7 +70,7 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Quickbooks' client ID."
     )
     @PluginProperty(dynamic = true)
@@ -77,7 +78,7 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Quickbooks' client secret."
     )
     @PluginProperty(dynamic = true)
@@ -85,14 +86,14 @@ public class Quickbooks extends AbstractPythonTap implements RunnableTask<Abstra
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Quickbooks' refresh token."
     )
     @PluginProperty(dynamic = true)
     private String refreshToken;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
     )
