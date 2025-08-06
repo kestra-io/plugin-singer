@@ -24,14 +24,15 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from the Google Search console with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/singer-io/tap-google-search-console)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class GoogleSearchConsole extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Your Google OAuth Client ID."
     )
     @PluginProperty(dynamic = true)
@@ -39,7 +40,7 @@ public class GoogleSearchConsole extends AbstractPythonTap implements RunnableTa
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Your Google OAuth Client Secret."
     )
     @PluginProperty(dynamic = true)
@@ -47,7 +48,7 @@ public class GoogleSearchConsole extends AbstractPythonTap implements RunnableTa
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The Refresh Token generated through the OAuth flow run using your OAuth Client and your developer token."
     )
     @PluginProperty(dynamic = true)
@@ -55,7 +56,7 @@ public class GoogleSearchConsole extends AbstractPythonTap implements RunnableTa
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Website URL properties.",
         description = "Do not include the domain-level property in the list."
     )
@@ -63,14 +64,14 @@ public class GoogleSearchConsole extends AbstractPythonTap implements RunnableTa
     private List<String> siteUrls;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
     )
     @PluginProperty(dynamic = true)
     private LocalDate startDate;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "User Agent for your OAuth Client."
     )
     @Builder.Default

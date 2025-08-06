@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -27,14 +28,15 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from GitHub API with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/singer-io/tap-github)."
 )
+@Deprecated(forRemoval = true, since = "0.24")
 public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "A GitHub personal access token.",
         description = "Login to your GitHub account, " +
             "go to the [Personal Access Tokens](https://github.com/settings/tokens) settings page, " +
@@ -44,7 +46,7 @@ public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPy
     private String accessToken;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "List of GitHub repositories.",
         description = "The repo path is relative to https://github.com/. \n" +
             "For example the path for [this repository](https://github.com/kestra-io/kestra) is `kestra-io/kestra`."
@@ -53,7 +55,7 @@ public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPy
     private Object repositories;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
     )
@@ -61,7 +63,7 @@ public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPy
     private LocalDate startDate;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Timeout for each request on github API."
     )
     @Builder.Default
@@ -82,7 +84,8 @@ public class GitHub extends AbstractPythonTap implements RunnableTask<AbstractPy
             //noinspection unchecked
             repositories = (List<String>) this.repositories;
         } else if (this.repositories instanceof String) {
-            final TypeReference<List<String>> reference = new TypeReference<>() {};
+            final TypeReference<List<String>> reference = new TypeReference<>() {
+            };
 
             try {
                 repositories = JacksonMapper.ofJson(false).readValue(

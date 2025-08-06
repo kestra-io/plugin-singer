@@ -15,6 +15,7 @@ import lombok.experimental.SuperBuilder;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
+
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -23,32 +24,33 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from BigQuery with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/anelendata/tap-bigquery)."
 )
+@Deprecated(forRemoval = true, since = "0.24")
 public class BigQuery extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
-    @Schema(
+    @Schema(deprecated = true,
         title = "The JSON service account key as string."
     )
     protected Property<String> serviceAccount;
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Array holding objects describing streams (tables) to extract, with `name`, `table`, `columns`, `datetime_key`, and `filters` keys."
     )
     @PluginProperty
     protected List<Stream> streams;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Limits the number of records returned in each stream, applied as a limit in the query."
     )
     private Property<Integer> limit;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "When replicating incrementally, disable to only select records whose `datetime_key` is greater than the maximum value replicated in the last run, by excluding records whose timestamps match exactly.",
         description = "This could cause records to be missed that were created after the last run finished, but during the same second and with the same timestamp."
     )
@@ -56,14 +58,14 @@ public class BigQuery extends AbstractPythonTap implements RunnableTask<Abstract
     private Property<Boolean> startAlwaysInclusive = Property.ofValue(true);
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
     )
     @PluginProperty(dynamic = true)
     private Instant startDateTime;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Date up to when historical data will be extracted."
     )
     @PluginProperty(dynamic = true)
@@ -131,7 +133,7 @@ public class BigQuery extends AbstractPythonTap implements RunnableTask<Abstract
         @JsonProperty("datetime_key")
         String datetimeKey;
 
-        @Schema(
+        @Schema(deprecated = true,
             title = "these are parsed in `WHERE` clause",
             description = "filters are optional but we strongly recommend using this over a large partitioned table to control the cost."
         )

@@ -21,14 +21,15 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Load data into a PostgreSQL database with a Singer target. ",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/datamill-co/target-postgres)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class DatamillCoPostgres extends AbstractPythonTarget implements RunnableTask<AbstractPythonTarget.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database hostname."
     )
     @PluginProperty(dynamic = true)
@@ -36,78 +37,78 @@ public class DatamillCoPostgres extends AbstractPythonTarget implements Runnable
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user."
     )
     @PluginProperty(dynamic = true)
     private String username;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user's password."
     )
     private Property<String> password;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database name."
     )
     private Property<String> dbName;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database port"
     )
     private Property<Integer> port;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database schema."
     )
     @Builder.Default
     private final Property<String> schema = Property.ofValue("public");
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Refer to the [libpq](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS) docs for more information about SSL."
     )
     @Builder.Default
     private final Property<String> sslMode = Property.ofValue("prefer");
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Crash on invalid records."
     )
     @Builder.Default
     private final Property<Boolean> invalidRecordsDetect = Property.ofValue(true);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Include a positive value n in your config to allow to encounter at most n invalid records per stream before giving up."
     )
     @Builder.Default
     private final Property<Integer> invalidRecordsThreshold = Property.ofValue(0);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The level for logging.",
         description = "Set to DEBUG to get things like queries executed, timing of those queries, etc. See Python's Logger Levels for information about valid values."
     )
     @Builder.Default
     private final Property<String> loggingLevel = Property.ofValue("INFO");
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Whether the Target should create tables which have no records present in Remote."
     )
     @Builder.Default
     private final Property<Boolean> persistEmptyTables = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The maximum number of rows to buffer in memory before writing to the destination table in Postgres."
     )
     @Builder.Default
     private final Property<Integer> maxBatchRows = Property.ofValue(200000);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The maximum number of bytes to buffer in memory before writing to the destination table in Postgres."
     )
     @Builder.Default
     private final Property<Integer> maxBufferSize = Property.ofValue(104857600);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "How often, in rows received, to count the buffered rows and bytes to check if a flush is necessary.",
         description = "There's a slight performance penalty to checking the buffered records count or bytesize, so this" +
             " controls how often this is polled in order to mitigate the penalty. This value is usually not necessary" +
@@ -116,20 +117,20 @@ public class DatamillCoPostgres extends AbstractPythonTarget implements Runnable
     )
     private Property<Integer> batchDetectionThreshold;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Whether the Target should create column indexes on the important columns used during data loading.",
         description = "These indexes will make data loading slightly slower but the deduplication phase much faster. Defaults to on for better baseline performance."
     )
     @Builder.Default
     private final Property<Boolean> addUpsertIndexes = Property.ofValue(true);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Raw SQL statement(s) to execute as soon as the connection to Postgres is opened by the target.",
         description = "Useful for setup like SET ROLE or other connection state that is important."
     )
     private Property<String> beforeRunSql;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Raw SQL statement(s) to before closing the connection to Postgres."
     )
     private Property<String> afterRunSql;

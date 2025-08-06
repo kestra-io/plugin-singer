@@ -27,38 +27,39 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from a Zendesk account with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/singer-io/tap-zendesk)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class Zendesk extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Zendesk Subdomain.",
         description = "See [Zendesk Documentation](https://support.zendesk.com/hc/en-us/articles/4409381383578-Where-can-I-find-my-Zendesk-subdomain)"
     )
     @PluginProperty(dynamic = true)
     private String subdomain;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Zendesk email."
     )
     private Property<String> email;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Zendesk API token."
     )
     private Property<String> apiToken;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Zendesk access token.",
         description = "See [Zendesk Documentation](https://support.zendesk.com/hc/en-us/articles/203663836)"
     )
     private Property<String> accessToken;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
     )

@@ -24,14 +24,15 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from Slack with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/Mashey/tap-slack)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "Slack Access Token.",
         description = "More details on Slack Access Tokens can be found [here](https://slack.dev/python-slack-sdk/installation/)."
     )
@@ -39,28 +40,28 @@ public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPyt
     private String apiToken;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Determines how much historical data will be extracted.",
         description = "Please be aware that the larger the time period and amount of data, the longer the initial extraction can be expected to take."
     )
     @PluginProperty(dynamic = true)
     private LocalDate startDate;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Join Private Channels.",
         description = "Specifies whether to sync private channels or not."
     )
     @Builder.Default
     private final Property<Boolean> privateChannels = Property.ofValue(true);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Join Public Channels.",
         description = "Specifies whether to have the tap auto-join all public channels in your ogranziation."
     )
     @Builder.Default
     private final Property<Boolean> publicChannels = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Sync Archived Channels.",
         description = "Specifies whether the tap will sync archived channels or not. Note that a bot cannot join " +
             "an archived channel, so unless the bot was added to the channel prior to it being archived it will not " +
@@ -69,7 +70,7 @@ public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPyt
     @Builder.Default
     private final Property<Boolean> archivedChannels = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Channels to Sync.",
         description = "By default the tap will sync all channels it has been invited to, but this can be overridden " +
             "to limit it to specific channels. Note this needs to be channel ID, not the name, as recommended " +
@@ -77,7 +78,7 @@ public class Slack extends AbstractPythonTap implements RunnableTask<AbstractPyt
     )
     private Property<List<String>> channels;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Channels to Sync.",
         description = "Due to the potentially high volume of data when syncing certain streams " +
             "(messages, files, threads) this tap implements date windowing based on a configuration parameter." +

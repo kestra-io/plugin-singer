@@ -22,14 +22,15 @@ import java.util.Map;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from a PostgreSQL database with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/transferwise/pipelinewise-tap-postgres)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class PipelinewisePostgres extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database hostname"
     )
     @PluginProperty(dynamic = true)
@@ -37,59 +38,59 @@ public class PipelinewisePostgres extends AbstractPythonTap implements RunnableT
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user."
     )
     @PluginProperty(dynamic = true)
     private String username;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user's password."
     )
     private Property<String> password;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database name."
     )
     private Property<String> dbName;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database port."
     )
     private Property<Integer> port;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "If ssl is enabled."
     )
     @Builder.Default
     private final Property<Boolean> ssl = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Stop running the tap when no data received from wal after certain number of seconds."
     )
     @Builder.Default
     private final Property<Integer> logicalPollSeconds = Property.ofValue(10800);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Stop running the tap if the newly received lsn is after the max lsn that was detected when the tap started."
     )
     @Builder.Default
     private final Property<Boolean> breakAtEndLsn = Property.ofValue(true);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Stop running the tap after certain number of seconds."
     )
     @Builder.Default
     private final Property<Integer> maxRunSeconds = Property.ofValue(43200);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "If set to \"true\" then add _sdc_lsn property to the singer messages to debug postgres LSN position in the WAL stream."
     )
     @Builder.Default
     private final Property<Boolean> debugLsn = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The list of schemas to extract tables only from particular schemas and to improve data extraction performance"
     )
     private Property<List<String>> filterSchemas;

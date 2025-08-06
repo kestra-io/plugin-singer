@@ -21,14 +21,15 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Load data into a PostgreSQL database with a Singer target.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/transferwise/pipelinewise-target-postgres)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class PipelinewisePostgres extends AbstractPythonTarget implements RunnableTask<AbstractPythonTarget.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database hostname."
     )
     @PluginProperty(dynamic = true)
@@ -36,43 +37,43 @@ public class PipelinewisePostgres extends AbstractPythonTarget implements Runnab
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user."
     )
     @PluginProperty(dynamic = true)
     private String username;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user's password."
     )
     private Property<String> password;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database name."
     )
     private Property<String> dbName;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database port."
     )
     private Property<Integer> port;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Maximum number of rows in each batch.",
         description = "At the end of each batch, the rows in the batch are loaded into Postgres."
     )
     @Builder.Default
     private final Property<Integer> batchSizeRows = Property.ofValue(100000);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Flush and load every stream into Postgres when one batch is full.",
         description = "Warning: This may trigger the COPY command to use files with low number of records.."
     )
     @Builder.Default
     private final Property<Boolean> flushAllStreams = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The number of threads used to flush tables.",
         description = "0 will create a thread for each stream, up to parallelism_max. -1 will create a thread for " +
             "each CPU core. Any other positive number will create that number of threads, up to parallelism_max."
@@ -80,13 +81,13 @@ public class PipelinewisePostgres extends AbstractPythonTarget implements Runnab
     @Builder.Default
     private final Property<Integer> parallelism = Property.ofValue(0);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Max number of parallel threads to use when flushing tables."
     )
     @Builder.Default
     private final Property<Integer> maxParallelism = Property.ofValue(16);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Add singer Metadata columns.",
         description = "Metadata columns add extra row level information about data ingestions, " +
             "(i.e. when was the row read in source, when was inserted or deleted in postgres etc.) " +
@@ -98,7 +99,7 @@ public class PipelinewisePostgres extends AbstractPythonTarget implements Runnab
     @Builder.Default
     private final Property<Boolean> addMetadataColumns = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Delete rows on Postgres.",
         description = "When hard_delete option is true then DELETE SQL commands will be performed in Postgres to " +
             "delete rows in tables. It's achieved by continuously checking the `_SDC_DELETED_AT` metadata column sent " +
@@ -108,21 +109,21 @@ public class PipelinewisePostgres extends AbstractPythonTarget implements Runnab
     @Builder.Default
     private final Property<Boolean> hardDelete = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Object type RECORD items from taps can be transformed to flattened columns by creating columns automatically.",
         description = "When value is 0 (default) then flattening functionality is turned off."
     )
     @Builder.Default
     private final Property<Integer> dataFlatteningMaxLevel = Property.ofValue(0);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Log based and Incremental replications on tables with no Primary Key cause duplicates when merging UPDATE events.",
         description = "When set to true, stop loading data if no Primary Key is defined."
     )
     @Builder.Default
     private final Property<Boolean> primaryKeyRequired = Property.ofValue(true);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Validate every single record message to the corresponding JSON schema.",
         description = "This option is disabled by default and invalid RECORD messages will fail only at load time by " +
             "Postgres. Enabling this option will detect invalid records earlier but could cause performance degradation.."
@@ -130,13 +131,13 @@ public class PipelinewisePostgres extends AbstractPythonTarget implements Runnab
     @Builder.Default
     private final Property<Boolean> validateRecords = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Name of the schema where the tables will be created.",
         description = "If `schemaMapping` is not defined then every stream sent by the tap is loaded into this schema."
     )
     private Property<String> defaultTargetSchema;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Grant USAGE privilege on newly created schemas and grant SELECT privilege on newly created."
     )
     private Property<String> defaultTargetSchemaSelectPermission;

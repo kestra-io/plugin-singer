@@ -21,14 +21,15 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Load data into a Redshift database with a Singer target.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/transferwise/pipelinewise-target-redshift)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class PipelinewiseRedshift extends AbstractPythonTarget implements RunnableTask<AbstractPythonTarget.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database hostname."
     )
     @PluginProperty(dynamic = true)
@@ -36,31 +37,31 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user."
     )
     @PluginProperty(dynamic = true)
     private String username;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user's password."
     )
     private Property<String> password;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database name."
     )
     private Property<String> dbName;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database port."
     )
     private Property<Integer> port;
 
     @NotEmpty
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "The S3 bucket name."
     )
     @PluginProperty(dynamic = true)
@@ -68,32 +69,32 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
 
     @NotEmpty
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Name of the schema where the tables will be created.",
         description = "If schema_mapping is not defined then every stream sent by the tap is loaded into this schema."
     )
     @PluginProperty(dynamic = true)
     private String defaultTargetSchema;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "S3 Access Key ID.",
         description = "Used for S3 and Redshift copy operations."
     )
     private Property<String> accessKeyId;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "S3 Secret Access Key.",
         description = "Used for S3 and Redshift copy operations."
     )
     private Property<String> secretAccessKey;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "AWS S3 Session Token.",
         description = "S3 AWS STS token for temporary credentials."
     )
     private Property<String> sessionToken;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "AWS Redshift COPY role ARN.",
         description = "AWS Role ARN to be used for the Redshift COPY operation. " +
             "Used instead of the given AWS keys for the COPY operation if provided - " +
@@ -101,20 +102,20 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
     )
     private Property<String> redshiftCopyRoleArn;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "AWS S3 ACL.",
         description = "S3 Object ACL."
     )
     private Property<String> s3Acl;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "S3 Key Prefix.",
         description = "A static prefix before the generated S3 key names. " +
             "Using prefixes you can upload files into specific directories in the S3 bucket. Default(None)."
     )
     private Property<String> s3KeyPrefix;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "COPY options.",
         description = "Parameters to use in the COPY command when loading data to Redshift. " +
             "Some basic file formatting parameters are fixed values and not recommended overriding them by custom values. " +
@@ -122,21 +123,21 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
     )
     private Property<String> copyOptions;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Maximum number of rows in each batch.",
         description = "At the end of each batch, the rows in the batch are loaded into Redshift."
     )
     @Builder.Default
     private final Property<Integer> batchSizeRows = Property.ofValue(100000);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Flush and load every stream into Redshift when one batch is full.",
         description = "Warning: This may trigger the COPY command to use files with low number of records.."
     )
     @Builder.Default
     private final Property<Boolean> flushAllStreams = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The number of threads used to flush tables.",
         description = "0 will create a thread for each stream, up to parallelism_max. -1 will create a thread for " +
             "each CPU core. Any other positive number will create that number of threads, up to parallelism_max."
@@ -144,19 +145,19 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
     @Builder.Default
     private final Property<Integer> parallelism = Property.ofValue(0);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Max number of parallel threads to use when flushing tables."
     )
     @Builder.Default
     private final Property<Integer> maxParallelism = Property.ofValue(16);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Grant USAGE privilege on newly created schemas and grant SELECT privilege on newly created tables to a specific list of users or groups.",
         description = "If `schemaMapping` is not defined then every stream sent by the tap is granted accordingly."
     )
     private Property<String> defaultTargetSchemaSelectPermissions;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Schema mapping.",
         description = "Useful if you want to load multiple streams from one tap to multiple Redshift schemas. " +
             "If the tap sends the stream_id in <schema_name>-<table_name> format then this option overwrites the " +
@@ -166,7 +167,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
     )
     private Property<String> schema_mapping;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Disable table cache.",
         description = "By default the connector caches the available table structures in Redshift at startup. " +
             "In this way it doesn't need to run additional queries when ingesting data to check if altering the target " +
@@ -176,7 +177,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
     @Builder.Default
     private final Property<Boolean> disableTableCache = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Add metadata columns.",
         description = "Metadata columns add extra row level information about data ingestions, (i.e. when was the " +
             "row read in source, when was inserted or deleted in redshift etc.) Metadata columns are creating " +
@@ -188,7 +189,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
     @Builder.Default
     private final Property<Boolean> addMetadataColumns = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Delete rows on Redshift.",
         description = "When `hardDelete` option is true then DELETE SQL commands will be performed in Redshift to delete " +
             "rows in tables. It's achieved by continuously checking the _SDC_DELETED_AT metadata column sent by the " +
@@ -198,7 +199,7 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
     @Builder.Default
     private final Property<Boolean> hardDelete = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Object type RECORD items from taps can be transformed to flattened columns by creating columns automatically.",
         description = "When `hardDelete` option is true then DELETE SQL commands will be performed in Redshift to delete " +
             "rows in tables. It's achieved by continuously checking the _SDC_DELETED_AT metadata column sent by the " +
@@ -208,14 +209,14 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
     @Builder.Default
     private final Property<Integer> dataFlatteningMaxLevel = Property.ofValue(0);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Log based and Incremental replications on tables with no Primary Key cause duplicates when merging UPDATE events.",
         description = "When set to true, stop loading data if no Primary Key is defined.."
     )
     @Builder.Default
     private final Property<Boolean> primaryKeyRequired = Property.ofValue(true);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Validate every single record message to the corresponding JSON schema.",
         description = "This option is disabled by default and invalid RECORD messages will fail only at load time by " +
             "Redshift. Enabling this option will detect invalid records earlier but could cause performance degradation.."
@@ -223,20 +224,20 @@ public class PipelinewiseRedshift extends AbstractPythonTarget implements Runnab
     @Builder.Default
     private final Property<Boolean> validateRecords = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Do not update existing records when Primary Key is defined. ",
         description = "Useful to improve performance when records are immutable, e.g. events."
     )
     @Builder.Default
     private final Property<Boolean> skipUpdates = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The compression method to use when writing files to S3 and running Redshift COPY."
     )
     @Builder.Default
     private final Property<Compression> compression = Property.ofValue(Compression.bzip2);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "number of slices to split files into prior to running COPY on Redshift.",
         description = "This should be set to the number of Redshift slices. The number of slices per node depends on " +
             "the node size of the cluster - run SELECT COUNT(DISTINCT slice) slices FROM stv_slices to calculate this."

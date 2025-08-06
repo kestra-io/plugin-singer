@@ -23,14 +23,15 @@ import jakarta.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from a MongoDB database with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://transferwise.github.io/pipelinewise/connectors/taps/mongodb.html)."
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class PipelinewiseMongoDb extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database hostname."
     )
     @PluginProperty(dynamic = true)
@@ -38,66 +39,66 @@ public class PipelinewiseMongoDb extends AbstractPythonTap implements RunnableTa
 
     @NotNull
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user."
     )
     @PluginProperty(dynamic = true)
     private String username;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user's password."
     )
     private Property<String> password;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database port."
     )
     private Property<Integer> port;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database name."
     )
     private Property<String> database;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database name to authenticate on."
     )
     private Property<String> authDatabase;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "If ssl is enabled."
     )
     @Builder.Default
     private final Property<Boolean> ssl = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Default SSL verify mode."
     )
     @Builder.Default
     private final Property<Boolean> sslVerify = Property.ofValue(true);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The name of replica set."
     )
     private Property<String> replicaSet;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Forces the stream names to take the form `<database_name>_<collection_name>` instead of `<collection_name>`."
     )
     @Builder.Default
     private final Property<Boolean> includeSchemaInStream = Property.ofValue(false);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The size of the buffer that holds detected update operations in memory.",
         description = "For LOG_BASED only, the buffer is flushed once the size is reached."
     )
     @Builder.Default
     private final Property<Integer> updateBufferSize = Property.ofValue(1);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The maximum amount of time in milliseconds waits for new data changes before exiting.",
         description = "For LOG_BASED only."
     )

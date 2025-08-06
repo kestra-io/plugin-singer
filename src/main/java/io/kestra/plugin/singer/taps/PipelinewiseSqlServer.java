@@ -25,7 +25,7 @@ import java.util.Map;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@Schema(
+@Schema(deprecated = true,
     title = "Fetch data from a Microsoft SQL Server database with a Singer tap.",
     description = "Full documentation can be found on the [GitHub Repo](https://github.com/BuzzCutNorman/tap-mssql/blob/main/README.md)."
 )
@@ -50,71 +50,72 @@ import java.util.Map;
         )
     }
 )
+@Deprecated(forRemoval = true, since="0.24")
 public class PipelinewiseSqlServer extends AbstractPythonTap implements RunnableTask<AbstractPythonTap.Output> {
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database hostname."
     )
     @PluginProperty(dynamic = true)
     private String host;
 
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database name."
     )
     @PluginProperty(dynamic = true)
     private String database;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database port."
     )
     @PluginProperty
     private Property<Integer> port;
 
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user."
     )
     @PluginProperty(dynamic = true)
     private String username;
 
     @NotEmpty
-    @Schema(
+    @Schema(deprecated = true,
         title = "The database user's password."
     )
     @PluginProperty(dynamic = true)
     private String password;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The list of schemas to extract tables only from particular schemas and to improve data extraction performance."
     )
     private Property<List<String>> filterDbs;
 
     @NotNull
-    @Schema(
+    @Schema(deprecated = true,
         title = "Emit Date datatypes as-is without converting them to datetime."
     )
     @Builder.Default
     private Property<Boolean> useDateDatatype = Property.ofValue(true);
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "TDS version to use when communicating with SQL Server (default is 7.3)."
     )
     private Property<String> tdsVersion;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "The characterset for the database / source system. The default is utf8, however older databases might use a charactersets like cp1252 for the encoding."
     )
     private Property<String> characterSet;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "Emit all numeric values as strings and treat floats as string data types for the target (default false).",
         description = "When true, the resulting SCHEMA message will contain an attribute in additionalProperties containing the scale and precision of the discovered property."
     )
     private Property<Boolean> useSingerDecimal;
 
-    @Schema(
+    @Schema(deprecated = true,
         title = "A numeric setting adjusting the internal buffersize for the tap (default 10000).",
         description = "The common query tuning scenario is for SELECT statements that return a large number of rows over a slow network. Increasing arraysize can improve performance by reducing the number of round-trips to the database. However increasing this value increases the amount of memory required."
     )
