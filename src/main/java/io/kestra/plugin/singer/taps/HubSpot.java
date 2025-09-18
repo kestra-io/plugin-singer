@@ -37,6 +37,7 @@ public class HubSpot extends AbstractPythonTap implements RunnableTask<AbstractP
         title = "Hubspot redirect Uri"
     )
     @PluginProperty(dynamic = true)
+    @Builder.Default
     private Property<String> redirectUri = Property.ofValue("https://api.hubspot.com/");
 
     @NotNull
