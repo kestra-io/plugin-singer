@@ -1,0 +1,8 @@
+group: io.kestra.plugin.singer
+name: "singer"
+title: "Singer"
+description: "Integrate Singer connectors for efficient data workflows in Kestra."
+body: ""
+videos: []
+createdBy: "Kestra Core Team"
+managedBy: "Kestra Core Team"

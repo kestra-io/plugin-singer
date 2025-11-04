@@ -1,0 +1,8 @@
+group: io.kestra.plugin.singer.taps
+name: "taps"
+title: "Taps"
+description: "This sub-group of plugins contains tasks for using Singer taps. Singer is a simple, composable, open source ETL."
+body: ""
+videos: []
+createdBy: "Kestra Core Team"
+managedBy: "Kestra Core Team"
